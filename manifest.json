@@ -1,6 +1,6 @@
 {
-  "name": "純資産ダッシュボード",
-  "short_name": "純資産",
+  "name": "Aurum — 家族の純資産",
+  "short_name": "Aurum",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
