@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1b27">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nesto">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nesto — 家族の純資産</title>
@@ -502,13 +511,6 @@
     *,*::before,*::after{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}
   }
 </style>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0d1b27">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Nesto">
 </head>
 <body>
 <div class="app">
@@ -546,7 +548,7 @@
     </nav>
     <div class="foot">
       <div>v1.0 · Claude Code Powered</div>
-      <div style="margin-top:4px">© Nesto Office</div>
+      <div style="margin-top:4px">© Nesto</div>
     </div>
   </aside>
 
@@ -570,7 +572,7 @@
     <div class="hero">
       <div class="card worth">
         <div class="card-h">
-          <div class="lbl">我が家の純資産（Family Net Worth）</div>
+          <div class="lbl">純資産（Family Net Worth）</div>
           <div class="month-picker">
             <label>基準 <select id="monthSelector" class="month-sel"></select></label>
             <label>比較 <select id="compareSelector" class="month-sel"></select></label>
@@ -1205,7 +1207,7 @@
     </div>
 
     <footer>
-      <div>Nesto Office · Confidential</div>
+      <div>Nesto · Confidential</div>
       <div>Powered by Claude Code · Generated 2026-06-04</div>
     </footer>
 
@@ -1227,1332 +1229,1299 @@
 <script>
 /* DASHBOARD_HISTORY_START */
 window.DASHBOARD_HISTORY = {
-  "2014-11": {
-    "as_of": "2014-11-01",
-    "keys": {
-      "gross_assets": 8521711,
-      "liabilities": 4338445,
-      "net_worth_total": 4183266,
-      "corporate": 0,
-      "individual": 0,
-      "household": 6223494,
-      "investment": 2298217,
-      "realestate": 0,
-      "household_realestate": 6223494
-    },
-    "text": {
-      "as_of_label": "As of 2014-11-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ "2014-11": {
+  "as_of": "2014-11-01",
+  "keys": {
+   "gross_assets": 8521711,
+   "liabilities": 4338445,
+   "net_worth_total": 4183266,
+   "corporate": 0,
+   "individual": 0,
+   "household": 6223494,
+   "investment": 2298217,
+   "realestate": 0,
+   "household_realestate": 6223494
   },
-  "2014-12": {
-    "as_of": "2014-12-01",
-    "keys": {
-      "gross_assets": 8761307,
-      "liabilities": 4462024,
-      "net_worth_total": 4299283,
-      "corporate": 0,
-      "individual": 0,
-      "household": 6600354,
-      "investment": 2160953,
-      "realestate": 0,
-      "household_realestate": 6600354
-    },
-    "text": {
-      "as_of_label": "As of 2014-12-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2014-11-01"
   },
-  "2015-01": {
-    "as_of": "2015-02-01",
-    "keys": {
-      "gross_assets": 7256014,
-      "liabilities": 4611307,
-      "net_worth_total": 2644707
-    },
-    "text": {
-      "as_of_label": "As of 2015-02-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2014-12": {
+  "as_of": "2014-12-01",
+  "keys": {
+   "gross_assets": 8761307,
+   "liabilities": 4462024,
+   "net_worth_total": 4299283,
+   "corporate": 0,
+   "individual": 0,
+   "household": 6600354,
+   "investment": 2160953,
+   "realestate": 0,
+   "household_realestate": 6600354
   },
-  "2015-02": {
-    "as_of": "2015-03-01",
-    "keys": {
-      "gross_assets": 7522232,
-      "liabilities": 4758987,
-      "net_worth_total": 2763245
-    },
-    "text": {
-      "as_of_label": "As of 2015-03-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2014-12-01"
   },
-  "2015-03": {
-    "as_of": "2015-04-01",
-    "keys": {
-      "gross_assets": 7299449,
-      "liabilities": 4767965,
-      "net_worth_total": 2531484
-    },
-    "text": {
-      "as_of_label": "As of 2015-04-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2015-01": {
+  "as_of": "2015-02-01",
+  "keys": {
+   "gross_assets": 7256014,
+   "liabilities": 4611307,
+   "net_worth_total": 2644707
   },
-  "2015-04": {
-    "as_of": "2015-05-01",
-    "keys": {
-      "gross_assets": 6748525,
-      "liabilities": 1496000,
-      "net_worth_total": 5252525
-    },
-    "text": {
-      "as_of_label": "As of 2015-05-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2015-02-01"
   },
-  "2015-05": {
-    "as_of": "2015-06-01",
-    "keys": {
-      "gross_assets": 14450244,
-      "liabilities": 20427556,
-      "net_worth_total": -5977312,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2015-06-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "_source": "BSシート過去取込"
+ },
+ "2015-02": {
+  "as_of": "2015-03-01",
+  "keys": {
+   "gross_assets": 7522232,
+   "liabilities": 4758987,
+   "net_worth_total": 2763245
   },
-  "2015-06": {
-    "as_of": "2015-06-01",
-    "keys": {
-      "gross_assets": 14152125,
-      "liabilities": 20388118,
-      "net_worth_total": -6235993,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2015-06-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "text": {
+   "as_of_label": "As of 2015-03-01"
   },
-  "2015-07": {
-    "as_of": "2015-07-01",
-    "keys": {
-      "gross_assets": 14044094,
-      "liabilities": 20348655,
-      "net_worth_total": -6304561,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2015-07-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "_source": "BSシート過去取込"
+ },
+ "2015-03": {
+  "as_of": "2015-04-01",
+  "keys": {
+   "gross_assets": 7299449,
+   "liabilities": 4767965,
+   "net_worth_total": 2531484
   },
-  "2015-08": {
-    "as_of": "2015-08-31",
-    "keys": {
-      "gross_assets": 14059849,
-      "liabilities": 20309166,
-      "net_worth_total": -6249317,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2015-08-31"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "text": {
+   "as_of_label": "As of 2015-04-01"
   },
-  "2015-09": {
-    "as_of": "2015-09-30",
-    "keys": {
-      "gross_assets": 14096181,
-      "liabilities": 20260512,
-      "net_worth_total": -6164331
-    },
-    "text": {
-      "as_of_label": "As of 2015-09-30"
-    },
-    "breakdown": {},
-    "_source": "記録欠落→前後実績から補間(推定)",
-    "_estimate_note": "記録欠落のため前後実績から補間（推定）"
+  "_source": "BSシート過去取込"
+ },
+ "2015-04": {
+  "as_of": "2015-05-01",
+  "keys": {
+   "gross_assets": 6748525,
+   "liabilities": 1496000,
+   "net_worth_total": 5252525
   },
-  "2016-11": {
-    "as_of": "2016-11-12",
-    "keys": {
-      "gross_assets": 14591514,
-      "liabilities": 19597196,
-      "net_worth_total": -5005682,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2016-11-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "text": {
+   "as_of_label": "As of 2015-05-01"
   },
-  "2018-03": {
-    "as_of": "2018-03-21",
-    "keys": {
-      "gross_assets": 14119503,
-      "liabilities": 18789917,
-      "net_worth_total": -4670414,
-      "realestate": 9500000
-    },
-    "text": {
-      "as_of_label": "As of 2018-03-21"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋建物遡及計上(推定)",
-    "_estimate_note": "建物¥950万を遡及計上（推定）"
+  "_source": "BSシート過去取込"
+ },
+ "2015-05": {
+  "as_of": "2015-06-01",
+  "keys": {
+   "gross_assets": 14450244,
+   "liabilities": 20427556,
+   "net_worth_total": -5977312,
+   "realestate": 9500000
   },
-  "2018-09": {
-    "as_of": "2018-09-30",
-    "keys": {
-      "gross_assets": 14884100,
-      "liabilities": 18478028,
-      "net_worth_total": -3593928
-    },
-    "text": {
-      "as_of_label": "As of 2018-09-30"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2015-06-01"
   },
-  "2019-05": {
-    "as_of": "2019-05-15",
-    "keys": {
-      "gross_assets": 16009751,
-      "liabilities": 18194190,
-      "net_worth_total": -2184439
-    },
-    "text": {
-      "as_of_label": "As of 2019-05-15"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2015-06": {
+  "as_of": "2015-06-01",
+  "keys": {
+   "gross_assets": 14152125,
+   "liabilities": 20388118,
+   "net_worth_total": -6235993,
+   "realestate": 9500000
   },
-  "2020-01": {
-    "as_of": "2020-01-06",
-    "keys": {
-      "gross_assets": 17091593,
-      "liabilities": 17809567,
-      "net_worth_total": -717974
-    },
-    "text": {
-      "as_of_label": "As of 2020-01-06"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2015-06-01"
   },
-  "2021-01": {
-    "as_of": "2021-01-15",
-    "keys": {
-      "gross_assets": 20598009,
-      "liabilities": 17190346,
-      "net_worth_total": 3407663
-    },
-    "text": {
-      "as_of_label": "As of 2021-01-15"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2015-07": {
+  "as_of": "2015-07-01",
+  "keys": {
+   "gross_assets": 14044094,
+   "liabilities": 20348655,
+   "net_worth_total": -6304561,
+   "realestate": 9500000
   },
-  "2021-07": {
-    "as_of": "2021-07-07",
-    "keys": {
-      "gross_assets": 21985001,
-      "liabilities": 16893967,
-      "net_worth_total": 5091034
-    },
-    "text": {
-      "as_of_label": "As of 2021-07-07"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2015-07-01"
   },
-  "2022-03": {
-    "as_of": "2022-03-12",
-    "keys": {
-      "gross_assets": 22674277,
-      "liabilities": 16484265,
-      "net_worth_total": 6190012
-    },
-    "text": {
-      "as_of_label": "As of 2022-03-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2015-08": {
+  "as_of": "2015-08-31",
+  "keys": {
+   "gross_assets": 14059849,
+   "liabilities": 20309166,
+   "net_worth_total": -6249317,
+   "realestate": 9500000
   },
-  "2022-11": {
-    "as_of": "2022-11-14",
-    "keys": {
-      "gross_assets": 25629894,
-      "liabilities": 16072847,
-      "net_worth_total": 9557047
-    },
-    "text": {
-      "as_of_label": "As of 2022-11-14"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込"
+  "text": {
+   "as_of_label": "As of 2015-08-31"
   },
-  "2023-04": {
-    "as_of": "2023-04-08",
-    "keys": {
-      "gross_assets": 26156083,
-      "liabilities": 15814834,
-      "net_worth_total": 10341249,
-      "corporate": 0,
-      "individual": 0,
-      "household": 9473257,
-      "investment": 6882826,
-      "realestate": 9800000,
-      "household_realestate": 19273257
-    },
-    "text": {
-      "as_of_label": "As of 2023-04-08"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2015-09": {
+  "as_of": "2015-09-30",
+  "keys": {
+   "gross_assets": 14096181,
+   "liabilities": 20260512,
+   "net_worth_total": -6164331
   },
-  "2023-07": {
-    "as_of": "2023-07-07",
-    "keys": {
-      "gross_assets": 26791154,
-      "liabilities": 15659703,
-      "net_worth_total": 11131451,
-      "corporate": 0,
-      "individual": 0,
-      "household": 9094159,
-      "investment": 7896995,
-      "realestate": 9800000,
-      "household_realestate": 18894159
-    },
-    "text": {
-      "as_of_label": "As of 2023-07-07"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2015-09-30"
   },
-  "2023-08": {
-    "as_of": "2023-08-10",
-    "keys": {
-      "gross_assets": 27005661,
-      "liabilities": 15607816,
-      "net_worth_total": 11397845,
-      "corporate": 0,
-      "individual": 25532,
-      "household": 9066395,
-      "investment": 8113734,
-      "realestate": 9800000,
-      "household_realestate": 18866395
-    },
-    "text": {
-      "as_of_label": "As of 2023-08-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "_source": "記録欠落→前後実績から補間(推定)",
+  "_estimate_note": "記録欠落のため前後実績から補間（推定）"
+ },
+ "2016-11": {
+  "as_of": "2016-11-12",
+  "keys": {
+   "gross_assets": 14591514,
+   "liabilities": 19597196,
+   "net_worth_total": -5005682,
+   "realestate": 9500000
   },
-  "2023-09": {
-    "as_of": "2023-09-05",
-    "keys": {
-      "gross_assets": 27248763,
-      "liabilities": 15555929,
-      "net_worth_total": 11692834,
-      "corporate": 0,
-      "individual": 110900,
-      "household": 9073808,
-      "investment": 8264055,
-      "realestate": 9800000,
-      "household_realestate": 18873808
-    },
-    "text": {
-      "as_of_label": "As of 2023-09-05"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "text": {
+   "as_of_label": "As of 2016-11-12"
   },
-  "2023-10": {
-    "as_of": "2023-10-13",
-    "keys": {
-      "gross_assets": 27300362,
-      "liabilities": 15504042,
-      "net_worth_total": 11796320,
-      "corporate": 0,
-      "individual": 63790,
-      "household": 8982303,
-      "investment": 8454269,
-      "realestate": 9800000,
-      "household_realestate": 18782303
-    },
-    "text": {
-      "as_of_label": "As of 2023-10-13"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2018-03": {
+  "as_of": "2018-03-21",
+  "keys": {
+   "gross_assets": 14119503,
+   "liabilities": 18789917,
+   "net_worth_total": -4670414,
+   "realestate": 9500000
   },
-  "2023-11": {
-    "as_of": "2023-11-09",
-    "keys": {
-      "gross_assets": 27836808,
-      "liabilities": 15452155,
-      "net_worth_total": 12384653,
-      "corporate": 0,
-      "individual": 282990,
-      "household": 9231028,
-      "investment": 8522790,
-      "realestate": 9800000,
-      "household_realestate": 19031028
-    },
-    "text": {
-      "as_of_label": "As of 2023-11-09"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "text": {
+   "as_of_label": "As of 2018-03-21"
   },
-  "2023-12": {
-    "as_of": "2023-12-01",
-    "keys": {
-      "gross_assets": 26896547,
-      "liabilities": 15400268,
-      "net_worth_total": 11496279,
-      "corporate": 0,
-      "individual": 92781,
-      "household": 8296758,
-      "investment": 8707008,
-      "realestate": 9800000,
-      "household_realestate": 18096758
-    },
-    "text": {
-      "as_of_label": "As of 2023-12-01"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "_source": "BSシート過去取込＋建物遡及計上(推定)",
+  "_estimate_note": "建物¥950万を遡及計上（推定）"
+ },
+ "2018-09": {
+  "as_of": "2018-09-30",
+  "keys": {
+   "gross_assets": 14884100,
+   "liabilities": 18478028,
+   "net_worth_total": -3593928
   },
-  "2024-01": {
-    "as_of": "2024-01-13",
-    "keys": {
-      "gross_assets": 27452846,
-      "liabilities": 15348381,
-      "net_worth_total": 12104465,
-      "corporate": 0,
-      "individual": 187709,
-      "household": 8425287,
-      "investment": 9039850,
-      "realestate": 9800000,
-      "household_realestate": 18225287
-    },
-    "text": {
-      "as_of_label": "As of 2024-01-13"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "text": {
+   "as_of_label": "As of 2018-09-30"
   },
-  "2024-02": {
-    "as_of": "2024-02-13",
-    "keys": {
-      "gross_assets": 27787418,
-      "liabilities": 15296494,
-      "net_worth_total": 12490924,
-      "corporate": 0,
-      "individual": 55870,
-      "household": 8410590,
-      "investment": 9520958,
-      "realestate": 9800000,
-      "household_realestate": 18210590
-    },
-    "text": {
-      "as_of_label": "As of 2024-02-13"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "_source": "BSシート過去取込"
+ },
+ "2019-05": {
+  "as_of": "2019-05-15",
+  "keys": {
+   "gross_assets": 16009751,
+   "liabilities": 18194190,
+   "net_worth_total": -2184439
   },
-  "2024-03": {
-    "as_of": "2024-03-13",
-    "keys": {
-      "gross_assets": 28759368,
-      "liabilities": 15244607,
-      "net_worth_total": 13514761,
-      "corporate": 0,
-      "individual": 448133,
-      "household": 8801377,
-      "investment": 9709858,
-      "realestate": 9800000,
-      "household_realestate": 18601377
-    },
-    "text": {
-      "as_of_label": "As of 2024-03-13"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "text": {
+   "as_of_label": "As of 2019-05-15"
   },
-  "2024-04": {
-    "as_of": "2024-04-12",
-    "keys": {
-      "gross_assets": 29815943,
-      "liabilities": 15192720,
-      "net_worth_total": 14623223,
-      "corporate": 0,
-      "individual": 211213,
-      "household": 9585508,
-      "investment": 10219222,
-      "realestate": 9800000,
-      "household_realestate": 19385508
-    },
-    "text": {
-      "as_of_label": "As of 2024-04-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
-    "_estimate_note": "負債は推定値（住宅ローン補間）"
+  "_source": "BSシート過去取込"
+ },
+ "2020-01": {
+  "as_of": "2020-01-06",
+  "keys": {
+   "gross_assets": 17091593,
+   "liabilities": 17809567,
+   "net_worth_total": -717974
   },
-  "2024-05": {
-    "as_of": "2024-05-10",
-    "keys": {
-      "gross_assets": 29907672,
-      "liabilities": 15140833,
-      "net_worth_total": 14766839,
-      "corporate": 0,
-      "individual": 465453,
-      "household": 9177179,
-      "investment": 10465040,
-      "realestate": 9800000,
-      "household_realestate": 18977179
-    },
-    "text": {
-      "as_of_label": "As of 2024-05-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2020-01-06"
   },
-  "2024-06": {
-    "as_of": "2024-06-10",
-    "keys": {
-      "gross_assets": 30889156,
-      "liabilities": 15140833,
-      "net_worth_total": 15748323,
-      "corporate": 0,
-      "individual": 1231559,
-      "household": 8326406,
-      "investment": 11731191,
-      "realestate": 9600000,
-      "household_realestate": 17926406
-    },
-    "text": {
-      "as_of_label": "As of 2024-06-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込"
+ },
+ "2021-01": {
+  "as_of": "2021-01-15",
+  "keys": {
+   "gross_assets": 20598009,
+   "liabilities": 17190346,
+   "net_worth_total": 3407663
   },
-  "2024-07": {
-    "as_of": "2024-07-11",
-    "keys": {
-      "gross_assets": 32008956,
-      "liabilities": 15140833,
-      "net_worth_total": 16868123,
-      "corporate": 0,
-      "individual": 1113868,
-      "household": 8728941,
-      "investment": 12566147,
-      "realestate": 9600000,
-      "household_realestate": 18328941
-    },
-    "text": {
-      "as_of_label": "As of 2024-07-11"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2021-01-15"
   },
-  "2024-08": {
-    "as_of": "2024-08-14",
-    "keys": {
-      "gross_assets": 30368370,
-      "liabilities": 15140833,
-      "net_worth_total": 15227537,
-      "corporate": 0,
-      "individual": 730435,
-      "household": 8690106,
-      "investment": 11347829,
-      "realestate": 9600000,
-      "household_realestate": 18290106
-    },
-    "text": {
-      "as_of_label": "As of 2024-08-14"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込"
+ },
+ "2021-07": {
+  "as_of": "2021-07-07",
+  "keys": {
+   "gross_assets": 21985001,
+   "liabilities": 16893967,
+   "net_worth_total": 5091034
   },
-  "2024-09": {
-    "as_of": "2024-09-18",
-    "keys": {
-      "gross_assets": 30903509,
-      "liabilities": 15140833,
-      "net_worth_total": 15762676,
-      "corporate": 0,
-      "individual": 1102230,
-      "household": 8608235,
-      "investment": 11593044,
-      "realestate": 9600000,
-      "household_realestate": 18208235
-    },
-    "text": {
-      "as_of_label": "As of 2024-09-18"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2021-07-07"
   },
-  "2024-10": {
-    "as_of": "2024-10-10",
-    "keys": {
-      "gross_assets": 30727024,
-      "liabilities": 14880376,
-      "net_worth_total": 15846648,
-      "corporate": 0,
-      "individual": 343841,
-      "household": 8418935,
-      "investment": 12364248,
-      "realestate": 9600000,
-      "household_realestate": 18018935
-    },
-    "text": {
-      "as_of_label": "As of 2024-10-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込"
+ },
+ "2022-03": {
+  "as_of": "2022-03-12",
+  "keys": {
+   "gross_assets": 22674277,
+   "liabilities": 16484265,
+   "net_worth_total": 6190012
   },
-  "2024-11": {
-    "as_of": "2024-11-12",
-    "keys": {
-      "gross_assets": 31935606,
-      "liabilities": 14818425,
-      "net_worth_total": 17117181,
-      "corporate": 0,
-      "individual": 794827,
-      "household": 8490899,
-      "investment": 13049880,
-      "realestate": 9600000,
-      "household_realestate": 18090899
-    },
-    "text": {
-      "as_of_label": "As of 2024-11-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2022-03-12"
   },
-  "2024-12": {
-    "as_of": "2024-12-11",
-    "keys": {
-      "gross_assets": 32982467,
-      "liabilities": 14818425,
-      "net_worth_total": 18164042,
-      "corporate": 0,
-      "individual": 1217579,
-      "household": 9045746,
-      "investment": 13119142,
-      "realestate": 9600000,
-      "household_realestate": 18645746
-    },
-    "text": {
-      "as_of_label": "As of 2024-12-11"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込"
+ },
+ "2022-11": {
+  "as_of": "2022-11-14",
+  "keys": {
+   "gross_assets": 25629894,
+   "liabilities": 16072847,
+   "net_worth_total": 9557047
   },
-  "2025-01": {
-    "as_of": "2025-01-10",
-    "keys": {
-      "gross_assets": 32997688,
-      "liabilities": 14723774,
-      "net_worth_total": 18273914,
-      "corporate": 0,
-      "individual": 962041,
-      "household": 9051709,
-      "investment": 13383938,
-      "realestate": 9600000,
-      "household_realestate": 18651709
-    },
-    "text": {
-      "as_of_label": "As of 2025-01-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2022-11-14"
   },
-  "2025-02": {
-    "as_of": "2025-02-10",
-    "keys": {
-      "gross_assets": 33335586,
-      "liabilities": 14723774,
-      "net_worth_total": 18611812,
-      "corporate": 0,
-      "individual": 624135,
-      "household": 9642675,
-      "investment": 13468776,
-      "realestate": 9600000,
-      "household_realestate": 19242675
-    },
-    "text": {
-      "as_of_label": "As of 2025-02-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込"
+ },
+ "2023-04": {
+  "as_of": "2023-04-08",
+  "keys": {
+   "gross_assets": 26156083,
+   "liabilities": 15814834,
+   "net_worth_total": 10341249,
+   "corporate": 0,
+   "individual": 0,
+   "household": 9473257,
+   "investment": 6882826,
+   "realestate": 9800000,
+   "household_realestate": 19273257
   },
-  "2025-03": {
-    "as_of": "2025-03-12",
-    "keys": {
-      "gross_assets": 32266131,
-      "liabilities": 14723774,
-      "net_worth_total": 17542357,
-      "corporate": 0,
-      "individual": 649985,
-      "household": 9479364,
-      "investment": 12536782,
-      "realestate": 9600000,
-      "household_realestate": 19079364
-    },
-    "text": {
-      "as_of_label": "As of 2025-03-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-04-08"
   },
-  "2025-04": {
-    "as_of": "2025-04-12",
-    "keys": {
-      "gross_assets": 31567567,
-      "liabilities": 14559603,
-      "net_worth_total": 17007964,
-      "corporate": 713434,
-      "individual": 64315,
-      "household": 9311741,
-      "investment": 11878077,
-      "realestate": 9600000,
-      "household_realestate": 18911741
-    },
-    "text": {
-      "as_of_label": "As of 2025-04-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2023-07": {
+  "as_of": "2023-07-07",
+  "keys": {
+   "gross_assets": 26791154,
+   "liabilities": 15659703,
+   "net_worth_total": 11131451,
+   "corporate": 0,
+   "individual": 0,
+   "household": 9094159,
+   "investment": 7896995,
+   "realestate": 9800000,
+   "household_realestate": 18894159
   },
-  "2025-05": {
-    "as_of": "2025-05-10",
-    "keys": {
-      "gross_assets": 32859944,
-      "liabilities": 14517851,
-      "net_worth_total": 18342093,
-      "corporate": 56559,
-      "individual": 101841,
-      "household": 10221931,
-      "investment": 12879613,
-      "realestate": 9600000,
-      "household_realestate": 19821931
-    },
-    "text": {
-      "as_of_label": "As of 2025-05-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-07-07"
   },
-  "2025-06": {
-    "as_of": "2025-06-10",
-    "keys": {
-      "gross_assets": 33448627,
-      "liabilities": 14466290,
-      "net_worth_total": 18982337,
-      "corporate": 306213,
-      "individual": 412784,
-      "household": 9688211,
-      "investment": 13441419,
-      "realestate": 9600000,
-      "household_realestate": 19288211
-    },
-    "text": {
-      "as_of_label": "As of 2025-06-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2023-08": {
+  "as_of": "2023-08-10",
+  "keys": {
+   "gross_assets": 27005661,
+   "liabilities": 15607816,
+   "net_worth_total": 11397845,
+   "corporate": 0,
+   "individual": 25532,
+   "household": 9066395,
+   "investment": 8113734,
+   "realestate": 9800000,
+   "household_realestate": 18866395
   },
-  "2025-07": {
-    "as_of": "2025-07-13",
-    "keys": {
-      "gross_assets": 34409237,
-      "liabilities": 14466290,
-      "net_worth_total": 19942947,
-      "corporate": 1097623,
-      "individual": 105797,
-      "household": 9505202,
-      "investment": 14100615,
-      "realestate": 9600000,
-      "household_realestate": 19105202
-    },
-    "text": {
-      "as_of_label": "As of 2025-07-13"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-08-10"
   },
-  "2025-08": {
-    "as_of": "2025-08-12",
-    "keys": {
-      "gross_assets": 34854100,
-      "liabilities": 14466290,
-      "net_worth_total": 20387810,
-      "corporate": 938361,
-      "individual": 226867,
-      "household": 9641739,
-      "investment": 14447133,
-      "realestate": 9600000,
-      "household_realestate": 19241739
-    },
-    "text": {
-      "as_of_label": "As of 2025-08-12"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2023-09": {
+  "as_of": "2023-09-05",
+  "keys": {
+   "gross_assets": 27248763,
+   "liabilities": 15555929,
+   "net_worth_total": 11692834,
+   "corporate": 0,
+   "individual": 110900,
+   "household": 9073808,
+   "investment": 8264055,
+   "realestate": 9800000,
+   "household_realestate": 18873808
   },
-  "2025-09": {
-    "as_of": "2025-09-10",
-    "keys": {
-      "gross_assets": 35125238,
-      "liabilities": 14317228,
-      "net_worth_total": 20808010,
-      "corporate": 502658,
-      "individual": 39332,
-      "household": 10029323,
-      "investment": 14953925,
-      "realestate": 9600000,
-      "household_realestate": 19629323
-    },
-    "text": {
-      "as_of_label": "As of 2025-09-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-09-05"
   },
-  "2025-10": {
-    "as_of": "2025-10-10",
-    "keys": {
-      "gross_assets": 35788768,
-      "liabilities": 14268437,
-      "net_worth_total": 21520331,
-      "corporate": 582365,
-      "individual": 72355,
-      "household": 9512377,
-      "investment": 16021671,
-      "realestate": 9600000,
-      "household_realestate": 19112377
-    },
-    "text": {
-      "as_of_label": "As of 2025-10-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2023-10": {
+  "as_of": "2023-10-13",
+  "keys": {
+   "gross_assets": 27300362,
+   "liabilities": 15504042,
+   "net_worth_total": 11796320,
+   "corporate": 0,
+   "individual": 63790,
+   "household": 8982303,
+   "investment": 8454269,
+   "realestate": 9800000,
+   "household_realestate": 18782303
   },
-  "2025-11": {
-    "as_of": "2025-11-10",
-    "keys": {
-      "gross_assets": 35908151,
-      "liabilities": 14219608,
-      "net_worth_total": 21688543,
-      "corporate": 669609,
-      "individual": 159595,
-      "household": 9376250,
-      "investment": 16102697,
-      "realestate": 9600000,
-      "household_realestate": 18976250
-    },
-    "text": {
-      "as_of_label": "As of 2025-11-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-10-13"
   },
-  "2025-12": {
-    "as_of": "2025-12-11",
-    "keys": {
-      "gross_assets": 36503074,
-      "liabilities": 14170740,
-      "net_worth_total": 22332334,
-      "corporate": 578703,
-      "individual": 185221,
-      "household": 9375784,
-      "investment": 16763366,
-      "realestate": 9600000,
-      "household_realestate": 18975784
-    },
-    "text": {
-      "as_of_label": "As of 2025-12-11"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2023-11": {
+  "as_of": "2023-11-09",
+  "keys": {
+   "gross_assets": 27836808,
+   "liabilities": 15452155,
+   "net_worth_total": 12384653,
+   "corporate": 0,
+   "individual": 282990,
+   "household": 9231028,
+   "investment": 8522790,
+   "realestate": 9800000,
+   "household_realestate": 19031028
   },
-  "2026-01": {
-    "as_of": "2026-01-15",
-    "keys": {
-      "gross_assets": 39044018,
-      "liabilities": 14112057,
-      "net_worth_total": 24931961,
-      "corporate": 2397000,
-      "individual": 149435,
-      "household": 9241173,
-      "investment": 17656410,
-      "realestate": 9600000,
-      "household_realestate": 18841173
-    },
-    "text": {
-      "as_of_label": "As of 2026-01-15"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-11-09"
   },
-  "2026-02": {
-    "as_of": "2026-02-10",
-    "keys": {
-      "gross_assets": 36572694,
-      "liabilities": 12262890,
-      "net_worth_total": 24309804,
-      "corporate": 1896847,
-      "individual": 43425,
-      "household": 7292033,
-      "investment": 17740389,
-      "realestate": 9600000,
-      "household_realestate": 16892033
-    },
-    "text": {
-      "as_of_label": "As of 2026-02-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込(2/10時点に修正)＋カテゴリ内訳(検算OK)"
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2023-12": {
+  "as_of": "2023-12-01",
+  "keys": {
+   "gross_assets": 26896547,
+   "liabilities": 15400268,
+   "net_worth_total": 11496279,
+   "corporate": 0,
+   "individual": 92781,
+   "household": 8296758,
+   "investment": 8707008,
+   "realestate": 9800000,
+   "household_realestate": 18096758
   },
-  "2026-03": {
-    "as_of": "2026-03-10",
-    "keys": {
-      "gross_assets": 36017366,
-      "liabilities": 12216474,
-      "net_worth_total": 23800892,
-      "corporate": 1355478,
-      "individual": 239026,
-      "household": 7280307,
-      "investment": 17542555,
-      "realestate": 9600000,
-      "household_realestate": 16880307
-    },
-    "text": {
-      "as_of_label": "As of 2026-03-10"
-    },
-    "breakdown": {},
-    "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+  "text": {
+   "as_of_label": "As of 2023-12-01"
   },
-  "2026-04": {
-    "as_of": "2026-04-15",
-    "keys": {
-      "gross_assets": 37817824,
-      "liabilities": 12162831,
-      "net_worth_total": 25654993,
-      "corporate": 1863252,
-      "individual": 314262,
-      "household": 7831236,
-      "investment": 18209074,
-      "realestate": 9600000,
-      "household_realestate": 17431236
-    },
-    "text": {
-      "as_of_label": "As of 2026-04-15"
-    },
-    "breakdown": {},
-    "_source": "PDF(2604-2605 Report.pdf)から明細取込。検算一致"
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2024-01": {
+  "as_of": "2024-01-13",
+  "keys": {
+   "gross_assets": 27452846,
+   "liabilities": 15348381,
+   "net_worth_total": 12104465,
+   "corporate": 0,
+   "individual": 187709,
+   "household": 8425287,
+   "investment": 9039850,
+   "realestate": 9800000,
+   "household_realestate": 18225287
   },
-  "2026-05": {
-    "as_of": "2026-05-20",
-    "keys": {
-      "gross_assets": 39182505,
-      "liabilities": 12118932,
-      "net_worth_total": 27063573,
-      "corporate": 1755172,
-      "individual": 79028,
-      "household": 8687453,
-      "investment": 19060852,
-      "realestate": 9600000,
-      "household_realestate": 18287453
-    },
-    "text": {
-      "as_of_label": "As of 2026-05-20"
-    },
-    "breakdown": {},
-    "_source": "PDF(2604-2605 Report.pdf)から明細取込。検算一致"
+  "text": {
+   "as_of_label": "As of 2024-01-13"
   },
-  "2026-07": {
-    "as_of": "2026-07-15",
-    "keys": {
-      "corporate": 801031,
-      "individual": 1779000,
-      "household": 7793117,
-      "investment": 20470464,
-      "realestate": 9600000,
-      "liabilities": 12031034,
-      "gross_assets": 40443612,
-      "net_worth_total": 28412578,
-      "household_realestate": 17393117
-    },
-    "text": {
-      "as_of_label": "As of 2026-07-15"
-    },
-    "breakdown": {
-      "corporate": [
-        [
-          "eBay（法人）",
-          136035,
-          "2026-07-15",
-          "857.82USD×掛率158.58。法人・未受取売上"
-        ],
-        [
-          "Payoneer（法人）",
-          38404,
-          "2026-07-15",
-          "242.17USD×掛率158.58。法人事業資金"
-        ],
-        [
-          "住信SBI（法人）",
-          626592,
-          "2026-07-15",
-          "住信SBIネット銀行 法人口座 残高（現状ベース。債務超過は無視し現金残高で計上）"
-        ]
-      ],
-      "individual": [
-        [
-          "小規模企業共済（本人）",
-          1695000,
-          "2026-07-15",
-          "退職金積立（中小機構）。掛金累計/解約手当金相当。年1回の現況通知で更新"
-        ],
-        [
-          "小規模企業共済（妻）",
-          84000,
-          "2026-07-15",
-          "退職金積立（中小機構）。掛金累計/解約手当金相当。年1回の現況通知で更新"
-        ]
-      ],
-      "household": [
-        [
-          "三井住友①",
-          187387,
-          "2026-07-15",
-          "bookmarklet 取得"
-        ],
-        [
-          "三井住友②",
-          59408,
-          "2026-07-15",
-          "bookmarklet 取得"
-        ],
-        [
-          "auPay（妻）",
-          25334,
-          "2026-07-15",
-          "手入力（スクショ参照）"
-        ],
-        [
-          "auPay（本人）",
-          96080,
-          "2026-07-15",
-          "auPay残高（本人）"
-        ],
-        [
-          "コメ兵ポイント",
-          43100,
-          "2026-07-15",
-          "コメ兵の店舗限定ポイント",
-          {
-            "expiry": "2027-04-13"
-          }
-        ],
-        [
-          "メルカリ（本人）",
-          122983,
-          "2026-07-15",
-          "売上金116,802＋メルカリポイント6,181P（1P=1円）"
-        ],
-        [
-          "メルカリ（妻）",
-          234351,
-          "2026-07-15",
-          "売上金231,546＋メルカリポイント2,805P（1P=1円）"
-        ],
-        [
-          "みずほ銀行",
-          218929,
-          "2026-07-08",
-          "bookmarklet 取得"
-        ],
-        [
-          "PayPay（本人）",
-          486745,
-          "2026-07-15",
-          "PayPay残高（本人・手入力）"
-        ],
-        [
-          "PayPay銀行（妻）",
-          15061,
-          "2026-07-15",
-          "PayPay銀行 006-＊ 円普通預金（妻）"
-        ],
-        [
-          "PayPay（妻）",
-          340138,
-          "2026-07-15",
-          "PayPay残高（妻名義・手入力）"
-        ],
-        [
-          "住信SBI（妻）",
-          300848,
-          "2026-07-15",
-          "dNEOBANK 103-＊ 代表口座 円普通（妻）。※目的別・ハイブリッド預金があれば別途追加"
-        ],
-        [
-          "住信SBI（本人）",
-          4761940,
-          "2026-07-15",
-          "目的別口座を合算：代表円普通66,573＋SBIハイブリッド預金387,316（=SBI証券本人から除外したスイープ。ここで計上）＋投信振替用円普通3,528,561＋子育て支援金779,490＋お小遣い0。ハイブリッド預金を含めても二重計上ではない（SBI証券側で除外済み）"
-        ],
-        [
-          "三井住友（妻）",
-          900813,
-          "2026-07-15",
-          "妻・ 残高別普通。LINEスクショ（21:02現在 ¥900,813）より手入力"
-        ]
-      ],
-      "investment": [
-        [
-          "iDeCo（本人）",
-          4897974,
-          "2026-07-09",
-          "bookmarklet 取得"
-        ],
-        [
-          "iDeCo（妻）",
-          2453576,
-          "2026-07-09",
-          "bookmarklet 取得 / 奥様のiDeCo（SBI_妻から訂正）"
-        ],
-        [
-          "マネックス",
-          413511,
-          "2026-07-09",
-          "bookmarklet 取得 / 旧NISA"
-        ],
-        [
-          "PayPayポイント運用",
-          414697,
-          "2026-07-15",
-          "PayPayポイント運用の評価額（変動）。運用損益は前月比で確認"
-        ],
-        [
-          "証券（子1）",
-          2376400,
-          "2026-07-09",
-          "bookmarklet 取得"
-        ],
-        [
-          "証券（本人）",
-          3015174,
-          "2026-07-09",
-          "投信2,900,761+株式114,413。スィープ387,316は住信SBI側で計上のため除外"
-        ],
-        [
-          "証券（妻）",
-          3143085,
-          "2026-07-09",
-          "bookmarklet 取得"
-        ],
-        [
-          "証券（子2）",
-          2181463,
-          "2026-07-09",
-          "bookmarklet 取得"
-        ],
-        [
-          "THEO",
-          1574584,
-          "2026-07-09",
-          "bookmarklet 取得"
-        ]
-      ],
-      "realestate": [
-        [
-          "自転車",
-          100000,
-          "2026-07-10",
-          "BSシート"
-        ],
-        [
-          "建物",
-          9500000,
-          "2026-07-10",
-          "BSシートの簿価。市場評価に変えたい場合は要相談"
-        ]
-      ],
-      "liabilities": [
-        [
-          "住宅ローン（みずほ）",
-          11718058,
-          "2026-07-15",
-          "毎月¥45,695・変動1.425%()・2050/3完済予定。完済まで総利息 約¥209万（現行金利継続時。0.775%なら約¥111万→金利上昇で生涯+約¥98万）。次回金利見直し2026/12・返済額見直し2029/12",
-          {
-            "monthly_payment": 45695,
-            "interest_to_payoff": 2093704
-          }
-        ],
-        [
-          "奨学金（無利子）",
-          312976,
-          "2026-07-15",
-          "無利子（貸与1,408,000=返還総額）・完済まで利息¥0。残32回×¥9,777(最終¥9,889)・・＊",
-          {
-            "monthly_payment": 9777,
-            "interest_to_payoff": 0
-          }
-        ]
-      ],
-      "household_realestate": {
-        "grouped": true,
-        "groups": [
-          {
-            "label": "家計",
-            "items": [
-              [
-                "三井住友①",
-                187387,
-                "2026-07-15",
-                "bookmarklet 取得"
-              ],
-              [
-                "三井住友②",
-                59408,
-                "2026-07-15",
-                "bookmarklet 取得"
-              ],
-              [
-                "auPay（妻）",
-                25334,
-                "2026-07-15",
-                "手入力（スクショ参照）"
-              ],
-              [
-                "auPay（本人）",
-                96080,
-                "2026-07-15",
-                "auPay残高（本人）"
-              ],
-              [
-                "コメ兵ポイント",
-                43100,
-                "2026-07-15",
-                "コメ兵の店舗限定ポイント",
-                {
-                  "expiry": "2027-04-13"
-                }
-              ],
-              [
-                "メルカリ（本人）",
-                122983,
-                "2026-07-15",
-                "売上金116,802＋メルカリポイント6,181P（1P=1円）"
-              ],
-              [
-                "メルカリ（妻）",
-                234351,
-                "2026-07-15",
-                "売上金231,546＋メルカリポイント2,805P（1P=1円）"
-              ],
-              [
-                "みずほ銀行",
-                218929,
-                "2026-07-08",
-                "bookmarklet 取得"
-              ],
-              [
-                "PayPay（本人）",
-                486745,
-                "2026-07-15",
-                "PayPay残高（本人・手入力）"
-              ],
-              [
-                "PayPay銀行（妻）",
-                15061,
-                "2026-07-15",
-                "PayPay銀行 006-＊ 円普通預金（妻）"
-              ],
-              [
-                "PayPay（妻）",
-                340138,
-                "2026-07-15",
-                "PayPay残高（妻名義・手入力）"
-              ],
-              [
-                "住信SBI（妻）",
-                300848,
-                "2026-07-15",
-                "dNEOBANK 103-＊ 代表口座 円普通（妻）。※目的別・ハイブリッド預金があれば別途追加"
-              ],
-              [
-                "住信SBI（本人）",
-                4761940,
-                "2026-07-15",
-                "目的別口座を合算：代表円普通66,573＋SBIハイブリッド預金387,316（=SBI証券本人から除外したスイープ。ここで計上）＋投信振替用円普通3,528,561＋子育て支援金779,490＋お小遣い0。ハイブリッド預金を含めても二重計上ではない（SBI証券側で除外済み）"
-              ],
-              [
-                "三井住友（妻）",
-                900813,
-                "2026-07-15",
-                "妻・ 残高別普通。LINEスクショ（21:02現在 ¥900,813）より手入力"
-              ]
-            ]
-          },
-          {
-            "label": "不動産",
-            "items": [
-              [
-                "自転車",
-                100000,
-                "2026-07-10",
-                "BSシート"
-              ],
-              [
-                "建物",
-                9500000,
-                "2026-07-10",
-                "BSシートの簿価。市場評価に変えたい場合は要相談"
-              ]
-            ]
-          }
-        ]
-      }
-    }
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2024-02": {
+  "as_of": "2024-02-13",
+  "keys": {
+   "gross_assets": 27787418,
+   "liabilities": 15296494,
+   "net_worth_total": 12490924,
+   "corporate": 0,
+   "individual": 55870,
+   "household": 8410590,
+   "investment": 9520958,
+   "realestate": 9800000,
+   "household_realestate": 18210590
+  },
+  "text": {
+   "as_of_label": "As of 2024-02-13"
+  },
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2024-03": {
+  "as_of": "2024-03-13",
+  "keys": {
+   "gross_assets": 28759368,
+   "liabilities": 15244607,
+   "net_worth_total": 13514761,
+   "corporate": 0,
+   "individual": 448133,
+   "household": 8801377,
+   "investment": 9709858,
+   "realestate": 9800000,
+   "household_realestate": 18601377
+  },
+  "text": {
+   "as_of_label": "As of 2024-03-13"
+  },
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2024-04": {
+  "as_of": "2024-04-12",
+  "keys": {
+   "gross_assets": 29815943,
+   "liabilities": 15192720,
+   "net_worth_total": 14623223,
+   "corporate": 0,
+   "individual": 211213,
+   "household": 9585508,
+   "investment": 10219222,
+   "realestate": 9800000,
+   "household_realestate": 19385508
+  },
+  "text": {
+   "as_of_label": "As of 2024-04-12"
+  },
+  "_source": "BSシート過去取込・負債推定＋カテゴリ内訳(検算OK)",
+  "_estimate_note": "負債は推定値（住宅ローン補間）"
+ },
+ "2024-05": {
+  "as_of": "2024-05-10",
+  "keys": {
+   "gross_assets": 29907672,
+   "liabilities": 15140833,
+   "net_worth_total": 14766839,
+   "corporate": 0,
+   "individual": 465453,
+   "household": 9177179,
+   "investment": 10465040,
+   "realestate": 9800000,
+   "household_realestate": 18977179
+  },
+  "text": {
+   "as_of_label": "As of 2024-05-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-06": {
+  "as_of": "2024-06-10",
+  "keys": {
+   "gross_assets": 30889156,
+   "liabilities": 15140833,
+   "net_worth_total": 15748323,
+   "corporate": 0,
+   "individual": 1231559,
+   "household": 8326406,
+   "investment": 11731191,
+   "realestate": 9600000,
+   "household_realestate": 17926406
+  },
+  "text": {
+   "as_of_label": "As of 2024-06-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-07": {
+  "as_of": "2024-07-11",
+  "keys": {
+   "gross_assets": 32008956,
+   "liabilities": 15140833,
+   "net_worth_total": 16868123,
+   "corporate": 0,
+   "individual": 1113868,
+   "household": 8728941,
+   "investment": 12566147,
+   "realestate": 9600000,
+   "household_realestate": 18328941
+  },
+  "text": {
+   "as_of_label": "As of 2024-07-11"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-08": {
+  "as_of": "2024-08-14",
+  "keys": {
+   "gross_assets": 30368370,
+   "liabilities": 15140833,
+   "net_worth_total": 15227537,
+   "corporate": 0,
+   "individual": 730435,
+   "household": 8690106,
+   "investment": 11347829,
+   "realestate": 9600000,
+   "household_realestate": 18290106
+  },
+  "text": {
+   "as_of_label": "As of 2024-08-14"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-09": {
+  "as_of": "2024-09-18",
+  "keys": {
+   "gross_assets": 30903509,
+   "liabilities": 15140833,
+   "net_worth_total": 15762676,
+   "corporate": 0,
+   "individual": 1102230,
+   "household": 8608235,
+   "investment": 11593044,
+   "realestate": 9600000,
+   "household_realestate": 18208235
+  },
+  "text": {
+   "as_of_label": "As of 2024-09-18"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-10": {
+  "as_of": "2024-10-10",
+  "keys": {
+   "gross_assets": 30727024,
+   "liabilities": 14880376,
+   "net_worth_total": 15846648,
+   "corporate": 0,
+   "individual": 343841,
+   "household": 8418935,
+   "investment": 12364248,
+   "realestate": 9600000,
+   "household_realestate": 18018935
+  },
+  "text": {
+   "as_of_label": "As of 2024-10-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-11": {
+  "as_of": "2024-11-12",
+  "keys": {
+   "gross_assets": 31935606,
+   "liabilities": 14818425,
+   "net_worth_total": 17117181,
+   "corporate": 0,
+   "individual": 794827,
+   "household": 8490899,
+   "investment": 13049880,
+   "realestate": 9600000,
+   "household_realestate": 18090899
+  },
+  "text": {
+   "as_of_label": "As of 2024-11-12"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2024-12": {
+  "as_of": "2024-12-11",
+  "keys": {
+   "gross_assets": 32982467,
+   "liabilities": 14818425,
+   "net_worth_total": 18164042,
+   "corporate": 0,
+   "individual": 1217579,
+   "household": 9045746,
+   "investment": 13119142,
+   "realestate": 9600000,
+   "household_realestate": 18645746
+  },
+  "text": {
+   "as_of_label": "As of 2024-12-11"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-01": {
+  "as_of": "2025-01-10",
+  "keys": {
+   "gross_assets": 32997688,
+   "liabilities": 14723774,
+   "net_worth_total": 18273914,
+   "corporate": 0,
+   "individual": 962041,
+   "household": 9051709,
+   "investment": 13383938,
+   "realestate": 9600000,
+   "household_realestate": 18651709
+  },
+  "text": {
+   "as_of_label": "As of 2025-01-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-02": {
+  "as_of": "2025-02-10",
+  "keys": {
+   "gross_assets": 33335586,
+   "liabilities": 14723774,
+   "net_worth_total": 18611812,
+   "corporate": 0,
+   "individual": 624135,
+   "household": 9642675,
+   "investment": 13468776,
+   "realestate": 9600000,
+   "household_realestate": 19242675
+  },
+  "text": {
+   "as_of_label": "As of 2025-02-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-03": {
+  "as_of": "2025-03-12",
+  "keys": {
+   "gross_assets": 32266131,
+   "liabilities": 14723774,
+   "net_worth_total": 17542357,
+   "corporate": 0,
+   "individual": 649985,
+   "household": 9479364,
+   "investment": 12536782,
+   "realestate": 9600000,
+   "household_realestate": 19079364
+  },
+  "text": {
+   "as_of_label": "As of 2025-03-12"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-04": {
+  "as_of": "2025-04-12",
+  "keys": {
+   "gross_assets": 31567567,
+   "liabilities": 14559603,
+   "net_worth_total": 17007964,
+   "corporate": 713434,
+   "individual": 64315,
+   "household": 9311741,
+   "investment": 11878077,
+   "realestate": 9600000,
+   "household_realestate": 18911741
+  },
+  "text": {
+   "as_of_label": "As of 2025-04-12"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-05": {
+  "as_of": "2025-05-10",
+  "keys": {
+   "gross_assets": 32859944,
+   "liabilities": 14517851,
+   "net_worth_total": 18342093,
+   "corporate": 56559,
+   "individual": 101841,
+   "household": 10221931,
+   "investment": 12879613,
+   "realestate": 9600000,
+   "household_realestate": 19821931
+  },
+  "text": {
+   "as_of_label": "As of 2025-05-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-06": {
+  "as_of": "2025-06-10",
+  "keys": {
+   "gross_assets": 33448627,
+   "liabilities": 14466290,
+   "net_worth_total": 18982337,
+   "corporate": 306213,
+   "individual": 412784,
+   "household": 9688211,
+   "investment": 13441419,
+   "realestate": 9600000,
+   "household_realestate": 19288211
+  },
+  "text": {
+   "as_of_label": "As of 2025-06-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-07": {
+  "as_of": "2025-07-13",
+  "keys": {
+   "gross_assets": 34409237,
+   "liabilities": 14466290,
+   "net_worth_total": 19942947,
+   "corporate": 1097623,
+   "individual": 105797,
+   "household": 9505202,
+   "investment": 14100615,
+   "realestate": 9600000,
+   "household_realestate": 19105202
+  },
+  "text": {
+   "as_of_label": "As of 2025-07-13"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-08": {
+  "as_of": "2025-08-12",
+  "keys": {
+   "gross_assets": 34854100,
+   "liabilities": 14466290,
+   "net_worth_total": 20387810,
+   "corporate": 938361,
+   "individual": 226867,
+   "household": 9641739,
+   "investment": 14447133,
+   "realestate": 9600000,
+   "household_realestate": 19241739
+  },
+  "text": {
+   "as_of_label": "As of 2025-08-12"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-09": {
+  "as_of": "2025-09-10",
+  "keys": {
+   "gross_assets": 35125238,
+   "liabilities": 14317228,
+   "net_worth_total": 20808010,
+   "corporate": 502658,
+   "individual": 39332,
+   "household": 10029323,
+   "investment": 14953925,
+   "realestate": 9600000,
+   "household_realestate": 19629323
+  },
+  "text": {
+   "as_of_label": "As of 2025-09-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-10": {
+  "as_of": "2025-10-10",
+  "keys": {
+   "gross_assets": 35788768,
+   "liabilities": 14268437,
+   "net_worth_total": 21520331,
+   "corporate": 582365,
+   "individual": 72355,
+   "household": 9512377,
+   "investment": 16021671,
+   "realestate": 9600000,
+   "household_realestate": 19112377
+  },
+  "text": {
+   "as_of_label": "As of 2025-10-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-11": {
+  "as_of": "2025-11-10",
+  "keys": {
+   "gross_assets": 35908151,
+   "liabilities": 14219608,
+   "net_worth_total": 21688543,
+   "corporate": 669609,
+   "individual": 159595,
+   "household": 9376250,
+   "investment": 16102697,
+   "realestate": 9600000,
+   "household_realestate": 18976250
+  },
+  "text": {
+   "as_of_label": "As of 2025-11-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2025-12": {
+  "as_of": "2025-12-11",
+  "keys": {
+   "gross_assets": 36503074,
+   "liabilities": 14170740,
+   "net_worth_total": 22332334,
+   "corporate": 578703,
+   "individual": 185221,
+   "household": 9375784,
+   "investment": 16763366,
+   "realestate": 9600000,
+   "household_realestate": 18975784
+  },
+  "text": {
+   "as_of_label": "As of 2025-12-11"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2026-01": {
+  "as_of": "2026-01-15",
+  "keys": {
+   "gross_assets": 39044018,
+   "liabilities": 14112057,
+   "net_worth_total": 24931961,
+   "corporate": 2397000,
+   "individual": 149435,
+   "household": 9241173,
+   "investment": 17656410,
+   "realestate": 9600000,
+   "household_realestate": 18841173
+  },
+  "text": {
+   "as_of_label": "As of 2026-01-15"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2026-02": {
+  "as_of": "2026-02-10",
+  "keys": {
+   "gross_assets": 36572694,
+   "liabilities": 12262890,
+   "net_worth_total": 24309804,
+   "corporate": 1896847,
+   "individual": 43425,
+   "household": 7292033,
+   "investment": 17740389,
+   "realestate": 9600000,
+   "household_realestate": 16892033
+  },
+  "text": {
+   "as_of_label": "As of 2026-02-10"
+  },
+  "_source": "BSシート過去取込(2/10時点に修正)＋カテゴリ内訳(検算OK)"
+ },
+ "2026-03": {
+  "as_of": "2026-03-10",
+  "keys": {
+   "gross_assets": 36017366,
+   "liabilities": 12216474,
+   "net_worth_total": 23800892,
+   "corporate": 1355478,
+   "individual": 239026,
+   "household": 7280307,
+   "investment": 17542555,
+   "realestate": 9600000,
+   "household_realestate": 16880307
+  },
+  "text": {
+   "as_of_label": "As of 2026-03-10"
+  },
+  "_source": "BSシート過去取込＋カテゴリ内訳(検算OK)"
+ },
+ "2026-04": {
+  "as_of": "2026-04-15",
+  "keys": {
+   "gross_assets": 37817824,
+   "liabilities": 12162831,
+   "net_worth_total": 25654993,
+   "corporate": 1863252,
+   "individual": 314262,
+   "household": 7831236,
+   "investment": 18209074,
+   "realestate": 9600000,
+   "household_realestate": 17431236
+  },
+  "text": {
+   "as_of_label": "As of 2026-04-15"
+  },
+  "_source": "PDF(2604-2605 Report.pdf)から明細取込。検算一致"
+ },
+ "2026-05": {
+  "as_of": "2026-05-20",
+  "keys": {
+   "gross_assets": 39182505,
+   "liabilities": 12118932,
+   "net_worth_total": 27063573,
+   "corporate": 1755172,
+   "individual": 79028,
+   "household": 8687453,
+   "investment": 19060852,
+   "realestate": 9600000,
+   "household_realestate": 18287453
+  },
+  "text": {
+   "as_of_label": "As of 2026-05-20"
+  },
+  "_source": "PDF(2604-2605 Report.pdf)から明細取込。検算一致"
+ },
+ "2026-07": {
+  "as_of": "2026-07-15",
+  "keys": {
+   "corporate": 801031,
+   "individual": 1779000,
+   "household": 7793117,
+   "investment": 20470464,
+   "realestate": 9600000,
+   "liabilities": 12031034,
+   "gross_assets": 40443612,
+   "net_worth_total": 28412578,
+   "household_realestate": 17393117
+  },
+  "text": {
+   "as_of_label": "As of 2026-07-15"
   }
+ },
+ "2026-08": {
+  "as_of": "2026-08-18",
+  "keys": {
+   "corporate": 337202,
+   "individual": 1779000,
+   "household": 8012510,
+   "investment": 21441792,
+   "realestate": 9600000,
+   "liabilities": 11999254,
+   "gross_assets": 41170504,
+   "net_worth_total": 29171250,
+   "household_realestate": 17612510
+  },
+  "text": {
+   "as_of_label": "As of 2026-08-18"
+  },
+  "breakdown": {
+   "corporate": [
+    [
+     "eBay（法人・未受取）",
+     -4936,
+     "2026-08-18",
+     "-30.91USD×実勢159.7。eBayへの手数料等の支払超過（マイナス残高）。受取ではないため掛率97.8%は適用しない"
+    ],
+    [
+     "Payoneer（法人）",
+     2407,
+     "2026-08-18",
+     "15.41USD×掛率156.1866（実勢159.7×97.8%）。法人事業資金"
+    ],
+    [
+     "ドコモSMTBネット銀行（法人）",
+     339731,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ]
+   ],
+   "individual": [
+    [
+     "小規模企業共済（本人）",
+     1695000,
+     "2026-07-15",
+     "退職金積立（中小機構）。掛金累計/解約手当金相当。年1回の現況通知で更新"
+    ],
+    [
+     "小規模企業共済（妻）",
+     84000,
+     "2026-07-15",
+     "退職金積立（中小機構）。掛金累計/解約手当金相当。年1回の現況通知で更新"
+    ]
+   ],
+   "household": [
+    [
+     "三井住友（本人・口座A）",
+     187627,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "三井住友（本人・口座B）",
+     194344,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "auPay（妻）",
+     25003,
+     "2026-08-18",
+     "手入力（LINEで数字のみ受領）"
+    ],
+    [
+     "auPay（本人）",
+     104464,
+     "2026-08-18",
+     "auPay残高（本人・手入力）"
+    ],
+    [
+     "コメ兵ポイント",
+     43100,
+     "2026-07-15",
+     "コメ兵の店舗限定ポイント",
+     {
+      "expiry": "2027-04-13"
+     }
+    ],
+    [
+     "メルカリ（本人）",
+     125064,
+     "2026-08-18",
+     "売上金118,877＋メルカリポイント6,187P（1P=1円）。前月と同じ計上基準"
+    ],
+    [
+     "メルカリ（妻）",
+     236889,
+     "2026-08-18",
+     "売上金234,084＋メルカリポイント2,805P（1P=1円）。前月と同じ計上基準。ビットコイン等72,794は別途 投資カテゴリで計上"
+    ],
+    [
+     "みずほ銀行（本人）",
+     239590,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "PayPay（本人）",
+     489021,
+     "2026-08-18",
+     "PayPay残高（本人・手入力）。運用ポイント432,435は投資カテゴリで別計上"
+    ],
+    [
+     "PayPay銀行（妻）",
+     15063,
+     "2026-08-18",
+     "PayPay銀行 （口座番号は非公開） 円普通預金（妻）"
+    ],
+    [
+     "PayPay（妻）",
+     374289,
+     "2026-08-18",
+     "PayPay残高（妻名義・手入力）。使えるポイント10,601ptは方針どおり除外"
+    ],
+    [
+     "ドコモSMTBネット銀行（妻）",
+     300968,
+     "2026-08-18",
+     "（支店・口座番号は非公開） 代表口座 円普通（妻）。2026年に「住信SBIネット銀行」→「ドコモSMTBネット銀行」へ行名変更。※目的別・ハイブリッド預金があれば別途追加"
+    ],
+    [
+     "ドコモSMTBネット銀行（個人・目的別合算）",
+     4860812,
+     "2026-08-18",
+     "目的別口座を合算：代表口座 円普通163,579＋代表口座 SBIハイブリッド387,474＋投信振り替え用3,529,959＋子育て系支援金779,800＋お小遣い0。ハイブリッド預金はSBI証券側で除外済みのため二重計上ではない"
+    ],
+    [
+     "三井住友（妻）",
+     816276,
+     "2026-08-18",
+     "妻・（支店・口座番号は非公開） 残高別普通。LINEスクショ（8/18 20:49現在 ¥816,276）より手入力"
+    ]
+   ],
+   "investment": [
+    [
+     "iDeCo（本人）",
+     4993072,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "iDeCo（妻）",
+     2511558,
+     "2026-08-18",
+     "bookmarklet 取得。SBIベネフィット・システムズ。拠出金累計1,231,000 / 損益+1,280,558（+104.0%）"
+    ],
+    [
+     "メルカリ ビットコイン等（妻）",
+     72794,
+     "2026-08-18",
+     "メルカリアプリ内「ビットコイン等」評価額（妻）。市場連動のため投資カテゴリ。2026-08から計上開始（前月まで未把握）"
+    ],
+    [
+     "マネックス証券（旧NISA）",
+     413511,
+     "2026-07-09",
+     "bookmarklet 取得 / 旧NISA"
+    ],
+    [
+     "PayPayポイント運用（本人）",
+     432435,
+     "2026-08-18",
+     "PayPayポイント運用の評価額（本人）。運用損益は前月比で確認"
+    ],
+    [
+     "SBI証券（子・長女）",
+     2405969,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "SBI証券（本人）",
+     3547470,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "SBI証券（妻）",
+     3280276,
+     "2026-08-18",
+     "bookmarklet 取得。投資信託のみ（評価損益 +1,447,086 / +78.93%）"
+    ],
+    [
+     "SBI証券（子・長男）",
+     2210123,
+     "2026-08-18",
+     "bookmarklet 取得"
+    ],
+    [
+     "THEO（AI運用）",
+     1574584,
+     "2026-07-09",
+     "bookmarklet 取得"
+    ]
+   ],
+   "realestate": [
+    [
+     "自転車",
+     100000,
+     "2026-07-10",
+     "BSシート"
+    ],
+    [
+     "建物（BS簿価）",
+     9500000,
+     "2026-07-10",
+     "BSシートの簿価。市場評価に変えたい場合は要相談"
+    ]
+   ],
+   "liabilities": [
+    [
+     "住宅ローン① みずほ（1.425%）",
+     11686278,
+     "2026-08-18",
+     "毎月¥45,695・変動1.425%。残高11,686,278に対し完済まで利息 約¥2,250,635（残305ヶ月/約25.4年・2051年完済見込）",
+     {
+      "monthly_payment": 45695,
+      "interest_to_payoff": 2250635
+     }
+    ],
+    [
+     "奨学金（第一種・無利子）",
+     312976,
+     "2026-07-15",
+     "無利子（貸与1,408,000=返還総額）・完済まで利息¥0。残32回×¥9,777(最終¥9,889)",
+     {
+      "monthly_payment": 9777,
+      "interest_to_payoff": 0
+     }
+    ]
+   ],
+   "household_realestate": {
+    "grouped": true,
+    "groups": [
+     {
+      "label": "家計",
+      "items": [
+       [
+        "三井住友（本人・口座A）",
+        187627,
+        "2026-08-18",
+        "bookmarklet 取得"
+       ],
+       [
+        "三井住友（本人・口座B）",
+        194344,
+        "2026-08-18",
+        "bookmarklet 取得"
+       ],
+       [
+        "auPay（妻）",
+        25003,
+        "2026-08-18",
+        "手入力（LINEで数字のみ受領）"
+       ],
+       [
+        "auPay（本人）",
+        104464,
+        "2026-08-18",
+        "auPay残高（本人・手入力）"
+       ],
+       [
+        "コメ兵ポイント",
+        43100,
+        "2026-07-15",
+        "コメ兵の店舗限定ポイント",
+        {
+         "expiry": "2027-04-13"
+        }
+       ],
+       [
+        "メルカリ（本人）",
+        125064,
+        "2026-08-18",
+        "売上金118,877＋メルカリポイント6,187P（1P=1円）。前月と同じ計上基準"
+       ],
+       [
+        "メルカリ（妻）",
+        236889,
+        "2026-08-18",
+        "売上金234,084＋メルカリポイント2,805P（1P=1円）。前月と同じ計上基準。ビットコイン等72,794は別途 投資カテゴリで計上"
+       ],
+       [
+        "みずほ銀行（本人）",
+        239590,
+        "2026-08-18",
+        "bookmarklet 取得"
+       ],
+       [
+        "PayPay（本人）",
+        489021,
+        "2026-08-18",
+        "PayPay残高（本人・手入力）。運用ポイント432,435は投資カテゴリで別計上"
+       ],
+       [
+        "PayPay銀行（妻）",
+        15063,
+        "2026-08-18",
+        "PayPay銀行 （口座番号は非公開） 円普通預金（妻）"
+       ],
+       [
+        "PayPay（妻）",
+        374289,
+        "2026-08-18",
+        "PayPay残高（妻名義・手入力）。使えるポイント10,601ptは方針どおり除外"
+       ],
+       [
+        "ドコモSMTBネット銀行（妻）",
+        300968,
+        "2026-08-18",
+        "（支店・口座番号は非公開） 代表口座 円普通（妻）。2026年に「住信SBIネット銀行」→「ドコモSMTBネット銀行」へ行名変更。※目的別・ハイブリッド預金があれば別途追加"
+       ],
+       [
+        "ドコモSMTBネット銀行（個人・目的別合算）",
+        4860812,
+        "2026-08-18",
+        "目的別口座を合算：代表口座 円普通163,579＋代表口座 SBIハイブリッド387,474＋投信振り替え用3,529,959＋子育て系支援金779,800＋お小遣い0。ハイブリッド預金はSBI証券側で除外済みのため二重計上ではない"
+       ],
+       [
+        "三井住友（妻）",
+        816276,
+        "2026-08-18",
+        "妻・（支店・口座番号は非公開） 残高別普通。LINEスクショ（8/18 20:49現在 ¥816,276）より手入力"
+       ]
+      ]
+     },
+     {
+      "label": "不動産",
+      "items": [
+       [
+        "自転車",
+        100000,
+        "2026-07-10",
+        "BSシート"
+       ],
+       [
+        "建物（BS簿価）",
+        9500000,
+        "2026-07-10",
+        "BSシートの簿価。市場評価に変えたい場合は要相談"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ }
 };
 /* DASHBOARD_HISTORY_END */
 </script>
