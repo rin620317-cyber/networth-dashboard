@@ -155,6 +155,32 @@
   .alloc-legend .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
   .alloc-legend .dot.cash{background:var(--gold)} .alloc-legend .dot.inv{background:var(--teal)}
   .alloc-pct{color:var(--ink-mute)}
+  /* --- 動かせる原資（実弾）--- */
+  .fuel-card.hidden{display:none}
+  .fuel-hero{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:4px 0 14px}
+  .fuel-hero .fv{font-size:clamp(1.7rem,5vw,2.5rem);font-weight:800;letter-spacing:-.02em;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+  .fuel-hero .fl{font-size:.74rem;color:var(--ink-sub)}
+  .fuel-rows{display:flex;flex-direction:column;gap:0;font-size:.82rem;font-variant-numeric:tabular-nums}
+  .fuel-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .fuel-row .n{color:var(--ink-sub)}
+  .fuel-row .n small{display:block;font-size:.66rem;color:var(--ink-mute);margin-top:1px}
+  .fuel-row .a{font-weight:700;white-space:nowrap;color:var(--ink)}
+  .fuel-row.minus .a{color:var(--bad)}
+  .fuel-row.sub{border-bottom:1px solid var(--line2)}
+  .fuel-row.sub .n,.fuel-row.sub .a{color:var(--ink);font-weight:700}
+  .fuel-row.total{border-bottom:0;padding-top:11px}
+  .fuel-row.total .n{color:var(--gold-soft);font-weight:800;font-size:.9rem}
+  .fuel-row.total .a{color:var(--gold-soft);font-weight:800;font-size:1.05rem}
+  .fuel-out{margin-top:12px;font-size:.7rem;color:var(--ink-mute);line-height:1.7}
+  .fuel-out b{color:var(--ink-sub);font-weight:600}
+  .fuel-yield{margin-top:13px;display:grid;gap:9px;grid-template-columns:1fr}
+  @media(min-width:640px){.fuel-yield{grid-template-columns:1fr 1fr}}
+  .fuel-y{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .fuel-y .yk{font-size:.68rem;color:var(--ink-mute);letter-spacing:.04em}
+  .fuel-y .yv{font-size:1.15rem;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;margin-top:2px}
+  .fuel-y .ys{font-size:.68rem;color:var(--ink-sub);margin-top:3px;line-height:1.55}
+  .fuel-gap{margin-top:12px;font-size:.78rem;line-height:1.6;color:var(--ink);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .fuel-gap b{color:var(--gold-soft)}
   .alloc-verdict{margin-top:11px;font-size:.8rem;line-height:1.5;color:var(--ink);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
   .alloc-verdict b{color:var(--gold)}
   .alloc-verdict.ok b{color:var(--good)}
@@ -643,6 +669,32 @@
             <label>分散 <input type="number" id="allocMonths" min="1" max="60" step="1"> ヶ月</label>
           </div>
         </div>
+      </div>
+
+      <div class="card fuel-card" id="fuelPanel">
+        <div class="card-h">
+          <div class="lbl">🎯 いま動かせる原資（実弾）</div>
+          <div class="as">拘束資産を除いた手元の弾</div>
+        </div>
+        <div class="fuel-hero">
+          <span class="fv" id="fuelValue">¥0</span>
+          <span class="fl">純資産のうち、いますぐ投資・返済・事業に振り向けられる金額</span>
+        </div>
+        <div class="fuel-rows" id="fuelRows"></div>
+        <div class="fuel-yield">
+          <div class="fuel-y">
+            <div class="yk">4%取り崩し（課税口座）</div>
+            <div class="yv" id="fuelInc1">¥0 / 月</div>
+            <div class="ys">この原資だけで得られる不労所得の目安</div>
+          </div>
+          <div class="fuel-y">
+            <div class="yk">4%取り崩し（NISA内・非課税）</div>
+            <div class="yv" id="fuelInc2">¥0 / 月</div>
+            <div class="ys">同じ元本でも非課税ならここまで伸びる</div>
+          </div>
+        </div>
+        <div class="fuel-gap" id="fuelGap"></div>
+        <div class="fuel-out" id="fuelOut"></div>
       </div>
 
       <div class="card fp-card">
@@ -2610,6 +2662,7 @@ window.DASHBOARD_HISTORY = {
       if(sel && sel.value !== monthKey) sel.value = monthKey;
       updateComparison();
       renderAllocation();
+      renderDeployable();
       renderFPAdvice();
       renderProjection();
     };
@@ -2663,6 +2716,71 @@ window.DASHBOARD_HISTORY = {
       try { return Object.assign({}, ALLOC_DEFAULT, JSON.parse(localStorage.getItem(ALLOC_KEY)||'{}')); }
       catch(e){ return Object.assign({}, ALLOC_DEFAULT); }
     }
+    /* 動かせる原資（実弾）＝ (家計＋投資) − iDeCo − 子の教育資金 − 生活防衛資金
+   自宅・法人・小規模企業共済は最初から除外（売れない／別勘定／拘束） */
+    function renderDeployable(){
+      const panel = document.getElementById('fuelPanel');
+      if(!panel) return;
+      const snap = history[window.__hfoCurrentMonth];
+      const k = snap && snap.keys;
+      const bd = snap && snap.breakdown;
+      if(!k || !bd || k.household === undefined || k.investment === undefined){
+        panel.classList.add('hidden'); return;
+      }
+      panel.classList.remove('hidden');
+
+      const sum = (arr, test) => (arr||[]).reduce((a,it)=> a + (test(String(it[0]||'')) ? (it[1]||0) : 0), 0);
+      const inv = bd.investment || [];
+      const ideco = sum(inv, s => /ideco/i.test(s));
+      const kids  = sum(inv, s => s.indexOf('子・') >= 0);
+      const emerg = loadAllocSettings().emergency || 0;
+
+      const cash = k.household, invest = k.investment;
+      const pool = cash + invest;
+      const fuel = Math.max(0, pool - ideco - kids - emerg);
+
+      document.getElementById('fuelValue').textContent = '¥'+fmtInt(fuel);
+
+      const rows = [
+        ['家計（現金・預金等）', cash, ''],
+        ['投資（証券・iDeCo含む）', invest, ''],
+        ['個人の金融資産', pool, 'sub'],
+        ['iDeCo（本人＋妻）', -ideco, 'minus', '60歳まで引き出せない'],
+        ['子の教育資金', -kids, 'minus', '数年後に確実に出ていく'],
+        ['生活防衛資金', -emerg, 'minus', '崩せない（配分パネルの設定値）'],
+        ['動かせる原資（実弾）', fuel, 'total']
+      ];
+      document.getElementById('fuelRows').innerHTML = rows.map(r=>{
+        const cls = r[2] ? ' '+r[2] : '';
+        const note = r[3] ? '<small>'+r[3]+'</small>' : '';
+        const sign = r[1] < 0 ? '−¥' : '¥';
+        return '<div class="fuel-row'+cls+'"><span class="n">'+r[0]+note+'</span>'
+             + '<span class="a">'+sign+fmtInt(Math.abs(r[1]))+'</span></div>';
+      }).join('');
+
+      const TAX = 0.20315;
+      const m1 = fuel*0.04*(1-TAX)/12, m2 = fuel*0.04/12;
+      document.getElementById('fuelInc1').textContent = '¥'+fmtInt(Math.round(m1))+' / 月';
+      document.getElementById('fuelInc2').textContent = '¥'+fmtInt(Math.round(m2))+' / 月';
+
+      const target = 100000;
+      const need = target*12/(0.04*(1-TAX));
+      const gap = need - fuel;
+      document.getElementById('fuelGap').innerHTML = gap > 0
+        ? '不労所得で<b>月10万円</b>を得るには元本 <b>¥'+fmtInt(Math.round(need))+'</b> が必要。'
+          + 'いまの実弾との差は <b>¥'+fmtInt(Math.round(gap))+'</b>。'
+        : '<b>月10万円</b>の不労所得に必要な元本（¥'+fmtInt(Math.round(need))+'）に到達しています。';
+
+      const excl = [];
+      if(k.realestate) excl.push('自宅・不動産 ¥'+fmtInt(k.realestate));
+      if(k.corporate)  excl.push('法人 ¥'+fmtInt(k.corporate));
+      if(k.individual) excl.push('小規模企業共済 ¥'+fmtInt(k.individual));
+      document.getElementById('fuelOut').innerHTML =
+        '<b>最初から除外しているもの：</b>' + excl.join(' ／ ')
+        + '<br>自宅は住むための資産で1円も生まず、法人は別勘定、共済は廃業/65歳まで実質拘束のため。'
+        + '※ 4%取り崩しは一般的な目安であり、将来を保証するものではありません。投資助言ではありません。';
+    }
+
     function renderAllocation(){
       const panel = document.getElementById('allocPanel');
       if(!panel) return;
@@ -2707,6 +2825,7 @@ window.DASHBOARD_HISTORY = {
       }
     }
     window.__hfoRenderAllocation = renderAllocation;
+    window.__hfoRenderDeployable = renderDeployable;
 
     // FPの視点：選択中の月と前年同月を比較し、観点コメントを自動生成（クリック更新対応）
     function renderFPAdvice(){
@@ -2912,6 +3031,7 @@ window.DASHBOARD_HISTORY = {
         s[allocMap[id]] = val;
         try{ localStorage.setItem(ALLOC_KEY, JSON.stringify(s)); }catch(e){}
         renderAllocation();
+        renderDeployable();
       });
     });
 
