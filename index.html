@@ -155,6 +155,43 @@
   .alloc-legend .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
   .alloc-legend .dot.cash{background:var(--gold)} .alloc-legend .dot.inv{background:var(--teal)}
   .alloc-pct{color:var(--ink-mute)}
+  /* --- 65歳からの年金と老後資金 --- */
+  .pens-card.hidden{display:none}
+  .pens-grid{display:grid;gap:10px;grid-template-columns:1fr;margin:4px 0 14px}
+  @media(min-width:700px){.pens-grid{grid-template-columns:repeat(3,1fr)}}
+  .pens-box{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
+  .pens-box .pk{font-size:.68rem;color:var(--ink-mute);letter-spacing:.04em}
+  .pens-box .pv{font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums;margin-top:3px;color:var(--ink)}
+  .pens-box .ps{font-size:.68rem;color:var(--ink-sub);margin-top:4px;line-height:1.55}
+  .pens-box.gap .pv{color:var(--bad)}
+  .pens-box.need{border-color:var(--gold);border-top:3px solid var(--gold)}
+  .pens-box.need .pv{color:var(--gold-soft)}
+  .pens-rows{display:flex;flex-direction:column;font-size:.82rem;font-variant-numeric:tabular-nums;margin-bottom:14px}
+  .pens-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .pens-row .n{color:var(--ink-sub)}
+  .pens-row .n small{display:block;font-size:.66rem;color:var(--ink-mute);margin-top:1px}
+  .pens-row .a{font-weight:700;white-space:nowrap;color:var(--ink)}
+  .pens-row.sum{border-bottom:1px solid var(--line2)}
+  .pens-row.sum .n,.pens-row.sum .a{color:var(--ink);font-weight:800}
+  .pens-scen{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .pens-sc{display:flex;align-items:center;gap:10px;font-size:.78rem}
+  .pens-sc .lab{width:5.5em;color:var(--ink-sub);flex:none}
+  .pens-sc .track{flex:1;height:15px;border-radius:8px;background:rgba(255,255,255,.05);position:relative;overflow:hidden}
+  .pens-sc .fill{height:100%;background:var(--teal)}
+  .pens-sc .fill.ng{background:var(--bad)}
+  .pens-sc .line{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
+  .pens-sc .val{width:6.5em;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;flex:none}
+  .pens-sc .val.ok{color:var(--good)} .pens-sc .val.ng{color:var(--bad)}
+  .pens-tl{margin-top:14px;display:flex;flex-direction:column;gap:0;font-size:.78rem}
+  .pens-tl .t{display:flex;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .pens-tl .t:last-child{border-bottom:0}
+  .pens-tl .ty{width:7.5em;color:var(--gold-soft);font-weight:700;flex:none;font-variant-numeric:tabular-nums}
+  .pens-tl .tw{color:var(--ink-sub)}
+  .pens-ctrl{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.72rem;color:var(--ink-sub)}
+  .pens-ctrl label{display:flex;align-items:center;gap:6px}
+  .pens-ctrl input{width:7.5em;padding:5px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
+  .pens-note{margin-top:11px;font-size:.7rem;color:var(--ink-mute);line-height:1.7}
+
   /* --- 動かせる原資（実弾）--- */
   .fuel-card.hidden{display:none}
   .fuel-hero{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:4px 0 14px}
@@ -695,6 +732,45 @@
         </div>
         <div class="fuel-gap" id="fuelGap"></div>
         <div class="fuel-out" id="fuelOut"></div>
+      </div>
+
+      <div class="card pens-card" id="pensPanel">
+        <div class="card-h">
+          <div class="lbl">👴 65歳からの年金と老後資金</div>
+          <div class="as">ねんきんネット実額ベース</div>
+        </div>
+        <div class="pens-grid">
+          <div class="pens-box">
+            <div class="pk">世帯の年金（月額）</div>
+            <div class="pv" id="pensTotal">¥0</div>
+            <div class="ps" id="pensBreak"></div>
+          </div>
+          <div class="pens-box gap">
+            <div class="pk">生活費との差（月額）</div>
+            <div class="pv" id="pensGap">¥0</div>
+            <div class="ps" id="pensGapNote"></div>
+          </div>
+          <div class="pens-box need">
+            <div class="pk">必要な老後資金</div>
+            <div class="pv" id="pensNeed">¥0</div>
+            <div class="ps" id="pensNeedNote"></div>
+          </div>
+        </div>
+
+        <div class="pens-rows" id="pensRows"></div>
+
+        <div style="font-size:.8rem;font-weight:700;margin-bottom:8px">65歳時点の到達見込み（実質リターン別）</div>
+        <div class="pens-scen" id="pensScen"></div>
+
+        <div class="pens-tl" id="pensTl"></div>
+
+        <div class="pens-ctrl">
+          <label>生活費 ¥<input type="number" id="pensLiving" min="0" step="10000"></label>
+          <label>月の積立 ¥<input type="number" id="pensSaving" min="0" step="1000"></label>
+          <label>教育費の想定 ¥<input type="number" id="pensEdu" min="0" step="1000000"></label>
+          <label>受取年数 <input type="number" id="pensYears" min="1" max="45" step="1"> 年</label>
+        </div>
+        <div class="pens-note" id="pensNote"></div>
       </div>
 
       <div class="card fp-card">
@@ -2663,6 +2739,7 @@ window.DASHBOARD_HISTORY = {
       updateComparison();
       renderAllocation();
       renderDeployable();
+      renderPension();
       renderFPAdvice();
       renderProjection();
     };
@@ -2716,7 +2793,93 @@ window.DASHBOARD_HISTORY = {
       try { return Object.assign({}, ALLOC_DEFAULT, JSON.parse(localStorage.getItem(ALLOC_KEY)||'{}')); }
       catch(e){ return Object.assign({}, ALLOC_DEFAULT); }
     }
-    /* 動かせる原資（実弾）＝ (家計＋投資) − iDeCo − 子の教育資金 − 生活防衛資金
+    /* 65歳からの年金と老後資金。年金額はねんきんネットの実額（2026-08取得）。
+   金融資産は選択中の月の実績から取り、そこに積立を足して65歳まで運用したシナリオを出す。 */
+    const PENSION = {
+      selfMonthly: 95402,          // 夫：基礎828,235/年＋厚生（標準報酬88,000維持）→ 月額
+      spouseMonthly: 68818,        // 妻：ねんきんネット試算の受給予定額（基礎68,058＋厚生760）
+      selfPensionYear: 2052,       // 夫65歳（1987年3月生まれ）
+      spousePensionYear: 2049,     // 妻65歳（1984年7月生まれ）
+      loanPayoffYear: 2051         // 住宅ローン完済（2051年12月・夫64歳9ヶ月）
+    };
+    const PENS_KEY = 'hfo_pension_v1';
+    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30 };
+    function loadPensSettings(){
+      try{ return Object.assign({}, PENS_DEFAULT, JSON.parse(localStorage.getItem(PENS_KEY)||'{}')); }
+      catch(e){ return Object.assign({}, PENS_DEFAULT); }
+    }
+    function projectTo65(start, monthlySaving, eduTotal, realRate, years, eduFrom, eduSpan){
+      let bal = start;
+      for(let y=0; y<years; y++){
+        bal *= (1+realRate);
+        bal += monthlySaving*12;
+        if(y>=eduFrom && y<eduFrom+eduSpan) bal -= eduTotal/eduSpan;
+      }
+      return bal;
+    }
+    function renderPension(){
+      const panel = document.getElementById('pensPanel');
+      if(!panel) return;
+      const snap = history[window.__hfoCurrentMonth];
+      const k = snap && snap.keys;
+      if(!k || k.household===undefined || k.investment===undefined){ panel.classList.add('hidden'); return; }
+      panel.classList.remove('hidden');
+
+      const s = loadPensSettings();
+      const setIf=(id,v)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=v; };
+      setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensEdu',s.edu); setIf('pensYears',s.years);
+
+      const pension = PENSION.selfMonthly + PENSION.spouseMonthly;
+      const gap = Math.max(0, s.living - pension);
+      const need = gap*12*s.years;
+
+      document.getElementById('pensTotal').textContent = '¥'+fmtInt(pension);
+      document.getElementById('pensBreak').innerHTML =
+        '本人 ¥'+fmtInt(PENSION.selfMonthly)+' ／ 妻 ¥'+fmtInt(PENSION.spouseMonthly);
+      document.getElementById('pensGap').textContent = '−¥'+fmtInt(gap);
+      document.getElementById('pensGapNote').textContent = '生活費 ¥'+fmtInt(s.living)+' − 年金 ¥'+fmtInt(pension);
+      document.getElementById('pensNeed').textContent = '¥'+fmtInt(Math.round(need));
+      document.getElementById('pensNeedNote').textContent = '月 ¥'+fmtInt(gap)+' × 12 × '+s.years+'年';
+
+      document.getElementById('pensRows').innerHTML = [
+        ['老齢基礎年金＋老齢厚生年金（本人）', PENSION.selfMonthly, '60歳まで加入で基礎はほぼ満額'],
+        ['老齢基礎年金＋老齢厚生年金（妻）', PENSION.spouseMonthly, '第3号期間が長くほぼ基礎年金のみ'],
+        ['世帯合計（月額）', pension, '', 'sum']
+      ].map(r=>'<div class="pens-row'+(r[3]?' '+r[3]:'')+'"><span class="n">'+r[0]
+        +(r[2]?'<small>'+r[2]+'</small>':'')+'</span><span class="a">¥'+fmtInt(r[1])+'</span></div>').join('');
+
+      // 65歳までの年数と、教育費が出ていく期間を選択月から算出
+      const baseYear = parseInt((snap.as_of||'').slice(0,4),10) || new Date().getFullYear();
+      const years = Math.max(1, PENSION.selfPensionYear - baseYear);
+      const eduFrom = Math.max(0, 2033 - baseYear), eduSpan = 11;
+      const startAssets = k.household + k.investment + (k.individual||0);
+
+      document.getElementById('pensScen').innerHTML = [0.01,0.02,0.03].map(r=>{
+        const v = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan);
+        const ok = v>=need;
+        const pctOfNeed = need? Math.min(100, v/need*100) : 100;
+        return '<div class="pens-sc"><span class="lab">実質 '+(r*100).toFixed(0)+'%</span>'
+          + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/(need*1.8)*100).toFixed(1)+'%"></span>'
+          + '<span class="line" style="left:'+(100/1.8).toFixed(1)+'%" title="必要額ライン"></span></span>'
+          + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')+'</span></div>';
+      }).join('');
+
+      document.getElementById('pensTl').innerHTML = [
+        [PENSION.spousePensionYear+'年8月', '妻 65歳・年金開始'],
+        [PENSION.loanPayoffYear+'年12月', '住宅ローン完済（本人64歳9ヶ月）'],
+        [PENSION.selfPensionYear+'年3月', '本人 65歳・年金開始']
+      ].map(t=>'<div class="t"><span class="ty">'+t[0]+'</span><span class="tw">'+t[1]+'</span></div>').join('');
+
+      document.getElementById('pensNote').innerHTML =
+        '起点となる金融資産 <b>¥'+fmtInt(startAssets)+'</b>（家計＋投資＋小規模企業共済）を '+years+'年間運用した場合の試算。'
+        + '自宅・法人は含まない。教育費は '+(2033)+'〜'+(2033+eduSpan-1)+'年に分散して支出する前提。'
+        + '<br>「実質リターン」は物価上昇を差し引いた後の利回り（名目5%・インフレ2%なら実質3%）。'
+        + '年金額は2026年8月時点のねんきんネット実額で、マクロ経済スライドにより変動する。'
+        + '※将来を保証するものではなく、投資助言でもありません。';
+    }
+    window.__hfoRenderPension = renderPension;
+
+/* 動かせる原資（実弾）＝ (家計＋投資) − iDeCo − 子の教育資金 − 生活防衛資金
    自宅・法人・小規模企業共済は最初から除外（売れない／別勘定／拘束） */
     function renderDeployable(){
       const panel = document.getElementById('fuelPanel');
@@ -3032,6 +3195,22 @@ window.DASHBOARD_HISTORY = {
         try{ localStorage.setItem(ALLOC_KEY, JSON.stringify(s)); }catch(e){}
         renderAllocation();
         renderDeployable();
+      });
+    });
+
+    // 老後パネルの設定入力（localStorageへ保存して再描画）
+    ['pensLiving','pensSaving','pensEdu','pensYears'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      el.addEventListener('input',()=>{
+        let val=parseInt(String(el.value).replace(/[^0-9-]/g,''),10);
+        if(isNaN(val)) return;
+        val=Math.max(0,val);
+        if(id==='pensYears') val=Math.min(45,Math.max(1,val));
+        const map={pensLiving:'living',pensSaving:'saving',pensEdu:'edu',pensYears:'years'};
+        const st=loadPensSettings(); st[map[id]]=val;
+        try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){}
+        renderPension();
       });
     });
 
