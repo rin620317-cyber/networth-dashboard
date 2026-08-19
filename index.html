@@ -155,6 +155,39 @@
   .alloc-legend .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
   .alloc-legend .dot.cash{background:var(--gold)} .alloc-legend .dot.inv{background:var(--teal)}
   .alloc-pct{color:var(--ink-mute)}
+  /* --- 二拠点生活（朝来）--- */
+  .asago-card.hidden{display:none}
+  .asago-next{background:linear-gradient(135deg,rgba(45,212,191,.10),rgba(212,175,110,.07));border:1px solid var(--teal);border-radius:12px;padding:14px 16px;margin:4px 0 16px}
+  .asago-next .nk{font-size:.68rem;letter-spacing:.16em;color:var(--teal);font-weight:700}
+  .asago-next .nv{font-size:1.05rem;font-weight:700;line-height:1.55;margin-top:5px;color:var(--ink)}
+  .asago-next .nd{font-size:.72rem;color:var(--ink-sub);margin-top:5px;line-height:1.6}
+  .asago-prog{display:flex;align-items:center;gap:11px;margin-bottom:16px;font-size:.76rem}
+  .asago-prog .pt{flex:1;height:9px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden}
+  .asago-prog .pf{height:100%;background:var(--teal)}
+  .asago-prog .pn{color:var(--ink-sub);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .asago-ph{border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:10px;background:rgba(255,255,255,.02)}
+  .asago-ph.active{border-color:var(--teal);background:rgba(45,212,191,.05)}
+  .asago-ph.done{opacity:.55}
+  .asago-ph-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+  .asago-ph-t{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .asago-ph-m{font-size:.68rem;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+  .asago-task{display:flex;align-items:flex-start;gap:9px;padding:5px 0;font-size:.8rem;line-height:1.55;cursor:pointer}
+  .asago-task input{margin-top:3px;accent-color:var(--teal);width:15px;height:15px;flex:none;cursor:pointer}
+  .asago-task span{color:var(--ink-sub)}
+  .asago-task.done span{text-decoration:line-through;color:var(--ink-mute)}
+  .asago-task small{display:block;font-size:.66rem;color:var(--ink-mute);margin-top:2px}
+  .asago-money{display:grid;gap:9px;grid-template-columns:1fr;margin:14px 0 0}
+  @media(min-width:640px){.asago-money{grid-template-columns:repeat(3,1fr)}}
+  .asago-m{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .asago-m .mk{font-size:.66rem;color:var(--ink-mute)}
+  .asago-m .mv{font-size:1.1rem;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+  .asago-m .ms{font-size:.66rem;color:var(--ink-sub);margin-top:3px;line-height:1.5}
+  .asago-m.ok .mv{color:var(--good)} .asago-m.ng .mv{color:var(--bad)}
+  .asago-ctrl{display:flex;gap:14px;flex-wrap:wrap;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:.72rem;color:var(--ink-sub);align-items:center}
+  .asago-ctrl input{width:8em;padding:5px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
+  .asago-warn{margin-top:12px;font-size:.74rem;line-height:1.7;color:var(--ink);background:rgba(251,191,36,.07);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:10px 12px}
+  .asago-warn b{color:var(--warn)}
+
   /* --- 65歳からの年金と老後資金 --- */
   .pens-card.hidden{display:none}
   .pens-grid{display:grid;gap:10px;grid-template-columns:1fr;margin:4px 0 14px}
@@ -771,6 +804,31 @@
           <label>受取年数 <input type="number" id="pensYears" min="1" max="45" step="1"> 年</label>
         </div>
         <div class="pens-note" id="pensNote"></div>
+      </div>
+
+      <div class="card asago-card" id="asagoPanel">
+        <div class="card-h">
+          <div class="lbl">🏡 二拠点生活プラン（朝来）</div>
+          <div class="as">車で1時間半・段階的に</div>
+        </div>
+
+        <div class="asago-next" id="asagoNext"></div>
+
+        <div class="asago-prog">
+          <span class="pt"><span class="pf" id="asagoProgFill"></span></span>
+          <span class="pn" id="asagoProgNum"></span>
+        </div>
+
+        <div id="asagoPhases"></div>
+
+        <div class="asago-money" id="asagoMoney"></div>
+
+        <div class="asago-ctrl">
+          <label>物件の想定予算 ¥<input type="number" id="asagoBudget" min="0" step="500000"></label>
+          <span id="asagoBudgetNote"></span>
+        </div>
+
+        <div class="asago-warn" id="asagoWarn"></div>
       </div>
 
       <div class="card fp-card">
@@ -2740,6 +2798,7 @@ window.DASHBOARD_HISTORY = {
       renderAllocation();
       renderDeployable();
       renderPension();
+      renderAsago();
       renderFPAdvice();
       renderProjection();
     };
@@ -2793,7 +2852,114 @@ window.DASHBOARD_HISTORY = {
       try { return Object.assign({}, ALLOC_DEFAULT, JSON.parse(localStorage.getItem(ALLOC_KEY)||'{}')); }
       catch(e){ return Object.assign({}, ALLOC_DEFAULT); }
     }
-    /* 65歳からの年金と老後資金。年金額はねんきんネットの実額（2026-08取得）。
+    /* 二拠点生活（朝来）— 段階を分けて、次の一手だけを大きく出す。
+   チェック状態は localStorage に保存。資金インパクトは実弾と老後試算に連動させる。 */
+    const ASAGO_KEY = 'hfo_asago_v1';
+    const ASAGO_PHASES = [
+      { id:'p0', title:'フェーズ0：通い倒す', meta:'今すぐ〜1年 ／ 年10〜20万',
+        tasks:[
+          ['t01','朝来市の「お試し住宅」に申し込む','宿ではなく生活として体験する。あさご暮らし応援室 079-672-1492'],
+          ['t02','冬（1〜2月）に一度泊まる','雪と寒さを必ず経験してから次に進む'],
+          ['t03','空き家バンクで気になる物件を3件選ぶ','asago-akiyabank.jp。相場観を30分でつかむ'],
+          ['t04','あさご暮らし応援室に電話して補助金を聞く','住宅取得等応援事業・空家活用促進事業の要件']
+        ]},
+      { id:'p1', title:'フェーズ1：借りて試す', meta:'1〜2年目 ／ 月2〜5万',
+        tasks:[
+          ['t11','空き家バンクの賃貸物件を内見する',''],
+          ['t12','1年契約で借りてみる','買わずに撤退できる段階。ここで確信が持てるか判断'],
+          ['t13','eBayの未出品在庫を移し、撮影・出品拠点にする','未出品217件・原価200万円。発送義務がないので置ける'],
+          ['t14','古物商の営業所追加を公安委員会に確認','伊丹も朝来も兵庫県内。変更届出で済むはず']
+        ]},
+      { id:'p2', title:'フェーズ2：買う', meta:'3〜5年目 ／ 300〜800万',
+        tasks:[
+          ['t21','補助金の要件と申請時期を確定させる',''],
+          ['t22','現金で買える範囲の物件に絞る','2件目に住宅ローンは使えない。セカンドハウスローンは金利が高い'],
+          ['t23','法人と個人どちらで持つか税理士と相談','事業用部分は法人の経費・減価償却に載せられる'],
+          ['t24','購入・改修','']
+        ]},
+      { id:'p3', title:'フェーズ3：宿泊事業（構想）', meta:'10年目〜 ／ 上の子が独立してから',
+        tasks:[
+          ['t31','簡易宿所（旅館業法）の要件を調べる','年180日制限のない営業には消防設備・用途変更が必要'],
+          ['t32','地域との関係を作る','事業の前に、通い続けて信頼を積む']
+        ]}
+    ];
+    function loadAsago(){
+      try{ const d=JSON.parse(localStorage.getItem(ASAGO_KEY)||'{}');
+        return { done: Array.isArray(d.done)?d.done:[], budget: typeof d.budget==='number'?d.budget:5000000 }; }
+      catch(e){ return { done:[], budget:5000000 }; }
+    }
+    function saveAsago(st){ try{ localStorage.setItem(ASAGO_KEY, JSON.stringify(st)); }catch(e){} }
+    function renderAsago(){
+      const panel=document.getElementById('asagoPanel');
+      if(!panel) return;
+      const snap=history[window.__hfoCurrentMonth];
+      const k=snap&&snap.keys, bd=snap&&snap.breakdown;
+      if(!k||!bd||k.household===undefined){ panel.classList.add('hidden'); return; }
+      panel.classList.remove('hidden');
+      const st=loadAsago();
+      const el=document.getElementById('asagoBudget');
+      if(el && document.activeElement!==el) el.value=st.budget;
+
+      const all=ASAGO_PHASES.flatMap(p=>p.tasks.map(t=>t[0]));
+      const doneN=all.filter(id=>st.done.includes(id)).length;
+      document.getElementById('asagoProgFill').style.width=(doneN/all.length*100).toFixed(1)+'%';
+      document.getElementById('asagoProgNum').textContent=doneN+' / '+all.length+' 完了';
+
+      // 次の一手＝未完了の最初のタスク
+      let next=null, nextPhase=null;
+      for(const p of ASAGO_PHASES){ for(const t of p.tasks){ if(!st.done.includes(t[0])){ next=t; nextPhase=p; break; } } if(next) break; }
+      document.getElementById('asagoNext').innerHTML = next
+        ? '<div class="nk">NEXT ACTION</div><div class="nv">'+next[1]+'</div>'
+          +'<div class="nd">'+nextPhase.title+'　'+(next[2]||'')+'</div>'
+        : '<div class="nk">ALL DONE</div><div class="nv">全タスク完了。二拠点生活、実現しましたね。</div>';
+
+      document.getElementById('asagoPhases').innerHTML = ASAGO_PHASES.map(p=>{
+        const d=p.tasks.filter(t=>st.done.includes(t[0])).length;
+        const cls = d===p.tasks.length ? ' done' : (p.id===(nextPhase&&nextPhase.id) ? ' active' : '');
+        return '<div class="asago-ph'+cls+'"><div class="asago-ph-h"><span class="asago-ph-t">'+p.title
+          +'</span><span class="asago-ph-m">'+p.meta+'　'+d+'/'+p.tasks.length+'</span></div>'
+          + p.tasks.map(t=>'<label class="asago-task'+(st.done.includes(t[0])?' done':'')+'">'
+              +'<input type="checkbox" data-task="'+t[0]+'"'+(st.done.includes(t[0])?' checked':'')+'>'
+              +'<span>'+t[1]+(t[2]?'<small>'+t[2]+'</small>':'')+'</span></label>').join('')
+          + '</div>';
+      }).join('');
+
+      // 資金インパクト：実弾から予算を引く／老後試算への影響
+      const sum=(arr,test)=>(arr||[]).reduce((a,it)=>a+(test(String(it[0]||''))?(it[1]||0):0),0);
+      const inv=bd.investment||[];
+      const ideco=sum(inv,s=>/ideco/i.test(s)), kids=sum(inv,s=>s.indexOf('子・')>=0);
+      const emerg=(loadAllocSettings().emergency)||0;
+      const fuel=Math.max(0,k.household+k.investment-ideco-kids-emerg);
+      const after=fuel-st.budget;
+
+      const ps=loadPensSettings();
+      const baseYear=parseInt((snap.as_of||'').slice(0,4),10)||new Date().getFullYear();
+      const years=Math.max(1,PENSION.selfPensionYear-baseYear), eduFrom=Math.max(0,2033-baseYear);
+      const startAssets=k.household+k.investment+(k.individual||0);
+      const need=Math.max(0,ps.living-(PENSION.selfMonthly+PENSION.spouseMonthly))*12*ps.years;
+      const base65=projectTo65(startAssets,ps.saving,ps.edu,0.01,years,eduFrom,11);
+      const with65=projectTo65(startAssets-st.budget,ps.saving,ps.edu,0.01,years,eduFrom,11);
+
+      document.getElementById('asagoMoney').innerHTML =
+        '<div class="asago-m"><div class="mk">いまの実弾</div><div class="mv">¥'+fmtInt(fuel)+'</div>'
+        +'<div class="ms">動かせる原資（自宅・法人・iDeCo・教育資金・生活防衛を除く）</div></div>'
+        +'<div class="asago-m '+(after>=3000000?'ok':'ng')+'"><div class="mk">物件購入後の実弾</div><div class="mv">¥'+fmtInt(Math.max(0,after))+'</div>'
+        +'<div class="ms">'+(after>=3000000?'余力あり':'⚠ 手元が薄くなりすぎ')+'</div></div>'
+        +'<div class="asago-m '+(with65>=need?'ok':'ng')+'"><div class="mk">65歳時点（実質1%・悲観）</div><div class="mv">'+(with65/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万</div>'
+        +'<div class="ms">購入なしなら '+(base65/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万 ／ 必要額 '+(need/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万</div></div>';
+
+      document.getElementById('asagoBudgetNote').textContent =
+        '住宅ローンは使えないので現金前提。老後試算への影響が上のカードに出ます。';
+
+      document.getElementById('asagoWarn').innerHTML =
+        '<b>いま優先すべきはフェーズ0〜1です。</b>'
+        +'2026年12月に長期修繕計画の完成、2027年3〜4月に総会（積立金の増額決議）、2〜3年以内に給排水管の更新工事。'
+        +'マンション管理組合の山場と重なるため、<b>物件購入（フェーズ2）は2028年以降</b>が現実的。'
+        +'<br>一方で、上のお子さんが中学に上がると部活で週末が消えます。<b>家族5人で自由に動けるのは今の1年が最後</b>かもしれません。通うだけなら今すぐ始められます。';
+    }
+    window.__hfoRenderAsago = renderAsago;
+
+/* 65歳からの年金と老後資金。年金額はねんきんネットの実額（2026-08取得）。
    金融資産は選択中の月の実績から取り、そこに積立を足して65歳まで運用したシナリオを出す。 */
     const PENSION = {
       selfMonthly: 95402,          // 夫：基礎828,235/年＋厚生（標準報酬88,000維持）→ 月額
@@ -3197,6 +3363,24 @@ window.DASHBOARD_HISTORY = {
         renderDeployable();
       });
     });
+
+    // 二拠点プラン：タスクのチェックと予算入力（委譲で貼り替え後も効く）
+    document.addEventListener('change', e=>{
+      const t=e.target;
+      if(t && t.matches && t.matches('#asagoPhases input[type=checkbox][data-task]')){
+        const id=t.dataset.task, st=loadAsago();
+        st.done = t.checked ? Array.from(new Set(st.done.concat([id]))) : st.done.filter(x=>x!==id);
+        saveAsago(st); renderAsago();
+      }
+    });
+    (()=>{ const b=document.getElementById('asagoBudget');
+      if(!b) return;
+      b.addEventListener('input',()=>{
+        let v=parseInt(String(b.value).replace(/[^0-9]/g,''),10);
+        if(isNaN(v)) return;
+        const st=loadAsago(); st.budget=Math.max(0,v); saveAsago(st); renderAsago();
+      });
+    })();
 
     // 老後パネルの設定入力（localStorageへ保存して再描画）
     ['pensLiving','pensSaving','pensEdu','pensYears'].forEach(id=>{
