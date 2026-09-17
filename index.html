@@ -222,6 +222,7 @@
   .pens-tl .tw{color:var(--ink-sub)}
   .pens-ctrl{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.72rem;color:var(--ink-sub)}
   .pens-ctrl label{display:flex;align-items:center;gap:6px}
+  .pens-ctrl input[data-yen]{width:8.5em}
   .pens-ctrl input{width:7.5em;padding:5px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
   .pens-note{margin-top:11px;font-size:.7rem;color:var(--ink-mute);line-height:1.7}
 
@@ -735,7 +736,7 @@
           <div class="alloc-verdict" id="allocVerdict"></div>
           <div class="alloc-ctrl">
             <label>目標現金比率 <input type="number" id="allocTargetPct" min="0" max="100" step="1"> %</label>
-            <label>生活防衛資金 ¥<input type="number" id="allocEmergency" min="0" step="100000"></label>
+            <label>生活防衛資金 ¥<input type="text" inputmode="numeric" data-yen id="allocEmergency" autocomplete="off"></label>
             <label>分散 <input type="number" id="allocMonths" min="1" max="60" step="1"> ヶ月</label>
           </div>
         </div>
@@ -798,10 +799,15 @@
         <div class="pens-tl" id="pensTl"></div>
 
         <div class="pens-ctrl">
-          <label>生活費 ¥<input type="number" id="pensLiving" min="0" step="10000"></label>
-          <label>月の積立 ¥<input type="number" id="pensSaving" min="0" step="1000"></label>
-          <label>教育費の想定 ¥<input type="number" id="pensEdu" min="0" step="1000000"></label>
+          <label>生活費 ¥<input type="text" inputmode="numeric" data-yen id="pensLiving" autocomplete="off"></label>
+          <label>月の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensSaving" autocomplete="off"></label>
+          <label>教育費の想定 ¥<input type="text" inputmode="numeric" data-yen id="pensEdu" autocomplete="off"></label>
           <label>受取年数 <input type="number" id="pensYears" min="1" max="45" step="1"> 年</label>
+        </div>
+        <div class="pens-ctrl">
+          <label>積立を減らす年 <input type="number" id="pensCutFrom" min="0" max="2060" step="1"> 年</label>
+          <label>減らした後の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensCutSaving" autocomplete="off"></label>
+          <label>積立を戻す年 <input type="number" id="pensRestore" min="0" max="2060" step="1"> 年</label>
         </div>
         <div class="pens-note" id="pensNote"></div>
       </div>
@@ -824,7 +830,7 @@
         <div class="asago-money" id="asagoMoney"></div>
 
         <div class="asago-ctrl">
-          <label>物件の想定予算 ¥<input type="number" id="asagoBudget" min="0" step="500000"></label>
+          <label>物件の想定予算 ¥<input type="text" inputmode="numeric" data-yen id="asagoBudget" autocomplete="off"></label>
           <span id="asagoBudgetNote"></span>
         </div>
 
@@ -2915,7 +2921,7 @@ window.DASHBOARD_HISTORY = {
       panel.classList.remove('hidden');
       const st=loadAsago();
       const el=document.getElementById('asagoBudget');
-      if(el && document.activeElement!==el) el.value=st.budget;
+      if(el && document.activeElement!==el) el.value=fmtInt(st.budget);
 
       const all=ASAGO_PHASES.flatMap(p=>p.tasks.map(t=>t[0]));
       const doneN=all.filter(id=>st.done.includes(id)).length;
@@ -2954,8 +2960,8 @@ window.DASHBOARD_HISTORY = {
       const years=Math.max(1,PENSION.selfPensionYear-baseYear), eduFrom=Math.max(0,2033-baseYear);
       const startAssets=k.household+k.investment+(k.individual||0);
       const need=Math.max(0,ps.living-(PENSION.selfMonthly+PENSION.spouseMonthly))*12*ps.years;
-      const base65=projectTo65(startAssets,ps.saving,ps.edu,0.01,years,eduFrom,11);
-      const with65=projectTo65(startAssets-st.budget,ps.saving,ps.edu,0.01,years,eduFrom,11);
+      const base65=projectTo65(startAssets,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
+      const with65=projectTo65(startAssets-st.budget,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
 
       document.getElementById('asagoMoney').innerHTML =
         '<div class="asago-m"><div class="mk">いまの実弾</div><div class="mv">¥'+fmtInt(fuel)+'</div>'
@@ -2990,16 +2996,23 @@ window.DASHBOARD_HISTORY = {
       loanPayoffYear: 2051         // 住宅ローン完済（2051年12月・夫64歳9ヶ月）
     };
     const PENS_KEY = 'hfo_pension_v1';
-    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30 };
+    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036 };
     function loadPensSettings(){
       try{ return Object.assign({}, PENS_DEFAULT, JSON.parse(localStorage.getItem(PENS_KEY)||'{}')); }
       catch(e){ return Object.assign({}, PENS_DEFAULT); }
     }
-    function projectTo65(start, monthlySaving, eduTotal, realRate, years, eduFrom, eduSpan){
+    /* 積立の減額プラン：cutFrom年から cutSaving に減らし、restoreFrom年に元の額へ戻す。
+       cutFrom=0 なら減額なし、restoreFrom=0 なら65歳まで戻さない。 */
+    function savingForYear(yr, monthlySaving, plan){
+      if(!plan || !plan.cutFrom || yr < plan.cutFrom) return monthlySaving;
+      if(plan.restoreFrom && plan.restoreFrom > plan.cutFrom && yr >= plan.restoreFrom) return monthlySaving;
+      return plan.cutSaving;
+    }
+    function projectTo65(start, monthlySaving, eduTotal, realRate, years, eduFrom, eduSpan, plan, baseYear){
       let bal = start;
       for(let y=0; y<years; y++){
         bal *= (1+realRate);
-        bal += monthlySaving*12;
+        bal += savingForYear((baseYear||0)+y, monthlySaving, plan)*12;
         if(y>=eduFrom && y<eduFrom+eduSpan) bal -= eduTotal/eduSpan;
       }
       return bal;
@@ -3013,8 +3026,9 @@ window.DASHBOARD_HISTORY = {
       panel.classList.remove('hidden');
 
       const s = loadPensSettings();
-      const setIf=(id,v)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=v; };
+      const setIf=(id,v)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=(el.hasAttribute('data-yen')?fmtInt(v):v); };
       setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensEdu',s.edu); setIf('pensYears',s.years);
+      setIf('pensCutFrom',s.cutFrom); setIf('pensCutSaving',s.cutSaving); setIf('pensRestore',s.restoreFrom);
 
       const pension = PENSION.selfMonthly + PENSION.spouseMonthly;
       const gap = Math.max(0, s.living - pension);
@@ -3041,25 +3055,37 @@ window.DASHBOARD_HISTORY = {
       const eduFrom = Math.max(0, 2033 - baseYear), eduSpan = 11;
       const startAssets = k.household + k.investment + (k.individual||0);
 
+      const planOn = !!(s.cutFrom && s.cutFrom < PENSION.selfPensionYear && s.cutSaving !== s.saving);
+      const restoreOn = planOn && s.restoreFrom && s.restoreFrom > s.cutFrom && s.restoreFrom < PENSION.selfPensionYear;
       document.getElementById('pensScen').innerHTML = [0.01,0.02,0.03].map(r=>{
-        const v = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan);
+        const v = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, s, baseYear);
+        const flat = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, null, baseYear);
         const ok = v>=need;
         const pctOfNeed = need? Math.min(100, v/need*100) : 100;
         return '<div class="pens-sc"><span class="lab">実質 '+(r*100).toFixed(0)+'%</span>'
           + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/(need*1.8)*100).toFixed(1)+'%"></span>'
           + '<span class="line" style="left:'+(100/1.8).toFixed(1)+'%" title="必要額ライン"></span></span>'
-          + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')+'</span></div>';
+          + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')
+          + (planOn ? '<small style="display:block;font-weight:400;opacity:.65;font-size:.68rem">減らさなければ '+(flat/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万</small>' : '')
+          + '</span></div>';
       }).join('');
 
-      document.getElementById('pensTl').innerHTML = [
+      const tl = [
         [PENSION.spousePensionYear+'年8月', '妻 65歳・年金開始'],
         [PENSION.loanPayoffYear+'年12月', '住宅ローン完済（夫64歳9ヶ月）'],
         [PENSION.selfPensionYear+'年3月', '夫 65歳・年金開始']
-      ].map(t=>'<div class="t"><span class="ty">'+t[0]+'</span><span class="tw">'+t[1]+'</span></div>').join('');
+      ];
+      if(planOn) tl.push([s.cutFrom+'年', '積立を月¥'+fmtInt(s.cutSaving)+'に減らす（想定）']);
+      if(restoreOn) tl.push([s.restoreFrom+'年', '積立を月¥'+fmtInt(s.saving)+'に戻す（想定）']);
+      tl.sort((a,b)=>parseInt(a[0],10)-parseInt(b[0],10));
+      document.getElementById('pensTl').innerHTML = tl.map(t=>'<div class="t"><span class="ty">'+t[0]+'</span><span class="tw">'+t[1]+'</span></div>').join('');
 
       document.getElementById('pensNote').innerHTML =
         '起点となる金融資産 <b>¥'+fmtInt(startAssets)+'</b>（家計＋投資＋小規模企業共済）を '+years+'年間運用した場合の試算。'
         + '自宅・法人は含まない。教育費は '+(2033)+'〜'+(2033+eduSpan-1)+'年に分散して支出する前提。'
+        + (planOn ? '<br>積立は '+s.cutFrom+'年から月¥'+fmtInt(s.cutSaving)+'に減らし、'
+            + (restoreOn ? s.restoreFrom+'年から月¥'+fmtInt(s.saving)+'に戻す想定。' : '65歳まで戻さない想定。')
+            + '減らさない場合は「月の積立」を26年続けた値（各行の小さい数字）。「積立を減らす年」を0にすると減額なしで計算する。' : '')
         + '<br>「実質リターン」は物価上昇を差し引いた後の利回り（名目5%・インフレ2%なら実質3%）。'
         + '年金額は2026年8月時点のねんきんネット実額で、マクロ経済スライドにより変動する。'
         + '※将来を保証するものではなく、投資助言でもありません。';
@@ -3141,7 +3167,7 @@ window.DASHBOARD_HISTORY = {
       panel.classList.remove('hidden');
 
       const s = loadAllocSettings();
-      const setIf = (id,val)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value = val; };
+      const setIf = (id,val)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value = (el.hasAttribute('data-yen')?fmtInt(val):val); };
       setIf('allocTargetPct', s.targetPct);
       setIf('allocEmergency', s.emergency);
       setIf('allocMonths', s.months);
@@ -3366,13 +3392,28 @@ window.DASHBOARD_HISTORY = {
       sel.innerHTML = '<option>データなし</option>'; sel.disabled = true;
     }
 
+    // 金額入力（data-yen）：入力中に3桁カンマを付ける。カーソルは「左にある数字の個数」で位置を戻す
+    document.addEventListener('input', e=>{
+      const el=e.target;
+      if(!el || !el.hasAttribute || !el.hasAttribute('data-yen')) return;
+      const raw=String(el.value), caret=el.selectionStart==null?raw.length:el.selectionStart;
+      const digitsLeft=raw.slice(0,caret).replace(/[^0-9]/g,'').length;
+      const digits=raw.replace(/[^0-9]/g,'').replace(/^0+(?=\d)/,'');
+      const out=digits?Number(digits).toLocaleString('ja-JP'):'';
+      if(out===raw) return;
+      el.value=out;
+      let pos=0, seen=0;
+      while(pos<out.length && seen<digitsLeft){ if(/[0-9]/.test(out[pos])) seen++; pos++; }
+      try{ el.setSelectionRange(pos,pos); }catch(_){}
+    }, true);
+
     // 配分パネルの設定入力（localStorageに保存し、即再計算）
     const allocMap = { allocTargetPct:'targetPct', allocEmergency:'emergency', allocMonths:'months' };
     Object.keys(allocMap).forEach(id=>{
       const el = document.getElementById(id);
       if(!el) return;
       el.addEventListener('input', ()=>{
-        let val = parseFloat(el.value);
+        let val = parseFloat(String(el.value).replace(/,/g,''));
         if(isNaN(val)) return;
         if(id==='allocTargetPct') val = Math.min(100, Math.max(0, val));
         else if(id==='allocMonths') val = Math.max(1, Math.round(val));
@@ -3404,7 +3445,7 @@ window.DASHBOARD_HISTORY = {
     })();
 
     // 老後パネルの設定入力（localStorageへ保存して再描画）
-    ['pensLiving','pensSaving','pensEdu','pensYears'].forEach(id=>{
+    ['pensLiving','pensSaving','pensEdu','pensYears','pensCutFrom','pensCutSaving','pensRestore'].forEach(id=>{
       const el=document.getElementById(id);
       if(!el) return;
       el.addEventListener('input',()=>{
@@ -3412,7 +3453,7 @@ window.DASHBOARD_HISTORY = {
         if(isNaN(val)) return;
         val=Math.max(0,val);
         if(id==='pensYears') val=Math.min(45,Math.max(1,val));
-        const map={pensLiving:'living',pensSaving:'saving',pensEdu:'edu',pensYears:'years'};
+        const map={pensLiving:'living',pensSaving:'saving',pensEdu:'edu',pensYears:'years',pensCutFrom:'cutFrom',pensCutSaving:'cutSaving',pensRestore:'restoreFrom'};
         const st=loadPensSettings(); st[map[id]]=val;
         try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){}
         renderPension();
