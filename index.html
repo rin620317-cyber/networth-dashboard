@@ -2959,7 +2959,7 @@ window.DASHBOARD_HISTORY = {
       const baseYear=parseInt((snap.as_of||'').slice(0,4),10)||new Date().getFullYear();
       const years=Math.max(1,PENSION.selfPensionYear-baseYear), eduFrom=Math.max(0,2033-baseYear);
       const startAssets=k.household+k.investment+(k.individual||0);
-      const need=Math.max(0,ps.living-(PENSION.selfMonthly+PENSION.spouseMonthly))*12*ps.years;
+      const need=Math.max(0,ps.living-pensionNet())*12*ps.years;
       const base65=projectTo65(startAssets,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
       const with65=projectTo65(startAssets-st.budget,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
 
@@ -2994,8 +2994,15 @@ window.DASHBOARD_HISTORY = {
       selfPensionYear: 2052,       // 夫65歳（1987年3月生まれ）
       lifeAge: 90,                 // 年金総額の試算で「何歳まで受け取るか」（夫婦とも）
       spousePensionYear: 2049,     // 妻65歳（1984年7月生まれ）
-      loanPayoffYear: 2051         // 住宅ローン完済（2051年12月・夫64歳9ヶ月）
+      loanPayoffYear: 2051,        // 住宅ローン完済（2051年12月・夫64歳9ヶ月）
+      /* 物価で見た年金の目減り（マクロ経済スライド）。AIが年1回（ねんきんネット更新時・次回財政検証2029年）に見直す。
+         根拠：2024年財政検証「過去30年投影ケース」で基礎年金の調整は2057年まで続き、基礎年金部分の所得代替率は約3割下がる
+         （厚生年金部分は2026年で調整終了）。賃金の実質伸び（年0.5%）で一部戻るため、物価で見た基礎年金は受給開始時点で約15%減。
+         我が家は年金の8割強が基礎年金なので、世帯全体で約12〜13%減 → 保守的に15%とする。 */
+      realCut: 0.15,
+      realCutNote: '2024年財政検証（過去30年投影ケース）をもとにAIが設定・2026-09'
     };
+    const pensionNet = () => (PENSION.selfMonthly + PENSION.spouseMonthly) * (1 - PENSION.realCut);
     const PENS_KEY = 'hfo_pension_v1';
     const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036 };
     function loadPensSettings(){
@@ -3031,13 +3038,14 @@ window.DASHBOARD_HISTORY = {
       setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensEdu',s.edu); setIf('pensYears',s.years);
       setIf('pensCutFrom',s.cutFrom); setIf('pensCutSaving',s.cutSaving); setIf('pensRestore',s.restoreFrom);
 
-      const pension = PENSION.selfMonthly + PENSION.spouseMonthly;
+      const pensionNominal = PENSION.selfMonthly + PENSION.spouseMonthly;
+      const pension = Math.round(pensionNet());
       const gap = Math.max(0, s.living - pension);
       const need = gap*12*s.years;
 
       document.getElementById('pensTotal').textContent = '¥'+fmtInt(pension);
       document.getElementById('pensBreak').innerHTML =
-        '夫 ¥'+fmtInt(PENSION.selfMonthly)+' ／ 妻 ¥'+fmtInt(PENSION.spouseMonthly);
+        'ねんきんネット ¥'+fmtInt(pensionNominal)+' から目減り −'+Math.round(PENSION.realCut*100)+'%';
       document.getElementById('pensGap').textContent = '−¥'+fmtInt(gap);
       document.getElementById('pensGapNote').textContent = '生活費 ¥'+fmtInt(s.living)+' − 年金 ¥'+fmtInt(pension);
       document.getElementById('pensNeed').textContent = '¥'+fmtInt(Math.round(need));
@@ -3046,9 +3054,11 @@ window.DASHBOARD_HISTORY = {
       document.getElementById('pensRows').innerHTML = [
         ['老齢基礎年金＋老齢厚生年金（夫）', PENSION.selfMonthly, '60歳まで加入で基礎はほぼ満額'],
         ['老齢基礎年金＋老齢厚生年金（妻）', PENSION.spouseMonthly, '第3号期間が長くほぼ基礎年金のみ'],
-        ['世帯合計（月額）', pension, '', 'sum']
+        ['世帯合計（ねんきんネットの額面）', pensionNominal, ''],
+        ['物価で見た目減り（想定 −'+Math.round(PENSION.realCut*100)+'%）', -Math.round(pensionNominal*PENSION.realCut), 'マクロ経済スライド。'+PENSION.realCutNote],
+        ['世帯合計（今の価値・月額）', pension, '', 'sum']
       ].map(r=>'<div class="pens-row'+(r[3]?' '+r[3]:'')+'"><span class="n">'+r[0]
-        +(r[2]?'<small>'+r[2]+'</small>':'')+'</span><span class="a">¥'+fmtInt(r[1])+'</span></div>').join('');
+        +(r[2]?'<small>'+r[2]+'</small>':'')+'</span><span class="a">'+(r[1]<0?'−¥'+fmtInt(-r[1]):'¥'+fmtInt(r[1]))+'</span></div>').join('');
 
       // 65歳までの年数と、教育費が出ていく期間を選択月から算出
       const baseYear = parseInt((snap.as_of||'').slice(0,4),10) || new Date().getFullYear();
@@ -3058,7 +3068,7 @@ window.DASHBOARD_HISTORY = {
 
       // 年金の受取総額（夫婦とも65歳から lifeAge 歳まで・今の金額のまま＝実質ベース）
       const pensYearsEach = Math.max(0, PENSION.lifeAge - 65);
-      const pensLifetime = (PENSION.selfMonthly + PENSION.spouseMonthly) * 12 * pensYearsEach;
+      const pensLifetime = pension * 12 * pensYearsEach;
       const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
       const planOn = !!(s.cutFrom && s.cutFrom < PENSION.selfPensionYear && s.cutSaving !== s.saving);
       const restoreOn = planOn && s.restoreFrom && s.restoreFrom > s.cutFrom && s.restoreFrom < PENSION.selfPensionYear;
@@ -3092,7 +3102,7 @@ window.DASHBOARD_HISTORY = {
         + (planOn ? '<br>積立は '+s.cutFrom+'年から月¥'+fmtInt(s.cutSaving)+'に減らし、'
             + (restoreOn ? s.restoreFrom+'年から月¥'+fmtInt(s.saving)+'に戻す想定。' : '65歳まで戻さない想定。')
             + '減らさない場合は「月の積立」を26年続けた値（各行の小さい数字）。「積立を減らす年」を0にすると減額なしで計算する。' : '')
-        + '<br>「＋年金」は夫婦とも65歳から'+PENSION.lifeAge+'歳まで受け取る年金の総額（夫 月¥'+fmtInt(PENSION.selfMonthly)+'・妻 月¥'+fmtInt(PENSION.spouseMonthly)+' × 12 × '+pensYearsEach+'年＝¥'+fmtInt(pensLifetime)+'）。'
+        + '<br>「＋年金」は夫婦とも65歳から'+PENSION.lifeAge+'歳まで受け取る年金の総額（目減り後の世帯 月¥'+fmtInt(pension)+' × 12 × '+pensYearsEach+'年＝¥'+fmtInt(pensLifetime)+'・今の価値）。'
         + '○×の判定は「年金で足りない分」との比較なので、年金を足した合計では判定していない（二重に数えないため）。'
         + '<br>「実質リターン」は物価上昇を差し引いた後の利回り（名目5%・インフレ2%なら実質3%）。'
         + '年金額は2026年8月時点のねんきんネット実額で、マクロ経済スライドにより変動する。'
