@@ -2992,6 +2992,7 @@ window.DASHBOARD_HISTORY = {
       selfMonthly: 95402,          // 夫：基礎828,235/年＋厚生（標準報酬88,000維持）→ 月額
       spouseMonthly: 68818,        // 妻：ねんきんネット試算の受給予定額（基礎68,058＋厚生760）
       selfPensionYear: 2052,       // 夫65歳（1987年3月生まれ）
+      lifeAge: 90,                 // 年金総額の試算で「何歳まで受け取るか」（夫婦とも）
       spousePensionYear: 2049,     // 妻65歳（1984年7月生まれ）
       loanPayoffYear: 2051         // 住宅ローン完済（2051年12月・夫64歳9ヶ月）
     };
@@ -3055,6 +3056,10 @@ window.DASHBOARD_HISTORY = {
       const eduFrom = Math.max(0, 2033 - baseYear), eduSpan = 11;
       const startAssets = k.household + k.investment + (k.individual||0);
 
+      // 年金の受取総額（夫婦とも65歳から lifeAge 歳まで・今の金額のまま＝実質ベース）
+      const pensYearsEach = Math.max(0, PENSION.lifeAge - 65);
+      const pensLifetime = (PENSION.selfMonthly + PENSION.spouseMonthly) * 12 * pensYearsEach;
+      const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
       const planOn = !!(s.cutFrom && s.cutFrom < PENSION.selfPensionYear && s.cutSaving !== s.saving);
       const restoreOn = planOn && s.restoreFrom && s.restoreFrom > s.cutFrom && s.restoreFrom < PENSION.selfPensionYear;
       document.getElementById('pensScen').innerHTML = [0.01,0.02,0.03].map(r=>{
@@ -3066,6 +3071,7 @@ window.DASHBOARD_HISTORY = {
           + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/(need*1.8)*100).toFixed(1)+'%"></span>'
           + '<span class="line" style="left:'+(100/1.8).toFixed(1)+'%" title="必要額ライン"></span></span>'
           + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')
+          + '<small style="display:block;font-weight:600;color:var(--gold,#e8c170);font-size:.7rem">＋年金 '+man(pensLifetime)+' ＝ '+man(v+pensLifetime)+'</small>'
           + (planOn ? '<small style="display:block;font-weight:400;opacity:.65;font-size:.68rem">減らさなければ '+(flat/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万</small>' : '')
           + '</span></div>';
       }).join('');
@@ -3086,6 +3092,8 @@ window.DASHBOARD_HISTORY = {
         + (planOn ? '<br>積立は '+s.cutFrom+'年から月¥'+fmtInt(s.cutSaving)+'に減らし、'
             + (restoreOn ? s.restoreFrom+'年から月¥'+fmtInt(s.saving)+'に戻す想定。' : '65歳まで戻さない想定。')
             + '減らさない場合は「月の積立」を26年続けた値（各行の小さい数字）。「積立を減らす年」を0にすると減額なしで計算する。' : '')
+        + '<br>「＋年金」は夫婦とも65歳から'+PENSION.lifeAge+'歳まで受け取る年金の総額（夫 月¥'+fmtInt(PENSION.selfMonthly)+'・妻 月¥'+fmtInt(PENSION.spouseMonthly)+' × 12 × '+pensYearsEach+'年＝¥'+fmtInt(pensLifetime)+'）。'
+        + '○×の判定は「年金で足りない分」との比較なので、年金を足した合計では判定していない（二重に数えないため）。'
         + '<br>「実質リターン」は物価上昇を差し引いた後の利回り（名目5%・インフレ2%なら実質3%）。'
         + '年金額は2026年8月時点のねんきんネット実額で、マクロ経済スライドにより変動する。'
         + '※将来を保証するものではなく、投資助言でもありません。';
