@@ -61,6 +61,9 @@
   .main{padding:28px 36px 60px;max-width:1400px}
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
   .topbar .title h1{font-family:"Noto Serif JP",serif;font-weight:700;font-size:1.55rem;letter-spacing:.02em}
+  .topbar .title .etym{font-size:.74rem;color:var(--ink-sub);letter-spacing:.03em;margin-top:5px}
+  .topbar .title .etym b{color:var(--gold-soft);font-weight:700}
+  .topbar .title .etym i{color:var(--gold);font-style:italic}
   .topbar .title .crumb{font-size:.74rem;color:var(--ink-mute);letter-spacing:.06em;margin-bottom:4px}
   .topbar .actions{display:flex;gap:10px;align-items:center}
   .pill{background:var(--bg-card);border:1px solid var(--line2);color:var(--ink-sub);padding:7px 14px;border-radius:999px;font-size:.78rem;display:inline-flex;align-items:center;gap:8px}
@@ -424,6 +427,9 @@
     .main{padding:16px 13px 40px}
     .topbar{flex-direction:column;align-items:flex-start;gap:12px}
     .topbar .title h1{font-size:1.22rem}
+    .sec-h{flex-wrap:wrap;align-items:flex-start;gap:10px}
+    .sec-h .ctrl{flex-wrap:wrap}
+    .sec-h .ctrl button{padding:7px 12px}
     .topbar .actions{flex-wrap:wrap;gap:8px}
     .card{padding:18px 15px;border-radius:16px}
     .card-h{flex-wrap:wrap;gap:8px}
@@ -657,6 +663,7 @@
       <div class="title">
         <div class="crumb">Family Office › Overview</div>
         <h1>おかえりなさい。</h1>
+        <div class="etym"><b>Nesto</b> = <i>nest</i> + <i>estate</i> — the nest where our family's estate grows.</div>
       </div>
       <div class="actions">
         <span class="pill live">Live · 同期 12分前</span>
