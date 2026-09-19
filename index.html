@@ -809,6 +809,11 @@
           <label>減らした後の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensCutSaving" autocomplete="off"></label>
           <label>積立を戻す年 <input type="number" id="pensRestore" min="0" max="2060" step="1"> 年</label>
         </div>
+        <div class="pens-ctrl">
+          <label>利回り① <input type="number" id="pensR1" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
+          <label>利回り② <input type="number" id="pensR2" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
+          <label>利回り③ <input type="number" id="pensR3" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
+        </div>
         <div class="pens-note" id="pensNote"></div>
       </div>
 
@@ -3004,7 +3009,7 @@ window.DASHBOARD_HISTORY = {
     };
     const pensionNet = () => (PENSION.selfMonthly + PENSION.spouseMonthly) * (1 - PENSION.realCut);
     const PENS_KEY = 'hfo_pension_v1';
-    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036 };
+    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036, r1: 3, r2: 5, r3: 7 };
     function loadPensSettings(){
       try{ return Object.assign({}, PENS_DEFAULT, JSON.parse(localStorage.getItem(PENS_KEY)||'{}')); }
       catch(e){ return Object.assign({}, PENS_DEFAULT); }
@@ -3036,6 +3041,7 @@ window.DASHBOARD_HISTORY = {
       const s = loadPensSettings();
       const setIf=(id,v)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=(el.hasAttribute('data-yen')?fmtInt(v):v); };
       setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensEdu',s.edu); setIf('pensYears',s.years);
+      setIf('pensR1',s.r1); setIf('pensR2',s.r2); setIf('pensR3',s.r3);
       setIf('pensCutFrom',s.cutFrom); setIf('pensCutSaving',s.cutSaving); setIf('pensRestore',s.restoreFrom);
 
       const pensionNominal = PENSION.selfMonthly + PENSION.spouseMonthly;
@@ -3072,12 +3078,12 @@ window.DASHBOARD_HISTORY = {
       const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
       const planOn = !!(s.cutFrom && s.cutFrom < PENSION.selfPensionYear && s.cutSaving !== s.saving);
       const restoreOn = planOn && s.restoreFrom && s.restoreFrom > s.cutFrom && s.restoreFrom < PENSION.selfPensionYear;
-      document.getElementById('pensScen').innerHTML = [0.01,0.02,0.03].map(r=>{
+      document.getElementById('pensScen').innerHTML = [s.r1,s.r2,s.r3].map(x=>(Number(x)||0)/100).map(r=>{
         const v = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, s, baseYear);
         const flat = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, null, baseYear);
         const ok = v>=need;
         const pctOfNeed = need? Math.min(100, v/need*100) : 100;
-        return '<div class="pens-sc"><span class="lab">実質 '+(r*100).toFixed(0)+'%</span>'
+        return '<div class="pens-sc"><span class="lab">実質 '+(+(r*100).toFixed(1))+'%</span>'
           + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/(need*1.8)*100).toFixed(1)+'%"></span>'
           + '<span class="line" style="left:'+(100/1.8).toFixed(1)+'%" title="必要額ライン"></span></span>'
           + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')
@@ -3463,6 +3469,18 @@ window.DASHBOARD_HISTORY = {
     })();
 
     // 老後パネルの設定入力（localStorageへ保存して再描画）
+    ['pensR1','pensR2','pensR3'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      el.addEventListener('input',()=>{
+        let val=parseFloat(String(el.value).replace(/[^0-9.\-]/g,''));
+        if(isNaN(val)) return;
+        val=Math.min(15,Math.max(-5,val));
+        const st=loadPensSettings(); st[{pensR1:'r1',pensR2:'r2',pensR3:'r3'}[id]]=val;
+        try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){}
+        renderPension();
+      });
+    });
     ['pensLiving','pensSaving','pensEdu','pensYears','pensCutFrom','pensCutSaving','pensRestore'].forEach(id=>{
       const el=document.getElementById(id);
       if(!el) return;
