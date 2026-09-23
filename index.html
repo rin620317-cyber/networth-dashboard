@@ -226,6 +226,22 @@
   .pens-ctrl{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.72rem;color:var(--ink-sub)}
   .pens-ctrl label{display:flex;align-items:center;gap:6px}
   .pens-ctrl input[data-yen]{width:8.5em}
+  .pens-steps-h{font-size:.76rem;font-weight:700;color:var(--ink-sub);margin:14px 0 6px}
+  .pens-steps{display:flex;flex-direction:column;gap:6px}
+  .pens-step{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.78rem;color:var(--ink-sub)}
+  .pens-step input[type=number]{width:5.5em}
+  .pens-step input[data-yen]{width:8.5em}
+  .pens-step input{padding:5px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
+  .pens-step .del{background:none;border:1px solid var(--line2);color:var(--ink-mute);border-radius:7px;padding:4px 9px;cursor:pointer;font-size:.74rem}
+  .pens-step .del:hover{color:#f87171;border-color:rgba(248,113,113,.4)}
+  .pens-add{background:rgba(212,175,110,.1);border:1px solid rgba(212,175,110,.32);color:var(--gold-soft);border-radius:8px;padding:6px 12px;font-size:.76rem;cursor:pointer}
+  .pens-edu{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+  .pens-edu .eh{font-size:.76rem;font-weight:700;color:var(--ink-sub);margin-bottom:8px}
+  .pens-edu table{width:100%;border-collapse:collapse;font-size:.74rem}
+  .pens-edu td,.pens-edu th{padding:4px 6px;text-align:right;color:var(--ink-sub);white-space:nowrap}
+  .pens-edu th{color:var(--ink-mute);font-weight:600;border-bottom:1px solid var(--line)}
+  .pens-edu td:first-child,.pens-edu th:first-child{text-align:left}
+  .pens-edu tr.peak td{color:var(--gold-soft);font-weight:700}
   .pens-ctrl input{width:7.5em;padding:5px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.8rem;font-variant-numeric:tabular-nums}
   .pens-note{margin-top:11px;font-size:.7rem;color:var(--ink-mute);line-height:1.7}
 
@@ -808,15 +824,24 @@
         <div class="pens-ctrl">
           <label>生活費 ¥<input type="text" inputmode="numeric" data-yen id="pensLiving" autocomplete="off"></label>
           <label>月の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensSaving" autocomplete="off"></label>
-          <label>教育費の想定 ¥<input type="text" inputmode="numeric" data-yen id="pensEdu" autocomplete="off"></label>
           <label>受取年数 <input type="number" id="pensYears" min="1" max="45" step="1"> 年</label>
         </div>
+        <div class="pens-ctrl">
+          <label>高校 1人・年 ¥<input type="text" inputmode="numeric" data-yen id="pensEduHs" autocomplete="off"></label>
+          <label>大学 1人・年 ¥<input type="text" inputmode="numeric" data-yen id="pensEduUni" autocomplete="off"></label>
+          <label>支援で軽くなる割合 <input type="number" id="pensEduSupport" min="0" max="100" step="5" style="width:4.5em"> %</label>
+        </div>
+        <div class="pens-steps-h">積立を変える年（何度でも追加できます）</div>
+        <div id="pensSteps" class="pens-steps"></div>
+        <div class="pens-ctrl"><button type="button" id="pensStepAdd" class="pens-add">＋ 変更ポイントを追加</button></div>
+        <div class="pens-edu" id="pensEduPlan"></div>
         <div class="pens-ctrl">
           <label>積立を減らす年 <input type="number" id="pensCutFrom" min="0" max="2060" step="1"> 年</label>
           <label>減らした後の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensCutSaving" autocomplete="off"></label>
           <label>積立を戻す年 <input type="number" id="pensRestore" min="0" max="2060" step="1"> 年</label>
         </div>
         <div class="pens-ctrl">
+          <label>いまの積立 ¥<input type="text" inputmode="numeric" data-yen id="pensSaving2" autocomplete="off" style="display:none"></label>
           <label>利回り① <input type="number" id="pensR1" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
           <label>利回り② <input type="number" id="pensR2" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
           <label>利回り③ <input type="number" id="pensR3" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
@@ -2887,11 +2912,11 @@ window.DASHBOARD_HISTORY = {
 
       const ps=loadPensSettings();
       const baseYear=parseInt((snap.as_of||'').slice(0,4),10)||new Date().getFullYear();
-      const years=Math.max(1,PENSION.selfPensionYear-baseYear), eduFrom=Math.max(0,2033-baseYear);
+      const years=Math.max(1,PENSION.selfPensionYear-baseYear);
       const startAssets=k.household+k.investment+(k.individual||0);
       const need=Math.max(0,ps.living-pensionNet())*12*ps.years;
-      const base65=projectTo65(startAssets,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
-      const with65=projectTo65(startAssets-st.budget,ps.saving,ps.edu,0.01,years,eduFrom,11,ps,baseYear);
+      const base65=projectTo65(startAssets,0.01,years,baseYear,ps);
+      const with65=projectTo65(startAssets-st.budget,0.01,years,baseYear,ps);
 
       document.getElementById('asagoMoney').innerHTML =
         '<div class="asago-m"><div class="mk">いまの実弾</div><div class="mv">¥'+fmtInt(fuel)+'</div>'
@@ -2933,25 +2958,61 @@ window.DASHBOARD_HISTORY = {
       realCutNote: '2024年財政検証（過去30年投影ケース）をもとにAIが設定・2026-09'
     };
     const pensionNet = () => (PENSION.selfMonthly + PENSION.spouseMonthly) * (1 - PENSION.realCut);
-    const PENS_KEY = 'hfo_pension_v2';   // v2：既定の積立額を実額191,000円に更新（旧設定は破棄）
-    const PENS_DEFAULT = { living: 250000, saving: 191000, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036, r1: 3, r2: 5, r3: 7 };
+    const PENS_KEY = 'hfo_pension_v3';   // v3：積立ステップ制＋教育費を子どもの学年から自動計算（旧設定は破棄）
+    /* 子ども3人の学年（2026年度：長男 小6／長女 小4／末っ子 年少）。
+       birthFY＝生まれた年度（4月〜翌3月）。長男2014/7/23→2014、長女2016/9/25→2016、末っ子2024/1/4→2023。
+       小1＝birthFY+7、中1＝+13、高1＝+16、大1＝+19 の年度に上がる。 */
+    const KIDS = [
+      { name: '長男', birthFY: 2014 },
+      { name: '長女', birthFY: 2016 },
+      { name: '末っ子', birthFY: 2023 }
+    ];
+    const PENS_DEFAULT = {
+      living: 250000, saving: 191000, years: 30,
+      eduHs: 600000, eduUni: 1500000, eduSupport: 0,
+      steps: [ { y: 2029, m: 100000 }, { y: 2046, m: 191000 } ],   // 2029＝長男が中3／2046＝末っ子の大学が終わった翌年度
+      r1: 3, r2: 5, r3: 7
+    };
     function loadPensSettings(){
       try{ return Object.assign({}, PENS_DEFAULT, JSON.parse(localStorage.getItem(PENS_KEY)||'{}')); }
       catch(e){ return Object.assign({}, PENS_DEFAULT); }
     }
     /* 積立の減額プラン：cutFrom年から cutSaving に減らし、restoreFrom年に元の額へ戻す。
        cutFrom=0 なら減額なし、restoreFrom=0 なら65歳まで戻さない。 */
-    function savingForYear(yr, monthlySaving, plan){
-      if(!plan || !plan.cutFrom || yr < plan.cutFrom) return monthlySaving;
-      if(plan.restoreFrom && plan.restoreFrom > plan.cutFrom && yr >= plan.restoreFrom) return monthlySaving;
-      return plan.cutSaving;
+    /* その年度の積立額。steps（年＋月額）を古い順に当てていく。stepsが空なら今の額のまま。 */
+    function savingForYear(yr, s){
+      let m = s.saving;
+      (s.steps||[]).slice().sort((a,b)=>a.y-b.y).forEach(st=>{ if(yr >= st.y) m = st.m; });
+      return m;
     }
-    function projectTo65(start, monthlySaving, eduTotal, realRate, years, eduFrom, eduSpan, plan, baseYear){
+    /* その年度の教育費。高校＝birthFY+16〜+18、大学＝birthFY+19〜+22 の年度に、1人あたりの年額を積む。 */
+    function eduForYear(yr, s){
+      const cut = 1 - Math.min(100, Math.max(0, s.eduSupport||0))/100;
+      let t = 0;
+      KIDS.forEach(k=>{
+        const hs = yr - k.birthFY;
+        if(hs>=16 && hs<=18) t += (s.eduHs||0);
+        if(hs>=19 && hs<=22) t += (s.eduUni||0);
+      });
+      return t * cut;
+    }
+    function eduSchedule(s, fromYear, toYear){
+      const rows = [];
+      for(let y=fromYear; y<=toYear; y++){
+        const who = KIDS.filter(k=>{ const a=y-k.birthFY; return (a>=16&&a<=18)||(a>=19&&a<=22); })
+          .map(k=>{ const a=y-k.birthFY; return k.name+(a<=18?'（高校）':'（大学）'); });
+        const v = eduForYear(y, s);
+        if(v>0) rows.push({ y, v, who });
+      }
+      return rows;
+    }
+    function projectTo65(start, realRate, years, baseYear, s, ignoreSteps){
       let bal = start;
       for(let y=0; y<years; y++){
+        const yr = (baseYear||0)+y;
         bal *= (1+realRate);
-        bal += savingForYear((baseYear||0)+y, monthlySaving, plan)*12;
-        if(y>=eduFrom && y<eduFrom+eduSpan) bal -= eduTotal/eduSpan;
+        bal += (ignoreSteps ? s.saving : savingForYear(yr, s))*12;
+        bal -= eduForYear(yr, s);
       }
       return bal;
     }
@@ -2965,9 +3026,10 @@ window.DASHBOARD_HISTORY = {
 
       const s = loadPensSettings();
       const setIf=(id,v)=>{ const el=document.getElementById(id); if(el && document.activeElement!==el) el.value=(el.hasAttribute('data-yen')?fmtInt(v):v); };
-      setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensEdu',s.edu); setIf('pensYears',s.years);
+      setIf('pensLiving',s.living); setIf('pensSaving',s.saving); setIf('pensYears',s.years);
+      setIf('pensEduHs',s.eduHs); setIf('pensEduUni',s.eduUni); setIf('pensEduSupport',s.eduSupport);
       setIf('pensR1',s.r1); setIf('pensR2',s.r2); setIf('pensR3',s.r3);
-      setIf('pensCutFrom',s.cutFrom); setIf('pensCutSaving',s.cutSaving); setIf('pensRestore',s.restoreFrom);
+      renderPensSteps(s);
 
       const pensionNominal = PENSION.selfMonthly + PENSION.spouseMonthly;
       const pension = Math.round(pensionNet());
@@ -2994,18 +3056,19 @@ window.DASHBOARD_HISTORY = {
       // 65歳までの年数と、教育費が出ていく期間を選択月から算出
       const baseYear = parseInt((snap.as_of||'').slice(0,4),10) || new Date().getFullYear();
       const years = Math.max(1, PENSION.selfPensionYear - baseYear);
-      const eduFrom = Math.max(0, 2033 - baseYear), eduSpan = 11;
       const startAssets = k.household + k.investment + (k.individual||0);
+      const eduRows = eduSchedule(s, baseYear, PENSION.selfPensionYear);
+      const eduTotal = eduRows.reduce((a,r)=>a+r.v, 0);
+      const eduMax = Math.max(0, ...eduRows.map(r=>r.v));
 
       // 年金の受取総額（夫婦とも65歳から lifeAge 歳まで・今の金額のまま＝実質ベース）
       const pensYearsEach = Math.max(0, PENSION.lifeAge - 65);
       const pensLifetime = pension * 12 * pensYearsEach;
       const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
-      const planOn = !!(s.cutFrom && s.cutFrom < PENSION.selfPensionYear && s.cutSaving !== s.saving);
-      const restoreOn = planOn && s.restoreFrom && s.restoreFrom > s.cutFrom && s.restoreFrom < PENSION.selfPensionYear;
+      const planOn = (s.steps||[]).some(st=>st.y < PENSION.selfPensionYear && st.m !== s.saving);
       document.getElementById('pensScen').innerHTML = [s.r1,s.r2,s.r3].map(x=>(Number(x)||0)/100).map(r=>{
-        const v = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, s, baseYear);
-        const flat = projectTo65(startAssets, s.saving, s.edu, r, years, eduFrom, eduSpan, null, baseYear);
+        const v = projectTo65(startAssets, r, years, baseYear, s);
+        const flat = projectTo65(startAssets, r, years, baseYear, s, true);
         const ok = v>=need;
         const pctOfNeed = need? Math.min(100, v/need*100) : 100;
         return '<div class="pens-sc"><span class="lab">実質 '+(+(r*100).toFixed(1))+'%</span>'
@@ -3022,23 +3085,74 @@ window.DASHBOARD_HISTORY = {
         [PENSION.loanPayoffYear+'年12月', '住宅ローン完済（夫64歳9ヶ月）'],
         [PENSION.selfPensionYear+'年3月', '夫 65歳・年金開始']
       ];
-      if(planOn) tl.push([s.cutFrom+'年', '積立を月¥'+fmtInt(s.cutSaving)+'に減らす（想定）']);
-      if(restoreOn) tl.push([s.restoreFrom+'年', '積立を月¥'+fmtInt(s.saving)+'に戻す（想定）']);
+      (s.steps||[]).slice().sort((a,b)=>a.y-b.y).forEach((st,i,arr)=>{
+        const before = i ? arr[i-1].m : s.saving;
+        if(st.y < PENSION.selfPensionYear && st.m !== before)
+          tl.push([st.y+'年度', '積立を月¥'+fmtInt(st.m)+'に'+(st.m<before?'減らす':'増やす')+'（想定）']);
+      });
+      KIDS.forEach(k=>{
+        tl.push([(k.birthFY+19)+'年度', k.name+' 大学入学（想定）']);
+      });
+      tl.push([(KIDS[KIDS.length-1].birthFY+22)+'年度', '末っ子 大学卒業（教育費の終わり）']);
       tl.sort((a,b)=>parseInt(a[0],10)-parseInt(b[0],10));
       document.getElementById('pensTl').innerHTML = tl.map(t=>'<div class="t"><span class="ty">'+t[0]+'</span><span class="tw">'+t[1]+'</span></div>').join('');
 
+      const eduEl = document.getElementById('pensEduPlan');
+      if(eduEl){
+        eduEl.innerHTML = eduRows.length ? '<div class="eh">教育費が出ていく年（子ども3人の学年から自動計算・合計 ¥'+fmtInt(eduTotal)+'）</div>'
+          + '<table><tr><th>年度</th><th>だれ</th><th>その年の教育費</th><th>その年の積立（月）</th></tr>'
+          + eduRows.map(r=>'<tr'+(r.v>=eduMax?' class="peak"':'')+'><td>'+r.y+'</td><td style="text-align:left">'+r.who.join('・')
+            + '</td><td>¥'+fmtInt(r.v)+'</td><td>¥'+fmtInt(savingForYear(r.y, s))+'</td></tr>').join('')
+          + '</table>' : '';
+      }
+
       document.getElementById('pensNote').innerHTML =
         '起点となる金融資産 <b>¥'+fmtInt(startAssets)+'</b>（家計＋投資＋小規模企業共済）を '+years+'年間運用した場合の試算。'
-        + '自宅・法人は含まない。教育費は '+(2033)+'〜'+(2033+eduSpan-1)+'年に分散して支出する前提。'
-        + (planOn ? '<br>積立は '+s.cutFrom+'年から月¥'+fmtInt(s.cutSaving)+'に減らし、'
-            + (restoreOn ? s.restoreFrom+'年から月¥'+fmtInt(s.saving)+'に戻す想定。' : '65歳まで戻さない想定。')
-            + '減らさない場合は「月の積立」を26年続けた値（各行の小さい数字）。「積立を減らす年」を0にすると減額なしで計算する。' : '')
+        + '自宅・法人は含まない。教育費は子ども3人の学年から自動計算（高校3年＋大学4年・合計¥'+fmtInt(eduTotal)+'）。'
+        + (planOn ? '<br>積立は下の「変更ポイント」のとおりに増減する想定。各行の小さい数字は、いまの月¥'+fmtInt(s.saving)+'を'+years+'年続けた場合。' : '')
         + '<br>「＋年金」は夫婦とも65歳から'+PENSION.lifeAge+'歳まで受け取る年金の総額（目減り後の世帯 月¥'+fmtInt(pension)+' × 12 × '+pensYearsEach+'年＝¥'+fmtInt(pensLifetime)+'・今の価値）。'
         + '○×の判定は「年金で足りない分」との比較なので、年金を足した合計では判定していない（二重に数えないため）。'
         + '<br>「実質リターン」は物価上昇を差し引いた後の利回り（名目5%・インフレ2%なら実質3%）。'
         + '年金額は2026年8月時点のねんきんネット実額で、マクロ経済スライドにより変動する。'
         + '※将来を保証するものではなく、投資助言でもありません。';
     }
+    function savePens(st){ try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){} renderPension(); }
+    function renderPensSteps(s){
+      const box = document.getElementById('pensSteps');
+      if(!box || document.activeElement && box.contains(document.activeElement)) return;
+      const steps = (s.steps||[]).slice().sort((a,b)=>a.y-b.y);
+      box.innerHTML = steps.length ? steps.map((st,i)=>
+        '<div class="pens-step"><span>'+(i+1)+'.</span>'
+        + '<input type="number" data-step="'+i+'" data-f="y" min="2026" max="2060" step="1" value="'+st.y+'"> 年度から'
+        + '<input type="text" inputmode="numeric" data-yen data-step="'+i+'" data-f="m" value="'+fmtInt(st.m)+'"> 円／月'
+        + '<button type="button" class="del" data-del="'+i+'">削除</button></div>').join('')
+        : '<div class="pens-step" style="opacity:.7">変更なし（いまの積立をそのまま続ける想定）</div>';
+    }
+    document.addEventListener('input', e=>{
+      const el = e.target;
+      if(!el || !el.dataset || el.dataset.step===undefined) return;
+      const st = loadPensSettings(), steps = (st.steps||[]).slice().sort((a,b)=>a.y-b.y);
+      const i = +el.dataset.step; if(!steps[i]) return;
+      const v = parseInt(String(el.value).replace(/[^0-9]/g,''),10);
+      if(isNaN(v)) return;
+      if(el.dataset.f==='y') steps[i].y = Math.min(2060, Math.max(2026, v));
+      else steps[i].m = Math.max(0, v);
+      st.steps = steps; savePens(st);
+    });
+    document.addEventListener('click', e=>{
+      const del = e.target.closest && e.target.closest('button[data-del]');
+      if(del){
+        const st = loadPensSettings(), steps = (st.steps||[]).slice().sort((a,b)=>a.y-b.y);
+        steps.splice(+del.dataset.del, 1); st.steps = steps; savePens(st); return;
+      }
+      if(e.target && e.target.id==='pensStepAdd'){
+        const st = loadPensSettings(), steps = (st.steps||[]).slice().sort((a,b)=>a.y-b.y);
+        const lastY = steps.length ? steps[steps.length-1].y : (new Date().getFullYear());
+        const lastM = steps.length ? steps[steps.length-1].m : st.saving;
+        steps.push({ y: Math.min(2060, lastY+1), m: lastM });
+        st.steps = steps; savePens(st);
+      }
+    });
     window.__hfoRenderPension = renderPension;
 
 /* 動かせる原資（実弾）＝ (家計＋投資) − iDeCo − 子の教育資金 − 生活防衛資金
@@ -3406,7 +3520,7 @@ window.DASHBOARD_HISTORY = {
         renderPension();
       });
     });
-    ['pensLiving','pensSaving','pensEdu','pensYears','pensCutFrom','pensCutSaving','pensRestore'].forEach(id=>{
+    ['pensLiving','pensSaving','pensYears','pensEduHs','pensEduUni','pensEduSupport'].forEach(id=>{
       const el=document.getElementById(id);
       if(!el) return;
       el.addEventListener('input',()=>{
@@ -3414,7 +3528,8 @@ window.DASHBOARD_HISTORY = {
         if(isNaN(val)) return;
         val=Math.max(0,val);
         if(id==='pensYears') val=Math.min(45,Math.max(1,val));
-        const map={pensLiving:'living',pensSaving:'saving',pensEdu:'edu',pensYears:'years',pensCutFrom:'cutFrom',pensCutSaving:'cutSaving',pensRestore:'restoreFrom'};
+        if(id==='pensEduSupport') val=Math.min(100,Math.max(0,val));
+        const map={pensLiving:'living',pensSaving:'saving',pensYears:'years',pensEduHs:'eduHs',pensEduUni:'eduUni',pensEduSupport:'eduSupport'};
         const st=loadPensSettings(); st[map[id]]=val;
         try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){}
         renderPension();
