@@ -428,6 +428,20 @@
   .al .desc{font-size:.74rem;color:var(--ink-sub);line-height:1.5}
   .al .meta{font-size:.66rem;color:var(--ink-mute);margin-top:6px;letter-spacing:.04em}
 
+  /* 今月の相場メモ */
+  .mkt-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .mkt-lead{font-size:.86rem;color:var(--ink);line-height:1.7;margin-bottom:12px}
+  .mkt-list{display:flex;flex-direction:column;gap:10px}
+  .mkt-i{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--ink-sub);line-height:1.65}
+  .mkt-i .tag{flex:none;font-size:.66rem;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:999px;
+        background:rgba(212,175,110,.12);color:var(--gold-soft);border:1px solid rgba(212,175,110,.28)}
+  .mkt-i .tag.up{background:rgba(52,211,153,.12);color:#6ee7b7;border-color:rgba(52,211,153,.3)}
+  .mkt-i .tag.down{background:rgba(248,113,113,.12);color:#fca5a5;border-color:rgba(248,113,113,.3)}
+  .mkt-i b{color:var(--ink)}
+  .mkt-src{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:.68rem;color:var(--ink-mute);line-height:1.8}
+  .mkt-src a{color:var(--ink-sub);text-decoration:underline;text-underline-offset:2px}
+  .mkt-src a:hover{color:var(--gold-soft)}
+
   /* 上部のセクション移動ナビ（スクロールで見落とさないように） */
   .qnav{position:sticky;top:0;z-index:40;display:flex;gap:6px;overflow-x:auto;padding:10px 0 10px;margin:0 0 14px;
         background:linear-gradient(180deg,var(--bg) 78%,rgba(0,0,0,0));backdrop-filter:blur(6px);
@@ -1054,6 +1068,14 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="card mkt-card" id="mktPanel" data-nav="相場メモ">
+      <div class="card-h">
+        <div class="lbl">📰 今月の相場メモ</div>
+        <div class="as" id="mktAs"></div>
+      </div>
+      <div id="mktBody"></div>
     </div>
 
     <!-- eBay Monthly P&L -->
@@ -2740,6 +2762,7 @@ window.DASHBOARD_HISTORY = {
     const CATEGORY_TILE_KEYS = ['corporate','individual','household_realestate','investment'];
 
     window.__hfoApplyMonth = function(monthKey){
+      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); }, 0);
       const snap = history[monthKey];
       if(!snap) return;
       window.__hfoCurrentMonth = monthKey;
@@ -3866,6 +3889,60 @@ window.DASHBOARD_HISTORY = {
   window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(mark); } }, { passive: true });
   window.addEventListener('resize', mark);
   mark();
+})();
+</script>
+<script>
+/* 今月の相場メモ：投資の増減が「何で動いたか」を毎月ここに残す。
+   月キーはダッシュボードの基準月と同じ（YYYY-MM）。選んだ月のメモがあれば出し、なければ直近のものを出す。 */
+window.MARKET_NOTES = {
+  "2026-09": {
+    period: "2026/8/18 → 9/17",
+    lead: "外国株の値段そのものは大きく崩れていない。下がって見えるのは<b>円高</b>のため。ドルなどで持っている資産を円に直す時の値段が下がった。",
+    items: [
+      { tag: "円高", dir: "down", text: "ドル円が<b>8月の157〜160円台から9月8日に152円台まで一気に円高</b>。7〜8月の為替介入（総額15兆円）に加え、日銀の利上げ観測が強まったため。9月中旬は155〜156円台。<b>外国株の投資信託は、これだけで3〜4%目減りする。</b>" },
+      { tag: "日銀", dir: "", text: "<b>9月18日に日銀が政策金利を1.00%→1.25%へ利上げ</b>（6月以来3か月ぶり・賛成7反対2）。植田総裁は「政策の局面は変化した」と述べ、連続利上げの可能性にも言及。<b>住宅ローンの変動金利は、これで11月分からの上昇がほぼ確定。</b>" },
+      { tag: "米金利", dir: "", text: "<b>9月16日のFOMCも0.25%利上げ</b>（3.50〜3.75%→3.75〜4.00%・全会一致）。日米の金利差は依然2.5%以上あるが、差が縮む方向に動き出した。" },
+      { tag: "米国株", dir: "up", text: "S&P500は8月13日に最高値。9月前半は上下したが大崩れはなく、<b>9月下旬にはナスダックが最高値を更新</b>（AI関連の半導体株が牽引）。ドル建てで見れば株価はむしろ堅調。" },
+      { tag: "日本株", dir: "up", text: "日経平均は<b>9月18日に65,018円（+882円）</b>と利上げ後も上昇。日本株を持っている口座（夫のSBI 国内株式）は今月プラス。" }
+    ],
+    verdict: "つまり今月のマイナスは<b>「持っている株が悪くなった」のではなく「円の価値が戻った」</b>ことによるもの。円高は輸入品が安くなる＝家計にはプラスの面もある。積立を続けていれば、円高の月は同じ金額でより多く買えている。",
+    sources: [
+      { t: "日銀9月会合の結果とドル円・日経225の見通し（OANDA証券）", u: "https://www.oanda.jp/lab-education/market_news/boj-2026-sep-review/" },
+      { t: "ドル安・円高のさらなる進行でドル円は153円台に（三井住友DSアセットマネジメント）", u: "https://www.smd-am.co.jp/market/ichikawa/2026/09/irepo260908/" },
+      { t: "7〜8月の円買い為替介入、総額15兆円（日本経済新聞）", u: "https://www.nikkei.com/article/DGXZQOUA272CY0X20C26A8000000/" },
+      { t: "米国：FOMCレビュー 2026/09/17（SMBC信託銀行）", u: "https://www.smbctb.co.jp/rates/prestia/insight_reports02.html" },
+      { t: "来週の日経平均見通し（9/21〜9/25）（外為どっとコム）", u: "https://www.gaitame.com/media/entry/2026/09/18/173854" },
+      { t: "Nasdaq jumps 2% to close at a record（CNBC）", u: "https://www.cnbc.com/2026/09/20/stock-market-today-live-updates.html" }
+    ]
+  }
+};
+(function(){
+  const panel = document.getElementById('mktPanel');
+  if(!panel) return;
+  function render(){
+    const notes = window.MARKET_NOTES || {};
+    const keys = Object.keys(notes).sort();
+    if(!keys.length){ panel.classList.add('hidden'); return; }
+    const cur = window.__hfoCurrentMonth;
+    const key = notes[cur] ? cur : keys[keys.length-1];
+    const n = notes[key];
+    panel.classList.remove('hidden');
+    document.getElementById('mktAs').textContent = n.period || key;
+    document.getElementById('mktBody').innerHTML =
+      '<div class="mkt-lead">' + n.lead + '</div>'
+      + '<div class="mkt-list">' + (n.items||[]).map(i =>
+          '<div class="mkt-i"><span class="tag ' + (i.dir||'') + '">' + i.tag + '</span><span>' + i.text + '</span></div>').join('')
+        + '</div>'
+      + (n.verdict ? '<div class="mkt-lead" style="margin:14px 0 0">' + n.verdict + '</div>' : '')
+      + (n.sources && n.sources.length
+          ? '<div class="mkt-src">出典：' + n.sources.map(s =>
+              '<a href="' + s.u + '" target="_blank" rel="noopener noreferrer">' + s.t + '</a>').join(' ／ ')
+            + '<br>相場の解説であり、投資助言ではありません。' + (key !== cur ? '（' + key + ' のメモを表示しています）' : '')
+            + '</div>'
+          : '');
+  }
+  window.__hfoRenderMarket = render;
+  render();
 })();
 </script>
 </body>
