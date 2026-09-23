@@ -2933,8 +2933,8 @@ window.DASHBOARD_HISTORY = {
       realCutNote: '2024年財政検証（過去30年投影ケース）をもとにAIが設定・2026-09'
     };
     const pensionNet = () => (PENSION.selfMonthly + PENSION.spouseMonthly) * (1 - PENSION.realCut);
-    const PENS_KEY = 'hfo_pension_v1';
-    const PENS_DEFAULT = { living: 250000, saving: 87666, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036, r1: 3, r2: 5, r3: 7 };
+    const PENS_KEY = 'hfo_pension_v2';   // v2：既定の積立額を実額191,000円に更新（旧設定は破棄）
+    const PENS_DEFAULT = { living: 250000, saving: 191000, edu: 20000000, years: 30, cutFrom: 2029, cutSaving: 30000, restoreFrom: 2036, r1: 3, r2: 5, r3: 7 };
     function loadPensSettings(){
       try{ return Object.assign({}, PENS_DEFAULT, JSON.parse(localStorage.getItem(PENS_KEY)||'{}')); }
       catch(e){ return Object.assign({}, PENS_DEFAULT); }
