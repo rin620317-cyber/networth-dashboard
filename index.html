@@ -423,6 +423,17 @@
   .al .desc{font-size:.74rem;color:var(--ink-sub);line-height:1.5}
   .al .meta{font-size:.66rem;color:var(--ink-mute);margin-top:6px;letter-spacing:.04em}
 
+  /* 上部のセクション移動ナビ（スクロールで見落とさないように） */
+  .qnav{position:sticky;top:0;z-index:40;display:flex;gap:6px;overflow-x:auto;padding:10px 0 10px;margin:0 0 14px;
+        background:linear-gradient(180deg,var(--bg) 78%,rgba(0,0,0,0));backdrop-filter:blur(6px);
+        scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .qnav::-webkit-scrollbar{display:none}
+  .qnav button{flex:none;background:var(--bg-card);border:1px solid var(--line);color:var(--ink-sub);
+        padding:7px 13px;border-radius:999px;font-size:.76rem;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .qnav button:hover{color:var(--ink);border-color:var(--line2)}
+  .qnav button.on{background:rgba(212,175,110,.14);color:var(--gold-soft);border-color:rgba(212,175,110,.35);font-weight:700}
+  @media(max-width:560px){ .qnav{padding:8px 0} .qnav button{padding:8px 13px} }
+
   /* Footer */
   footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-mute);letter-spacing:.04em}
 
@@ -688,8 +699,10 @@
       </div>
     </div>
 
+    <nav class="qnav" id="qnav" aria-label="セクションへ移動"></nav>
+
     <!-- Hero: Family worth + Score -->
-    <div class="hero">
+    <div class="hero" data-nav="純資産">
       <div class="card worth">
         <div class="card-h">
           <div class="lbl">純資産（Family Net Worth）</div>
@@ -742,7 +755,7 @@
             <svg class="wsspark" id="investSpark" width="190" height="80" viewBox="0 0 190 80" preserveAspectRatio="none"></svg>
           </div>
         </div>
-        <div class="alloc" id="allocPanel">
+        <div class="alloc" id="allocPanel" data-nav="現金と投資">
           <div class="alloc-head">
             <span class="alloc-title">現金 ⇄ 投資 の配分（参考値）</span>
             <span class="alloc-note">不動産・法人・個人事業は除外／投資助言ではありません</span>
@@ -765,7 +778,7 @@
         </div>
       </div>
 
-      <div class="card fuel-card" id="fuelPanel">
+      <div class="card fuel-card" id="fuelPanel" data-nav="動かせる原資">
         <div class="card-h">
           <div class="lbl">🎯 いま動かせる原資（実弾）</div>
           <div class="as">拘束資産を除いた手元の弾</div>
@@ -791,7 +804,7 @@
         <div class="fuel-out" id="fuelOut"></div>
       </div>
 
-      <div class="card pens-card" id="pensPanel">
+      <div class="card pens-card" id="pensPanel" data-nav="年金・老後">
         <div class="card-h">
           <div class="lbl">👴 65歳からの年金と老後資金</div>
           <div class="as">ねんきんネット実額ベース</div>
@@ -836,12 +849,6 @@
         <div class="pens-ctrl"><button type="button" id="pensStepAdd" class="pens-add">＋ 変更ポイントを追加</button></div>
         <div class="pens-edu" id="pensEduPlan"></div>
         <div class="pens-ctrl">
-          <label>積立を減らす年 <input type="number" id="pensCutFrom" min="0" max="2060" step="1"> 年</label>
-          <label>減らした後の積立 ¥<input type="text" inputmode="numeric" data-yen id="pensCutSaving" autocomplete="off"></label>
-          <label>積立を戻す年 <input type="number" id="pensRestore" min="0" max="2060" step="1"> 年</label>
-        </div>
-        <div class="pens-ctrl">
-          <label>いまの積立 ¥<input type="text" inputmode="numeric" data-yen id="pensSaving2" autocomplete="off" style="display:none"></label>
           <label>利回り① <input type="number" id="pensR1" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
           <label>利回り② <input type="number" id="pensR2" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
           <label>利回り③ <input type="number" id="pensR3" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
@@ -849,7 +856,7 @@
         <div class="pens-note" id="pensNote"></div>
       </div>
 
-      <div class="card asago-card" id="asagoPanel">
+      <div class="card asago-card" id="asagoPanel" data-nav="二拠点">
         <div class="card-h">
           <div class="lbl">🏡 二拠点生活プラン（丹波篠山）</div>
           <div class="as">JR篠山口まで乗換なし・段階的に</div>
@@ -876,7 +883,7 @@
 
       
 
-      <div class="card fp-card">
+      <div class="card fp-card" data-nav="FPの視点">
         <div class="card-h">
           <div class="lbl">💡 FPの視点（参考・毎月更新）</div>
           <div class="as" id="fpMonth">2026年7月</div>
@@ -976,7 +983,7 @@
     </div>
 
     <!-- Cashflow -->
-    <div class="sec-h">
+    <div class="sec-h" data-nav="資産の推移">
       <div>
         <div class="lbl">NET WORTH TREND</div>
         <h2>資産の推移（純資産と毎月の増減）</h2>
@@ -1045,7 +1052,7 @@
     </div>
 
     <!-- eBay Monthly P&L -->
-    <div class="sec-h">
+    <div class="sec-h" data-nav="eBay事業">
       <div>
         <div class="lbl">EBAY BUSINESS · MONTHLY P&L</div>
         <h2>月別eBay事業 営業利益（第5期実績）</h2>
@@ -1201,7 +1208,7 @@
     </div>
 
     <!-- Lifeplan -->
-    <div class="sec-h">
+    <div class="sec-h" data-nav="ライフプラン">
       <div>
         <div class="lbl">LIFE PLAN HORIZON</div>
         <h2>20年ライフプラン年表</h2>
@@ -1241,7 +1248,7 @@
     </div>
 
     <!-- Modules: Entity drill down -->
-    <div class="sec-h">
+    <div class="sec-h" data-nav="領域別">
       <div>
         <div class="lbl">ENTITY DEEP DIVE</div>
         <h2>領域別の状況</h2>
@@ -1290,7 +1297,7 @@
     </div>
 
     <!-- Strategy & Alerts -->
-    <div class="sec-h">
+    <div class="sec-h" data-nav="戦略・アラート">
       <div>
         <div class="lbl">STRATEGY · ACTIONS</div>
         <h2>戦略タスク & 重要アラート</h2>
@@ -3815,6 +3822,45 @@ window.DASHBOARD_HISTORY = {
     setOn(); render(cur);
   });
   setOn(); render(cur);
+})();
+</script>
+<script>
+/* 上部ナビ：data-nav を持つ要素を上から拾ってボタンを作る。
+   公開版では有事パネル（PRIVATE区間）ごと消えるため、DOMから作れば公開版だけ自動で1つ減る。 */
+(function(){
+  const nav = document.getElementById('qnav');
+  if(!nav) return;
+  const targets = [...document.querySelectorAll('[data-nav]')];
+  if(!targets.length){ nav.remove(); return; }
+  targets.forEach((el,i)=>{ if(!el.id) el.id = 'navsec'+i; });
+  nav.innerHTML = targets.map(el=>'<button type="button" data-go="'+el.id+'">'+el.dataset.nav+'</button>').join('');
+  const btns = [...nav.querySelectorAll('button')];
+
+  const navH = ()=> nav.getBoundingClientRect().height + 8;
+  nav.addEventListener('click', e=>{
+    const b = e.target.closest('button[data-go]'); if(!b) return;
+    const el = document.getElementById(b.dataset.go); if(!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - navH() - 6;
+    window.scrollTo({ top: Math.max(0,y), behavior: 'smooth' });
+  });
+
+  let ticking = false;
+  function mark(){
+    ticking = false;
+    const line = window.scrollY + navH() + 40;
+    let idx = 0;
+    targets.forEach((el,i)=>{ if(el.getBoundingClientRect().top + window.scrollY <= line) idx = i; });
+    btns.forEach((b,i)=>b.classList.toggle('on', i===idx));
+    const on = btns[idx];
+    if(on){
+      const l = on.offsetLeft, r = l + on.offsetWidth;
+      if(l < nav.scrollLeft || r > nav.scrollLeft + nav.clientWidth)
+        nav.scrollTo({ left: Math.max(0, l - 16), behavior: 'smooth' });
+    }
+  }
+  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+  window.addEventListener('resize', mark);
+  mark();
 })();
 </script>
 </body>
