@@ -3905,6 +3905,12 @@ window.MARKET_NOTES = {
       { tag: "米国株", dir: "up", text: "S&P500は8月13日に最高値。9月前半は上下したが大崩れはなく、<b>9月下旬にはナスダックが最高値を更新</b>（AI関連の半導体株が牽引）。ドル建てで見れば株価はむしろ堅調。" },
       { tag: "日本株", dir: "up", text: "日経平均は<b>9月18日に65,018円（+882円）</b>と利上げ後も上昇。日本株を持っている口座（夫のSBI 国内株式）は今月プラス。" }
     ],
+    caveats: [
+      "<b>円高が続けば下がり続ける。</b>外貨に連動する資産は約1,890万円。円が1%上がるごとに約19万円、5円（約3%）で約60万円、円で見た評価額が減る。",
+      "<b>米国株の最高値はAI関連が牽引</b>しており、調整を警告する専門家もいる。いちばん痛いのは「円高と株安が重なる月」。",
+      "<b>日銀の利上げは家計にとって確定したマイナス。</b>+0.25%で住宅ローンの完済までの利息は約35万円増える。連続利上げの可能性にも言及されている。",
+      "<b>資産のほぼ全部が株で、大半が外貨建て。</b>債券も為替ヘッジもないため、円高・株安の両方をまともに受ける形になっている。"
+    ],
     verdict: "つまり今月のマイナスは<b>「持っている株が悪くなった」のではなく「円の価値が戻った」</b>ことによるもの。円高は輸入品が安くなる＝家計にはプラスの面もある。積立を続けていれば、円高の月は同じ金額でより多く買えている。",
     sources: [
       { t: "日銀9月会合の結果とドル円・日経225の見通し（OANDA証券）", u: "https://www.oanda.jp/lab-education/market_news/boj-2026-sep-review/" },
@@ -3934,6 +3940,11 @@ window.MARKET_NOTES = {
           '<div class="mkt-i"><span class="tag ' + (i.dir||'') + '">' + i.tag + '</span><span>' + i.text + '</span></div>').join('')
         + '</div>'
       + (n.verdict ? '<div class="mkt-lead" style="margin:14px 0 0">' + n.verdict + '</div>' : '')
+      + (n.caveats && n.caveats.length
+          ? '<div class="mkt-lead" style="margin:14px 0 6px;font-weight:700">留意点（このメモに書いていないこと）</div>'
+            + '<div class="mkt-list">' + n.caveats.map(c =>
+                '<div class="mkt-i"><span class="tag down">注意</span><span>' + c + '</span></div>').join('') + '</div>'
+          : '')
       + (n.sources && n.sources.length
           ? '<div class="mkt-src">出典：' + n.sources.map(s =>
               '<a href="' + s.u + '" target="_blank" rel="noopener noreferrer">' + s.t + '</a>').join(' ／ ')
