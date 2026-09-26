@@ -235,6 +235,26 @@
   .pens-step .del{background:none;border:1px solid var(--line2);color:var(--ink-mute);border-radius:7px;padding:4px 9px;cursor:pointer;font-size:.74rem}
   .pens-step .del:hover{color:#f87171;border-color:rgba(248,113,113,.4)}
   .pens-add{background:rgba(212,175,110,.1);border:1px solid rgba(212,175,110,.32);color:var(--gold-soft);border-radius:8px;padding:6px 12px;font-size:.76rem;cursor:pointer}
+  .pp-lead{font-size:.82rem;color:var(--ink-sub);line-height:1.7;margin-bottom:12px}
+  .pp-wrap{max-width:100%;overflow-x:auto}
+  .pp-t{width:100%;border-collapse:collapse;font-size:.76rem;table-layout:fixed}
+  .pp-t th,.pp-t td{padding:6px 5px;text-align:right;color:var(--ink-sub);white-space:nowrap}
+  .pp-t th{color:var(--ink-mute);font-weight:600;border-bottom:1px solid var(--line)}
+  .pp-t td:first-child,.pp-t th:first-child{text-align:left;color:var(--ink);font-weight:600}
+  .pp-t tr.now td{background:rgba(212,175,110,.07)}
+  .pp-t .j{font-weight:700}
+  .pp-t .j.keep{color:#6ee7b7}
+  .pp-t .j.gray{color:var(--gold-soft)}
+  .pp-t .j.pay{color:#fca5a5}
+  .pp-rule{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:9px}
+  .pp-r{display:flex;gap:10px;align-items:flex-start;font-size:.79rem;color:var(--ink-sub);line-height:1.65}
+  .pp-r .lv{flex:none;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid}
+  .pp-r .lv.keep{color:#6ee7b7;border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.1)}
+  .pp-r .lv.gray{color:var(--gold-soft);border-color:rgba(212,175,110,.32);background:rgba(212,175,110,.1)}
+  .pp-r .lv.pay{color:#fca5a5;border-color:rgba(248,113,113,.32);background:rgba(248,113,113,.1)}
+  .pp-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
+  @media(max-width:560px){ .pp-t th,.pp-t td{padding:5px 3px;font-size:.72rem} }
+
   .pens-decum{margin:16px 0 4px;border-top:1px solid var(--line);padding-top:12px;max-width:100%;overflow-x:auto}
   .pens-decum .dh{font-size:.76rem;font-weight:700;color:var(--ink-sub);margin-bottom:8px}
   .pens-decum table{width:100%;border-collapse:collapse;font-size:.76rem;table-layout:fixed}
@@ -890,6 +910,20 @@
           <label>利回り③ <input type="number" id="pensR3" min="-5" max="15" step="0.5" style="width:4.5em"> %</label>
         </div>
         <div class="pens-note" id="pensNote"></div>
+      </div>
+
+      <div class="card prepay-card" id="prepayPanel" data-nav="繰上返済">
+        <div class="card-h">
+          <div class="lbl">🏦 住宅ローン：繰上返済の損得</div>
+          <div class="as" id="prepayAs"></div>
+        </div>
+        <div id="prepayBody"></div>
+        <div class="pens-ctrl">
+          <label>繰上げに回す額 ¥<input type="text" inputmode="numeric" data-yen id="ppAmount" autocomplete="off"></label>
+          <label>投資の期待リターン（名目） <input type="number" id="ppExpect" min="0" max="12" step="0.5" style="width:4.5em"> %</label>
+          <label>住宅ローン控除の残り <input type="number" id="ppDeduct" min="0" max="13" step="1" style="width:4.5em"> 年</label>
+          <label>投資の不確実さの割引 <input type="number" id="ppHaircut" min="0" max="5" step="0.5" style="width:4.5em"> %</label>
+        </div>
       </div>
 
       <div class="card asago-card" id="asagoPanel" data-nav="二拠点">
@@ -2779,7 +2813,7 @@ window.DASHBOARD_HISTORY = {
     const CATEGORY_TILE_KEYS = ['corporate','individual','household_realestate','investment'];
 
     window.__hfoApplyMonth = function(monthKey){
-      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); }, 0);
+      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); if(window.__hfoRenderPrepay) window.__hfoRenderPrepay(); }, 0);
       const snap = history[monthKey];
       if(!snap) return;
       window.__hfoCurrentMonth = monthKey;
@@ -4015,6 +4049,117 @@ window.MARKET_NOTES = {
           : '');
   }
   window.__hfoRenderMarket = render;
+  render();
+})();
+</script>
+<script>
+/* 住宅ローン：金利が何%になったら繰上返済が有利かを出す。
+   考え方はシンプルで、繰上返済は「ローン金利と同じ利回りの、税金も手数料もかからない確実な運用」。
+   だから比べる相手は投資の期待リターン（NISAなので非課税）。手数料0円のため取引コストは無視できる。 */
+(function(){
+  const panel = document.getElementById('prepayPanel');
+  if(!panel) return;
+  const PP_KEY = 'hfo_prepay_v1';
+  const PP_DEF = { amount: 1000000, expect: 5, deduct: 0, haircut: 2 };
+  const load = () => { try{ return Object.assign({}, PP_DEF, JSON.parse(localStorage.getItem(PP_KEY)||'{}')); }catch(e){ return Object.assign({}, PP_DEF); } };
+  const save = st => { try{ localStorage.setItem(PP_KEY, JSON.stringify(st)); }catch(e){} render(); };
+  const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
+  const fmtInt = n => Math.round(n).toLocaleString('ja-JP');   // 本体のfmtIntは別スコープなのでここで定義
+
+  function loan(){
+    const snap = (window.DASHBOARD_HISTORY||{})[window.__hfoCurrentMonth];
+    const rows = snap && snap.breakdown && snap.breakdown.liabilities;
+    if(!rows) return null;
+    for(const r of rows){
+      const name = String(r[0]||'');
+      if(name.indexOf('住宅ローン') < 0) continue;
+      const extra = r[4] || {};
+      const m = name.match(/([\d.]+)\s*%/);
+      return { bal: r[1]||0, pay: extra.monthly_payment || 0, rate: m ? parseFloat(m[1]) : 1.425 };
+    }
+    return null;
+  }
+
+  /* 残り何ヶ月で返し終わるか（毎月の返済額を変えない前提）。金利が高すぎて利息が返済額を超える場合は null。 */
+  function monthsLeft(bal, pay, ratePct){
+    const i = ratePct/100/12;
+    if(i <= 0) return Math.ceil(bal/pay);
+    if(bal*i >= pay) return null;              // 未払利息が出る＝元金が減らない
+    return Math.ceil(-Math.log(1 - i*bal/pay) / Math.log(1+i));
+  }
+  const grow = (x, annualPct, months) => x * (Math.pow(1+annualPct/100/12, months) - 1);
+
+  function render(){
+    const L = loan();
+    if(!L || !L.bal || !L.pay){ panel.classList.add('hidden'); return; }
+    panel.classList.remove('hidden');
+    const st = load();
+    [['ppAmount',fmtInt(st.amount)],['ppExpect',st.expect],['ppDeduct',st.deduct],['ppHaircut',st.haircut]].forEach(([id,v])=>{
+      const el = document.getElementById(id);
+      if(el && document.activeElement !== el) el.value = v;
+    });
+
+    const X = Math.min(st.amount, L.bal);
+    const unpaidLine = L.pay*12/L.bal*100;               // これを超えると利息が返済額を上回る
+    const dedu = Math.max(0, Number(st.deduct)||0);
+    const nNow = monthsLeft(L.bal, L.pay, L.rate) || 300;   // 比較の期間は今の残り年数でそろえる
+    const expect = Number(st.expect)||0, haircut = Number(st.haircut)||0;
+    const breakeven = Math.max(0, expect - haircut);        // これを超えたら繰上げ有利
+    const rates = [L.rate, L.rate+0.25, 2, 2.5, 3, 3.5, 4];
+
+    document.getElementById('prepayAs').textContent =
+      '残高 ¥'+fmtInt(L.bal)+'／毎月 ¥'+fmtInt(L.pay)+'／現在 '+L.rate+'%';
+
+    const rows = rates.filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b).map(rate=>{
+      const cut = grow(X, rate, nNow);                     // 繰上げで浮く利息（確実）
+      const inv = grow(X, expect, nNow);                   // 同じ額を投資した場合（期待値・NISAで非課税）
+      const lost = dedu ? X*0.007*dedu : 0;                // 住宅ローン控除が減る分（年0.7%×残り年数）
+      const judge = rate >= breakeven + 0.5 ? ['pay','繰上げが有利']
+                  : (rate >= breakeven - 0.5 ? ['gray','ほぼ互角'] : ['keep','投資が有利']);
+      return { rate, cut, inv, lost, judge };
+    });
+
+    document.getElementById('prepayBody').innerHTML =
+      '<div class="pp-lead">繰上返済は<b>「ローン金利と同じ利回りで、値動きも税金もない運用」</b>。手数料0円なので、比べる相手は投資の期待リターンだけ。'
+      + '下の表は <b>¥'+fmtInt(X)+'</b> を返済額軽減型で繰上げた場合と、同じ額を投資に回した場合の比較（完済までの合計・名目）。</div>'
+      + '<div class="pp-lead" style="margin:0 0 10px"><b>分かれ目は '+breakeven.toFixed(1)+'%。</b>'
+      + '投資の期待リターン '+expect+'% から、値動きの不確実さぶん '+haircut+'% を割り引いた水準。'
+      + 'ローン金利がこれを超えたら、確実に減らせる繰上返済のほうが合理的になる。</div>'
+      + '<div class="pp-wrap"><table class="pp-t"><tr><th>ローン金利</th><th>繰上げで浮く利息</th><th>投資だと（'+expect+'%）</th><th>判定</th></tr>'
+      + rows.map(r=>'<tr'+(Math.abs(r.rate-L.rate)<0.01?' class="now"':'')+'>'
+          + '<td>'+r.rate.toFixed(2)+'%'+(Math.abs(r.rate-L.rate)<0.01?'（今）':'')+'</td>'
+          + '<td>'+man(r.cut)+(r.lost?'<small style="display:block;opacity:.6">控除減 −'+man(r.lost)+'</small>':'')+'</td>'
+          + '<td>'+man(r.inv)+'</td>'
+          + '<td class="j '+r.judge[0]+'">'+r.judge[1]+'</td></tr>').join('')
+      + '</table><div class="pp-note" style="margin-top:6px">※どちらも ¥'+fmtInt(X)+' を今の残り'+Math.round(nNow/12)+'年で比べた金額（名目）。投資のほうは期待値であって、確実ではない。</div></div>'
+      + '<div class="pp-rule">'
+      + '<div class="pp-r"><span class="lv keep">〜'+(breakeven-0.5).toFixed(1)+'%</span><span><b>繰上げしない。</b>期待リターンとの差が大きく、手元の現金を減らすほうが不利。教育費と生活防衛にお金を残す。</span></div>'
+      + '<div class="pp-r"><span class="lv gray">'+(breakeven-0.5).toFixed(1)+'〜'+(breakeven+0.5).toFixed(1)+'%</span><span><b>金利差は縮むが、まだ投資寄り。</b>ただし教育費が始まる2029年ごろに、毎月の返済を軽くする目的で100〜200万円を「返済額軽減型」で入れるのは理にかなう。</span></div>'
+      + '<div class="pp-r"><span class="lv pay">'+(breakeven+0.5).toFixed(1)+'%超</span><span><b>部分繰上げを優先。</b>値動きゼロで、この金利と同じ利回りが確実に取れるのと同じ。ただし生活防衛資金300万円と教育費の分は必ず残す。</span></div>'
+      + '<div class="pp-r"><span class="lv pay">'+unpaidLine.toFixed(1)+'%超</span><span><b>最優先で繰上げ。</b>この金利を超えると毎月の返済額より利息のほうが大きくなり（未払利息）、払っても元金が減らない状態になる。</span></div>'
+      + '</div>'
+      + '<div class="pp-note">'
+      + '・<b>一括返済は勧めない。</b>団体信用生命保険が消える（夫に万一のとき、残りのローンが保険で消える権利を失う）うえ、手元の現金がなくなる。今の残高は現金より大きいので、そもそも一括はできない。<br>'
+      + '・<b>「返済額軽減型」と「期間短縮型」</b>：利息が多く減るのは期間短縮型。毎月の家計が楽になるのは返済額軽減型。教育費の山を越えるのが目的なら後者。<br>'
+      + '・住宅ローン控除が残っていると、繰上げで控除も減る（年末残高の0.7%）。残り年数を入れると差し引いて計算する。<b>年末残高証明書で要確認。</b><br>'
+      + '・変動金利は5年ルール・125%ルールで返済額の見直しが抑えられるが、<b>利息が先に増える</b>ため、上の「未払利息ライン」は実際に効いてくる。次の見直しは2029年12月の見込み。<br>'
+      + '・参考情報であり、投資助言ではありません。</div>';
+  }
+
+  ['ppAmount','ppExpect','ppDeduct','ppHaircut'].forEach(id=>{
+    document.addEventListener('input', e=>{
+      if(!e.target || e.target.id !== id) return;
+      let v = parseFloat(String(e.target.value).replace(/[^0-9.]/g,''));
+      if(isNaN(v)) return;
+      const st = load();
+      if(id==='ppAmount') st.amount = Math.max(0, Math.round(v));
+      else if(id==='ppExpect') st.expect = Math.min(12, Math.max(0, v));
+      else if(id==='ppDeduct') st.deduct = Math.min(13, Math.max(0, Math.round(v)));
+      else st.haircut = Math.min(5, Math.max(0, v));
+      save(st);
+    });
+  });
+  window.__hfoRenderPrepay = render;
   render();
 })();
 </script>
