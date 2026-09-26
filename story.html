@@ -50,6 +50,16 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .hb .bar{height:18px;border-radius:9px;background:var(--surface-2);overflow:hidden}
 .hb .bar i{display:block;height:100%;border-radius:9px;background:var(--gray)}
 .hb .r.me .bar i{background:var(--gold)}
+.rank{display:flex;flex-direction:column;gap:18px;margin-top:6px}
+.rank .g .h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.rank .g .h span{font-weight:700}
+.rank .g .h b{font-size:1.35rem;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.rank .g .h b small{font-size:.62em;color:var(--ink-soft);margin-left:2px}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:4px}
+.dots i{display:block;aspect-ratio:1;border-radius:50%;background:var(--surface-2)}
+.dots i.above{background:var(--gray)}
+.dots i.me{background:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 35%,transparent)}
+.rank .g .s{font-size:.8rem;color:var(--ink-soft);margin-top:6px}
 .stack{display:flex;height:34px;border-radius:12px;overflow:hidden;gap:2px;margin:6px 0 10px}
 .stack i{display:block;height:100%}
 .leg{display:flex;flex-direction:column;gap:6px}
@@ -117,8 +127,16 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     <div class="step">STEP 2　くらべてみると</div>
     <h2>預金と投資の合計（家は除く）</h2>
     <div class="hb" id="cmp"></div>
-    <p class="one">収入が少ない家庭のまんなかは<b>約360万円</b>。わが家は<b id="times">—</b>です。</p>
-    <p class="note">くらべる数字：金融経済教育推進機構「家計の金融行動に関する世論調査（2025年）」2人以上の世帯・中央値（まんなかの家庭の金額）。自宅は含みません。</p>
+    <p class="one">年収300万円未満の家庭のまんなかは<b>100万円</b>。わが家は<b id="times">—</b>です。</p>
+    <p class="note">くらべる数字：金融経済教育推進機構「家計の金融行動に関する世論調査（2025年）」2人以上の世帯・各種分類別データ 表4（金融資産を持っていない世帯を含む）の中央値＝まんなかの家庭の金額。自宅は含みません。</p>
+  </div>
+
+  <!-- 2.5 -->
+  <div class="card">
+    <div class="step">STEP 2+　100世帯ならべると</div>
+    <h2>わが家は、前から何番目？</h2>
+    <div class="rank" id="rank"></div>
+    <p class="note" id="rankNote"></p>
   </div>
 
   <!-- 3 -->
@@ -240,7 +258,8 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     // STEP2：自由に使えるお金＝家計（預金など）＋投資＋小規模企業共済
     const fin = (K.household||0) + (K.investment||0) + (K.individual||0);
     const cmp = [
-      { l:'収入が少ない家庭（年収300万円未満）', v:3600000 },
+      { l:'年収300万円未満の家庭', v:1000000 },
+      { l:'30代の家庭', v:3110000 },
       { l:'40代の家庭', v:5000000 },
       { l:'わが家', v:fin, me:true }
     ];
@@ -248,7 +267,44 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     document.getElementById('cmp').innerHTML = cmp.map(c =>
       '<div class="r'+(c.me?' me':'')+'"><div class="l"><span>'+c.l+'</span><b>'+man(c.v)+'</b></div>'
       + '<div class="bar"><i style="width:'+Math.max(3, c.v/mx*100).toFixed(1)+'%"></i></div></div>').join('');
-    document.getElementById('times').textContent = '約' + Math.round(fin/3600000) + '倍';
+    document.getElementById('times').textContent = '約' + Math.round(fin/1000000) + '倍';
+
+    // STEP2+：公式の分布表から「上位何％か」を出す（階級の中は均等に分布していると仮定）
+    //   階級：非保有／100万未満／100-200／200-300／300-400／400-500／500-700／700-1000／1000-1500／1500-2000／2000-3000／3000万以上
+    const LO = [null,0,100,200,300,400,500,700,1000,1500,2000,3000], HI = [null,100,200,300,400,500,700,1000,1500,2000,3000,null];
+    const DIST = [
+      { l:'30代の家庭', sh:[17.6,12.7,9.1,6,6,4.5,8.3,7.4,9.4,3.9,4.6,7.9], na:2.6, sub:'夫が30代（世帯主の年齢で分類）' },
+      { l:'40代の家庭', sh:[18.8,10,6.2,5.1,4.4,2.6,7.3,6.1,9.7,6.5,8.2,13.1], na:2.1, sub:'妻と同じ40代でくらべた場合' },
+      { l:'年収300万円未満の家庭', sh:[28.6,15.7,9.1,5.7,4.8,2.4,6,5.1,6.7,2.2,3.5,7.6], na:2.6, sub:'収入が同じくらいの家庭' }
+    ];
+    const topPct = (v, d) => {           // v は万円
+      let above = 0;
+      for(let i=1;i<d.sh.length;i++){
+        const lo = LO[i], hi = HI[i], p = d.sh[i];
+        if(hi === null){ if(v < lo) above += p; else return { pct: above/(100-d.na)*100, open:true }; }
+        else if(v < lo) above += p;
+        else if(v < hi) above += p*(hi-v)/(hi-lo);
+      }
+      return { pct: above/(100-d.na)*100, open:false };
+    };
+    // 調査の「金融資産」は、ふだんの出し入れ用の預金や子ども名義を含まないことがあるため、控えめな値でも出す
+    const inv = (H[last].breakdown && H[last].breakdown.investment) || [];
+    const kids = inv.filter(r=>String(r[0]).indexOf('子')>=0).reduce((a,r)=>a+(r[1]||0),0);
+    const finLow = fin - kids - 1000000;
+    document.getElementById('rank').innerHTML = DIST.map(d=>{
+      const a = topPct(fin/10000, d), b = topPct(finLow/10000, d);
+      const lo = Math.max(1, Math.round(Math.min(a.pct,b.pct))), hi = Math.max(1, Math.round(Math.max(a.pct,b.pct)));
+      const me = lo;                     // 点で示すのは「そのまま」の順位
+      const dots = Array.from({length:100},(_,i)=>'<i class="'+(i+1===me?'me':(i+1<me?'above':''))+'"></i>').join('');
+      return '<div class="g"><div class="h"><span>'+d.l+'</span><b>上位'+(lo===hi?lo:lo+'〜'+hi)+'<small>%</small></b></div>'
+        + '<div class="dots" aria-label="'+d.l+'100世帯のうち前から'+me+'番目">'+dots+'</div>'
+        + '<div class="s">'+d.sub+'。100世帯ならべると<b>前から'+lo+(lo===hi?'':'〜'+hi)+'番目</b>くらい</div></div>';
+    }).join('');
+    document.getElementById('rankNote').innerHTML =
+      '金色の点がわが家、濃い灰色がわが家より多い家庭。出典は上と同じ調査の分布表。'
+      + '幅があるのは、調査の「金融資産」がふだんの出し入れ用の預金などを含まないため、わが家の数字をそのまま（'+Math.round(fin/10000).toLocaleString('ja-JP')+'万円）と、'
+      + '子ども名義の口座と生活用の現金100万円を除いた控えめな数字（'+Math.round(finLow/10000).toLocaleString('ja-JP')+'万円）の両方で計算したため。'
+      + 'ネット調査なので、実際より高めに出やすいとされています。';
 
     // STEP3：置き場所（3つ）
     const parts = [
