@@ -96,6 +96,13 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .rule .x.ok i{color:var(--up)}
 .cost .r .bar i{background:var(--down)!important}
 .cost .r .l b{color:var(--down)!important}
+.mon{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.mon .m{background:var(--surface-2);border-radius:14px;padding:10px 8px;text-align:center}
+.mon .m .k{font-size:.72rem;color:var(--ink-soft)}
+.mon .m .v{font-size:1.15rem;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+.mon .m .v.up{color:var(--up)} .mon .m .v.down{color:var(--down)}
+.why-now{margin-top:12px;background:var(--surface-2);border-radius:14px;padding:12px 14px;font-size:.92rem;color:var(--ink-soft)}
+.why-now b{color:var(--ink)}
 .end{text-align:center;font-size:1.05rem;margin:26px 0 6px;color:var(--ink)}
 .end b{color:var(--gold-soft)}
 </style>
@@ -110,6 +117,14 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     <div class="s">わが家のいちばん大事なルール</div>
     <div class="m"><span>いまやっていることを、</span><br><span>淡々と続ける。</span></div>
     <div class="d">増えても、減っても、何も変えない。<br>それだけで、このページの未来になります。</div>
+  </div>
+
+  <!-- 0 -->
+  <div class="card" id="monthCard">
+    <div class="step">今月のひとこと</div>
+    <h2 id="monTitle">先月からの変化</h2>
+    <div class="mon" id="mon"></div>
+    <div class="why-now" id="monWhy"></div>
   </div>
 
   <!-- 1 -->
@@ -152,29 +167,18 @@ svg{display:block;width:100%;height:auto;overflow:visible}
   <div class="card">
     <div class="step">STEP 4　あなたの口座</div>
     <h2>入れたお金が、こんなに増えました</h2>
-    <div class="pair">
-      <div>
-        <div class="t">iDeCo（妻）<em>約2倍</em></div>
-        <div class="row"><span>入れたお金</span><span class="bar"><i style="width:49%;background:var(--gray)"></i></span><b>123万円</b></div>
-        <div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>251万円</b></div>
-      </div>
-      <div>
-        <div class="t">SBI証券（妻）<em>約1.8倍</em></div>
-        <div class="row"><span>入れたお金</span><span class="bar"><i style="width:56%;background:var(--gray)"></i></span><b>183万円</b></div>
-        <div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>328万円</b></div>
-      </div>
-    </div>
-    <p class="one">増えた分は<b>あわせて約273万円</b>。何もしなくても、お金が働いてくれた分です。</p>
-    <p class="note">2026年8月時点の数字。値段は毎月上がったり下がったりします。</p>
+    <div class="pair" id="pair"></div>
+    <p class="one" id="pairMsg"></p>
+    <p class="note" id="pairNote"></p>
   </div>
 
   <!-- 5 -->
   <div class="card">
     <div class="step">STEP 5　これから</div>
-    <h2>夫が65歳のとき（2052年）</h2>
+    <h2 id="futTitle">夫が65歳のとき</h2>
     <div class="hb" id="future"></div>
-    <p class="one">年金だけでは足りない分は<b>約4,000万円</b>。今のペースなら、<b>少なめに見積もっても足りる</b>見込みです。</p>
-    <p class="note">2026年9月の試算（物価の上がり分を差し引いた、今のお金の価値）。子ども3人の高校・大学の費用2,340万円を払ったあとの金額です。将来を約束するものではありません。</p>
+    <p class="one" id="futMsg"></p>
+    <p class="note" id="futNote"></p>
   </div>
 
   <!-- 6 -->
@@ -193,7 +197,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     <div class="step">STEP 7　気をつけること</div>
     <h2>安心しすぎない</h2>
     <ul class="care">
-      <li>投資は<b>下がる月もある</b>。9月は円高で約70万円へった。あわてて売らないのがコツ。</li>
+      <li id="careMove">投資は<b>下がる月もある</b>。あわてて売らないのがコツ。</li>
       <li>これから<b>子ども3人の学費</b>が続く（いちばん重いのは2035〜2036年）。</li>
       <li>収入が少し増えるだけで、<b>もっと安心</b>になる。</li>
     </ul>
@@ -203,14 +207,10 @@ svg{display:block;width:100%;height:auto;overflow:visible}
   <div class="card">
     <div class="step">STEP 8　ここがいちばん大事</div>
     <h2>財産が増えても、<br>使えるお金が増えたわけではない</h2>
-    <p class="one" style="margin-top:0">この2,986万円のほとんどは、<b>これからの学費</b>と<b>ふたりの老後</b>のためのお金。iDeCoは60歳まで引き出せません。</p>
+    <p class="one" style="margin-top:0">この<span id="s8amt">—</span>のほとんどは、<b>これからの学費</b>と<b>ふたりの老後</b>のためのお金。iDeCoは60歳まで引き出せません。</p>
     <h2 style="margin-top:18px">毎月のぜいたくが、65歳でこう効いてくる</h2>
-    <div class="hb cost">
-      <div class="r"><div class="l"><span>毎月 1万円 多く使うと</span><b>−約350〜460万円</b></div><div class="bar"><i style="width:20%"></i></div></div>
-      <div class="r"><div class="l"><span>毎月 3万円 多く使うと</span><b>−約1,060〜1,390万円</b></div><div class="bar"><i style="width:60%"></i></div></div>
-      <div class="r"><div class="l"><span>毎月 5万円 多く使うと</span><b>−約1,770〜2,310万円</b></div><div class="bar"><i style="width:100%"></i></div></div>
-    </div>
-    <p class="note">その分を65歳まで26年間、投資に回していた場合との差（年1〜3%で計算）。<b>月5万円のぜいたくで、STEP5の「少なめの見込み」は必要な額ぎりぎりまで下がります。</b></p>
+    <div class="hb cost" id="cost"></div>
+    <p class="note" id="costNote"></p>
     <h2 style="margin-top:18px">わが家の約束</h2>
     <div class="rule">
       <div class="x ok"><i>○</i><span>投資が<b>増えた月</b>も、いつもどおり</span></div>
@@ -238,10 +238,37 @@ svg{display:block;width:100%;height:auto;overflow:visible}
   fetch('./index.html', { cache: 'no-store' }).then(r=>r.text()).then(t=>{
     const i = t.indexOf('window.DASHBOARD_HISTORY'), j = t.indexOf('/* DASHBOARD_HISTORY_END */');
     const body = t.slice(t.indexOf('{', i), t.lastIndexOf('}', j) + 1);
-    render(JSON.parse(body));
-  }).catch(()=>{ document.getElementById('asof').textContent = 'データを読み込めませんでした（Nestoを開き直してください）'; });
+    // 老後の試算・相場メモも Nesto本体と同じ定義を使う（本体を直せば、かんたん版も自動で同じになる）
+    const C = {
+      PENSION: grab(t, 'const PENSION = {'),
+      KIDS: grab(t, 'const KIDS = ['),
+      PENS_DEFAULT: grab(t, 'const PENS_DEFAULT = {'),
+      NOTES: grab(t, 'window.MARKET_NOTES = {')
+    };
+    render(JSON.parse(body), C);
+  }).catch(e=>{ console.error(e); document.getElementById('asof').textContent = 'データを読み込めませんでした（Nestoを開き直してください）'; });
 
-  function render(H){
+  /* index.html のなかの JS の値（{…} や […]）を、かっこの対応を数えて取り出して評価する。文字列とコメントの中は数えない。 */
+  function grab(t, marker){
+    const i = t.indexOf(marker); if(i < 0) return null;
+    const start = i + marker.length - 1, open = t[start], close = open === '{' ? '}' : ']';
+    let depth = 0, q = null;
+    for(let k = start; k < t.length; k++){
+      const c = t[k], n = t[k+1];
+      if(q){ if(c === '\\'){ k++; continue; } if(c === q) q = null; continue; }
+      if(c === '/' && n === '/'){ k = t.indexOf('\n', k); if(k < 0) return null; continue; }
+      if(c === '/' && n === '*'){ k = t.indexOf('*/', k+2) + 1; continue; }
+      if(c === '"' || c === "'" || c === '`'){ q = c; continue; }
+      if(c === open) depth++;
+      else if(c === close && --depth === 0){
+        try{ return new Function('return (' + t.slice(start, k+1) + ');')(); }catch(e){ console.error(e); return null; }
+      }
+    }
+    return null;
+  }
+
+  function render(H, C){
+    C = C || {};
     const keys = Object.keys(H).filter(k => H[k] && H[k].keys && typeof H[k].keys.net_worth_total === 'number').sort();
     const last = keys[keys.length-1], K = H[last].keys;
     document.getElementById('asof').textContent = (H[last].as_of || last) + ' 時点';
@@ -316,16 +343,89 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     document.getElementById('stack').innerHTML = parts.map(p=>'<i style="width:'+(p.v/tot*100).toFixed(1)+'%;background:var('+p.c+')" title="'+esc(p.l)+'"></i>').join('');
     document.getElementById('leg').innerHTML = parts.map(p=>'<div class="x"><span><i style="background:var('+p.c+')"></i>'+esc(p.l)+'</span><b>'+man(p.v)+'（'+Math.round(p.v/tot*100)+'%）</b></div>').join('');
 
-    // STEP5：65歳の見込み（2026年9月の試算値）
-    const fut = [
-      { l:'足りない分（必要な額）', v:39750000 },
-      { l:'見込み（少なめ・年1%）', v:58190000, me:true },
-      { l:'見込み（ふつう・年3%）', v:89130000, me:true }
-    ];
-    const fm = Math.max(...fut.map(f=>f.v));
-    document.getElementById('future').innerHTML = fut.map(f =>
-      '<div class="r'+(f.me?' me':'')+'"><div class="l"><span>'+f.l+'</span><b>'+man(f.v)+'</b></div>'
-      + '<div class="bar"><i style="width:'+(f.v/fm*100).toFixed(1)+'%"></i></div></div>').join('');
+    // ── 今月のひとこと：先月の記録との差 ──
+    const prevKey = keys[keys.length-2], P = prevKey ? H[prevKey].keys : null;
+    const sgn = v => (v>0?'+':v<0?'−':'±') + Math.round(Math.abs(v)/10000).toLocaleString('ja-JP') + '万';
+    if(P){
+      const items = [['家族の財産', K.net_worth_total - P.net_worth_total], ['投資', (K.investment||0) - (P.investment||0)], ['預金など', (K.household||0) - (P.household||0)]];
+      const ym = k => k.slice(0,4) + '年' + parseInt(k.slice(5,7),10) + '月';
+      document.getElementById('monTitle').textContent = ym(prevKey) + ' → ' + ym(last);
+      document.getElementById('mon').innerHTML = items.map(x=>'<div class="m"><div class="k">'+x[0]+'</div><div class="v '+(x[1]>=0?'up':'down')+'">'+sgn(x[1])+'</div></div>').join('');
+      const note = C.NOTES && C.NOTES[last];
+      const inv = (K.investment||0) - (P.investment||0);
+      document.getElementById('monWhy').innerHTML = (note && note.short
+          ? '<b>投資が'+(inv>=0?'増えた':'へった')+'理由：</b>'+esc(note.short)+'。'
+          : '<b>投資が'+(inv>=0?'増えた':'へった')+'のは、主に相場の動き</b>によるもの。')
+        + '<br>' + (inv >= 0 ? 'でも、<b>使えるお金が増えたわけではありません。</b>いつもどおりに。' : 'でも、<b>あわてなくて大丈夫。</b>下がった月は、同じ金額で多く買えています。');
+    } else {
+      document.getElementById('monthCard').hidden = true;
+    }
+
+    // ── STEP4：妻の口座（元本＝入れたお金は、Nestoのデータの principal_jpy）──
+    const invRows = (H[last].breakdown && H[last].breakdown.investment) || [];
+    const mine = invRows.filter(r => /妻/.test(String(r[0])) && r[4] && r[4].principal_jpy)
+      .map(r => ({ name: String(r[0]).replace(/[（(]妻[）)]/,'').trim(), v: r[1], p: r[4].principal_jpy }));
+    if(mine.length){
+      document.getElementById('pair').innerHTML = mine.map(m => {
+        const x = m.v / m.p;
+        return '<div><div class="t">'+esc(m.name)+'（妻）<em>約'+(Math.round(x*10)/10)+'倍</em></div>'
+          + '<div class="row"><span>入れたお金</span><span class="bar"><i style="width:'+(m.p/m.v*100).toFixed(0)+'%;background:var(--gray)"></i></span><b>'+man(m.p)+'</b></div>'
+          + '<div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>'+man(m.v)+'</b></div></div>';
+      }).join('');
+      const gain = mine.reduce((a,m)=>a + m.v - m.p, 0);
+      document.getElementById('pairMsg').innerHTML = '増えた分は<b>あわせて約'+man(gain)+'</b>。何もしなくても、お金が働いてくれた分です。';
+      document.getElementById('pairNote').textContent = (H[last].as_of || last) + ' 時点。値段は毎月上がったり下がったりします。';
+    }
+
+    // ── STEP5：Nesto本体の「年金・老後」パネルと同じ計算・同じ前提（既定値）──
+    const PEN = C.PENSION, KIDS = C.KIDS, S = C.PENS_DEFAULT;
+    if(PEN && KIDS && S){
+      const baseYear = parseInt((H[last].as_of || last).slice(0,4), 10);
+      const years = Math.max(1, PEN.selfPensionYear - baseYear);
+      const pensionNet = (PEN.selfMonthly + PEN.spouseMonthly) * (1 - (PEN.realCut || 0));
+      const need = Math.max(0, S.living - pensionNet) * 12 * S.years;
+      const saving = y => { let m = S.saving; (S.steps||[]).slice().sort((a,b)=>a.y-b.y).forEach(st=>{ if(y >= st.y) m = st.m; }); return m; };
+      const edu = y => { let t = 0; KIDS.forEach(k=>{ const a = y - k.birthFY; if(a>=16 && a<=18) t += S.eduHs; if(a>=19 && a<=22) t += S.eduUni; }); return t * (1 - (S.eduSupport||0)/100); };
+      const proj = r => { let b = fin; for(let i=0;i<years;i++){ const y = baseYear + i; b = b*(1+r) + saving(y)*12 - edu(y); } return b; };
+      let eduTotal = 0; for(let i=0;i<years;i++) eduTotal += edu(baseYear+i);
+      const lo = proj(0.01), mid = proj(0.03);
+      const fut = [
+        { l:'年金で足りない分（必要な額）', v: need },
+        { l:'見込み（少なめ・年1%）', v: lo, me:true },
+        { l:'見込み（ふつう・年3%）', v: mid, me:true }
+      ];
+      const fm = Math.max(...fut.map(f=>f.v));
+      document.getElementById('futTitle').textContent = '夫が65歳のとき（' + PEN.selfPensionYear + '年）';
+      document.getElementById('future').innerHTML = fut.map(f =>
+        '<div class="r'+(f.me?' me':'')+'"><div class="l"><span>'+f.l+'</span><b>'+man(f.v)+'</b></div>'
+        + '<div class="bar"><i style="width:'+Math.max(3, f.v/fm*100).toFixed(1)+'%"></i></div></div>').join('');
+      document.getElementById('futMsg').innerHTML = '年金だけでは足りない分は<b>約'+man(Math.round(need/1e6)*1e6)+'</b>。'
+        + (lo >= need ? '今のペースなら、<b>少なめに見積もっても足りる</b>見込みです。'
+                      : (mid >= need ? 'ふつうに増えれば足りますが、<b>少なめだと足りません</b>。' : '<b>今のペースでは足りない</b>見込みです。'));
+      document.getElementById('futNote').textContent = (H[last].as_of || last).slice(0,4) + '年' + parseInt((H[last].as_of || last).slice(5,7),10) + '月のデータで計算（物価の上がり分を差し引いた、今のお金の価値）。'
+        + '子ども3人の高校・大学の費用 約'+man(eduTotal)+'を払ったあとの金額。前提はNestoの「年金・老後」と同じ。将来を約束するものではありません。';
+
+      // ── STEP8：ぜいたくのコスト（65歳までの年数で毎回計算）──
+      const fv = (m, r) => m * 12 * ((Math.pow(1+r, years) - 1) / r);
+      const costs = [10000, 30000, 50000].map(m => ({ m, lo: fv(m, 0.01), hi: fv(m, 0.03) }));
+      const cmax = costs[costs.length-1].hi;
+      document.getElementById('cost').innerHTML = costs.map(c =>
+        '<div class="r"><div class="l"><span>毎月 '+(c.m/10000)+'万円 多く使うと</span><b>−約'+Math.round(c.lo/10000).toLocaleString('ja-JP')+'〜'+Math.round(c.hi/10000).toLocaleString('ja-JP')+'万円</b></div>'
+        + '<div class="bar"><i style="width:'+(c.hi/cmax*100).toFixed(0)+'%"></i></div></div>').join('');
+      const after = lo - costs[2].lo;
+      document.getElementById('costNote').innerHTML = 'その分を65歳まで'+years+'年間、投資に回していた場合との差（年1〜3%で計算）。'
+        + '<b>月5万円のぜいたくで、STEP5の「少なめの見込み」は'+man(after)+'に下がり、'
+        + (after >= need ? '必要な額との差は'+man(after-need)+'しか残りません。' : '必要な額に<b>届かなくなります</b>。') + '</b>';
+    }
+    document.getElementById('s8amt').textContent = man(K.net_worth_total);
+
+    // ── STEP7：今月の動き ──
+    if(P){
+      const inv = (K.investment||0) - (P.investment||0);
+      document.getElementById('careMove').innerHTML = inv < 0
+        ? '投資は<b>下がる月もある</b>。先月は約'+man(-inv)+'へった。あわてて売らないのがコツ。'
+        : '投資は<b>上がる月も下がる月もある</b>。先月は約'+man(inv)+'増えたけど、使えるお金が増えたわけではない。';
+    }
   }
 
   function line(pts){
