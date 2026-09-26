@@ -74,6 +74,18 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .care{margin:0;padding-left:1.2em;color:var(--ink-soft)}
 .care li{margin:4px 0}
 .care b{color:var(--ink)}
+.motto{margin:18px 0 6px;border-radius:22px;padding:24px 18px 22px;text-align:center;
+  background:linear-gradient(160deg,var(--gold) 0%,color-mix(in srgb,var(--gold) 70%,#000) 100%);color:#fff}
+.motto .s{font-size:.8rem;font-weight:700;letter-spacing:.18em;opacity:.9}
+.motto .m span{white-space:nowrap}
+.motto .m{font-size:clamp(1.45rem,7vw,2.4rem);font-weight:900;line-height:1.3;margin:8px 0 10px;letter-spacing:.02em}
+.motto .d{font-size:.95rem;line-height:1.7;opacity:.95}
+.rule{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.rule .x{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.rule .x i{flex:none;font-style:normal;font-weight:800;color:var(--down)}
+.rule .x.ok i{color:var(--up)}
+.cost .r .bar i{background:var(--down)!important}
+.cost .r .l b{color:var(--down)!important}
 .end{text-align:center;font-size:1.05rem;margin:26px 0 6px;color:var(--ink)}
 .end b{color:var(--gold-soft)}
 </style>
@@ -83,6 +95,12 @@ svg{display:block;width:100%;height:auto;overflow:visible}
   <a class="back" href="./">← Nestoにもどる</a>
   <h1>わが家のお金、<br>ちゃんと育っています</h1>
   <div class="date" id="asof">読み込み中…</div>
+
+  <div class="motto">
+    <div class="s">わが家のいちばん大事なルール</div>
+    <div class="m"><span>いまやっていることを、</span><br><span>淡々と続ける。</span></div>
+    <div class="d">増えても、減っても、何も変えない。<br>それだけで、このページの未来になります。</div>
+  </div>
 
   <!-- 1 -->
   <div class="card">
@@ -163,7 +181,33 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     </ul>
   </div>
 
-  <p class="end">収入が少なくても、<br><b>お金はちゃんと育てられる。</b></p>
+  <!-- 8 -->
+  <div class="card">
+    <div class="step">STEP 8　ここがいちばん大事</div>
+    <h2>財産が増えても、<br>使えるお金が増えたわけではない</h2>
+    <p class="one" style="margin-top:0">この2,986万円のほとんどは、<b>これからの学費</b>と<b>ふたりの老後</b>のためのお金。iDeCoは60歳まで引き出せません。</p>
+    <h2 style="margin-top:18px">毎月のぜいたくが、65歳でこう効いてくる</h2>
+    <div class="hb cost">
+      <div class="r"><div class="l"><span>毎月 1万円 多く使うと</span><b>−約350〜460万円</b></div><div class="bar"><i style="width:20%"></i></div></div>
+      <div class="r"><div class="l"><span>毎月 3万円 多く使うと</span><b>−約1,060〜1,390万円</b></div><div class="bar"><i style="width:60%"></i></div></div>
+      <div class="r"><div class="l"><span>毎月 5万円 多く使うと</span><b>−約1,770〜2,310万円</b></div><div class="bar"><i style="width:100%"></i></div></div>
+    </div>
+    <p class="note">その分を65歳まで26年間、投資に回していた場合との差（年1〜3%で計算）。<b>月5万円のぜいたくで、STEP5の「少なめの見込み」は必要な額ぎりぎりまで下がります。</b></p>
+    <h2 style="margin-top:18px">わが家の約束</h2>
+    <div class="rule">
+      <div class="x ok"><i>○</i><span>投資が<b>増えた月</b>も、いつもどおり</span></div>
+      <div class="x ok"><i>○</i><span>投資が<b>減った月</b>も、いつもどおり（あわてて売らない）</span></div>
+      <div class="x"><i>×</i><span>「増えたから、ちょっと使おう」はしない</span></div>
+      <div class="x"><i>×</i><span>毎月の積立を、気分で止めたり減らしたりしない</span></div>
+      <div class="x ok"><i>○</i><span>使いたいものは、<b>年に一度の「使う予算」</b>の中で楽しむ</span></div>
+    </div>
+  </div>
+
+  <div class="motto">
+    <div class="s">もう一度</div>
+    <div class="m"><span>いまやっていることを、</span><br><span>淡々と続ける。</span></div>
+    <div class="d">お金を育てたのは、<b style="color:#fff">特別なことではなく「続けたこと」</b>です。</div>
+  </div>
 </div>
 
 <script>
