@@ -255,6 +255,41 @@
   .pp-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
   @media(max-width:560px){ .pp-t th,.pp-t td{padding:5px 3px;font-size:.72rem} }
 
+  .lv-sec{margin-top:12px}
+  .lv-sec .sh{font-size:.76rem;font-weight:700;color:var(--ink-sub);margin:0 0 6px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .lv-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:.8rem;color:var(--ink-sub)}
+  .lv-row .n small{display:block;font-size:.66rem;color:var(--ink-mute)}
+  .lv-row input{width:7.5em;padding:4px 7px;border-radius:7px;border:1px solid var(--line2);background:var(--bg-card2);color:var(--ink);font-size:.78rem;text-align:right;font-variant-numeric:tabular-nums}
+  .lv-row .a{font-variant-numeric:tabular-nums;color:var(--ink)}
+  .lv-row.tot{border-bottom:none;border-top:1px solid var(--line2);margin-top:4px;padding-top:8px;font-weight:700}
+  .lv-row.tot .a{color:var(--gold-soft);font-size:.95rem}
+  .lv-big{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 4px}
+  .lv-big .b{flex:1 1 160px;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .lv-big .b .k{font-size:.7rem;color:var(--ink-mute)}
+  .lv-big .b .v{font-size:1.25rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  .lv-big .b.g .v{color:var(--gold-soft)}
+  .lv-btn{margin-top:10px;background:rgba(212,175,110,.12);border:1px solid rgba(212,175,110,.35);color:var(--gold-soft);border-radius:8px;padding:7px 12px;font-size:.78rem;cursor:pointer}
+  .lv-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
+  .life2{padding:22px 24px}
+  .life2 .life-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  @media(max-width:700px){ .life2 .life-summary{grid-template-columns:1fr 1fr} }
+  .lp-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .lp-t{width:100%;border-collapse:collapse;font-size:.75rem;min-width:520px}
+  .lp-t th,.lp-t td{padding:6px 6px;text-align:right;color:var(--ink-sub);white-space:nowrap;border-bottom:1px solid rgba(255,255,255,.04)}
+  .lp-t th{color:var(--ink-mute);font-weight:600;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg-card)}
+  .lp-t td:first-child,.lp-t th:first-child{text-align:left;color:var(--ink)}
+  .lp-t td.c,.lp-t th.c{text-align:center}
+  .lp-t tr.now td{background:rgba(212,175,110,.08)}
+  .lp-t .pos{color:#6ee7b7}.lp-t .neg{color:#fca5a5}
+  .lp-t .st{display:inline-block;font-size:.66rem;padding:1px 6px;border-radius:999px;border:1px solid var(--line2)}
+  .lp-t .st.hs{border-color:rgba(212,175,110,.4);color:var(--gold-soft)}
+  .lp-t .st.un{border-color:rgba(248,113,113,.4);color:#fca5a5}
+  .lp-t .st.jb{opacity:.45}
+  .lp-ev{display:flex;flex-direction:column;gap:6px}
+  .lp-ev .e{display:flex;gap:12px;font-size:.8rem;color:var(--ink-sub);padding:6px 0;border-bottom:1px dashed var(--line)}
+  .lp-ev .e .y{flex:none;width:7.5em;color:var(--gold-soft);font-weight:700}
+  .lp-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
+
   .pens-decum{margin:16px 0 4px;border-top:1px solid var(--line);padding-top:12px;max-width:100%;overflow-x:auto}
   .pens-decum .dh{font-size:.76rem;font-weight:700;color:var(--ink-sub);margin-bottom:8px}
   .pens-decum table{width:100%;border-collapse:collapse;font-size:.76rem;table-layout:fixed}
@@ -853,6 +888,14 @@
         <div class="fuel-out" id="fuelOut"></div>
       </div>
 
+      <div class="card live-card" id="livePanel" data-nav="実質生活費">
+        <div class="card-h">
+          <div class="lbl">🧾 実質生活費（事業が肩代わりしている分も含めた本当の生活費）</div>
+          <div class="as">月額・今の価値</div>
+        </div>
+        <div id="liveBody"></div>
+      </div>
+
       <div class="card pens-card" id="pensPanel" data-nav="年金・老後">
         <div class="card-h">
           <div class="lbl">👴 65歳からの年金と老後資金</div>
@@ -1289,40 +1332,15 @@
     <div class="sec-h" data-nav="ライフプラン">
       <div>
         <div class="lbl">LIFE PLAN HORIZON</div>
-        <h2>20年ライフプラン年表</h2>
+        <h2>ライフプラン年表（子どもの成長・児童手当・住まい・老後）</h2>
       </div>
-      <div class="ctrl">
-        <button class="on">教育費</button><button>住居</button><button>引退</button>
+      <div class="ctrl" id="lifeView">
+        <button data-v="kids" class="on">子ども・手当</button><button data-v="home">住まい</button><button data-v="old">老後</button>
       </div>
     </div>
-    <div class="card life">
-      <div class="life-bar">
-        <div class="axis"></div>
-        <!-- Years -->
-        <div class="year now" style="left:5%"><div class="dot"></div><div class="lbl">2026</div></div>
-        <div class="year"     style="left:18%"><div class="dot"></div><div class="lbl">2029</div></div>
-        <div class="year"     style="left:31%"><div class="dot"></div><div class="lbl">2032</div></div>
-        <div class="year"     style="left:44%"><div class="dot"></div><div class="lbl">2035</div></div>
-        <div class="year"     style="left:57%"><div class="dot"></div><div class="lbl">2038</div></div>
-        <div class="year"     style="left:70%"><div class="dot"></div><div class="lbl">2041</div></div>
-        <div class="year"     style="left:83%"><div class="dot"></div><div class="lbl">2044</div></div>
-        <div class="year"     style="left:95%"><div class="dot"></div><div class="lbl">2046</div></div>
-        <!-- Events -->
-        <div class="ev up" style="left:11%"><div class="ic">📚</div><div class="ttl">第1子 高校入学</div><div class="amt">▲¥500K/y</div></div>
-        <div class="ev dn" style="left:18%"><div class="ic">🎓</div><div class="ttl">第1子 大学入学</div><div class="amt">▲¥1.2M/y</div></div>
-        <div class="ev up" style="left:24%"><div class="ic">📚</div><div class="ttl">第2子 高校入学</div><div class="amt">▲¥500K/y</div></div>
-        <div class="ev dn" style="left:31%"><div class="ic">🎓</div><div class="ttl">第2子 大学入学</div><div class="amt">▲¥1.2M/y</div></div>
-        <div class="ev up" style="left:54%"><div class="ic">📚</div><div class="ttl">第3子 高校入学</div></div>
-        <div class="ev dn" style="left:65%"><div class="ic">🎓</div><div class="ttl">第3子 大学入学</div><div class="amt">▲¥1.2M/y</div></div>
-        <div class="ev up" style="left:82%"><div class="ic">🏠</div><div class="ttl">住宅ローン完済</div><div class="amt">▲¥10M</div></div>
-        <div class="ev dn" style="left:93%"><div class="ic">🌅</div><div class="ttl">夫さん 60歳</div></div>
-      </div>
-      <div class="life-summary">
-        <div class="ls"><div class="lbl">教育費 累計</div><div class="v num">¥84.6M</div></div>
-        <div class="ls"><div class="lbl">住宅ローン残</div><div class="v num">¥10.0M</div></div>
-        <div class="ls"><div class="lbl">必要老後資金</div><div class="v num">¥30.0M</div></div>
-        <div class="ls"><div class="lbl">想定到達年</div><div class="v">2044年</div></div>
-      </div>
+    <div class="card life2" id="lifePanel">
+      <div class="life-summary" id="lifeSum"></div>
+      <div id="lifeBody"></div>
     </div>
 
     <!-- Modules: Entity drill down -->
@@ -2813,7 +2831,7 @@ window.DASHBOARD_HISTORY = {
     const CATEGORY_TILE_KEYS = ['corporate','individual','household_realestate','investment'];
 
     window.__hfoApplyMonth = function(monthKey){
-      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); if(window.__hfoRenderPrepay) window.__hfoRenderPrepay(); }, 0);
+      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); if(window.__hfoRenderPrepay) window.__hfoRenderPrepay(); if(window.__hfoRenderLiving) window.__hfoRenderLiving(); if(window.__hfoRenderLife) window.__hfoRenderLife(); }, 0);
       const snap = history[monthKey];
       if(!snap) return;
       window.__hfoCurrentMonth = monthKey;
@@ -3284,6 +3302,9 @@ window.DASHBOARD_HISTORY = {
       }
     });
     window.__hfoRenderPension = renderPension;
+    window.__hfoEduForYear = y => eduForYear(y, loadPensSettings());
+    window.__hfoPensSettings = () => loadPensSettings();
+    window.__hfoSetLiving = v => { const st = loadPensSettings(); st.living = Math.max(0, Math.round(v)); try{ localStorage.setItem(PENS_KEY, JSON.stringify(st)); }catch(e){} renderPension(); };
 
 /* 動かせる原資（実弾）＝ (家計＋投資) − iDeCo − 子の教育資金 − 生活防衛資金
    自宅・法人・小規模企業共済は最初から除外（売れない／別勘定／拘束） */
@@ -4161,6 +4182,263 @@ window.MARKET_NOTES = {
   });
   window.__hfoRenderPrepay = render;
   render();
+})();
+</script>
+<script>
+/* 子ども3人（生まれた年度）。老後パネルと同じ定義。 */
+const HFO_KIDS = [ { name:'長男', b:2014 }, { name:'長女', b:2016 }, { name:'末っ子', b:2023 } ];
+const hfoYen = n => Math.round(n).toLocaleString('ja-JP');
+const hfoMan = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+'万';
+
+/* 学年ラベル（年度で判定。a＝その年度に何歳になるか） */
+function hfoGrade(fy, b){
+  const a = fy - b;
+  if(a < 0) return { t:'—', c:'jb' };
+  if(a <= 3) return { t: a+'歳', c:'' };
+  if(a <= 6) return { t: ['年少','年中','年長'][a-4], c:'' };
+  if(a <= 12) return { t: '小'+(a-6), c:'' };
+  if(a <= 15) return { t: '中'+(a-12), c:'' };
+  if(a <= 18) return { t: '高'+(a-15), c:'hs' };
+  if(a <= 22) return { t: '大'+(a-18), c:'un' };
+  return { t:'社会人', c:'jb' };
+}
+
+/* 児童手当（2024年10月からの制度・年度あたりの年額）
+   支給は高校生年代まで（生まれた年度＋18の年度まで）。
+   月額：3歳未満 1.5万／3歳〜高校生 1万／第3子以降は年齢に関係なく3万。
+   第何子かは「22歳の年度末まで」の子を上から数える（大学生年代は親が生計費を負担している届出が必要）。 */
+function hfoAllowance(fy){
+  const counted = HFO_KIDS.filter(k => fy <= k.b + 22 && fy >= k.b);
+  let total = 0; const per = {};
+  HFO_KIDS.forEach(k=>{
+    per[k.name] = 0;
+    if(fy < k.b || fy > k.b + 18) return;
+    const order = counted.indexOf(k) + 1;
+    const m = order >= 3 ? 30000 : (fy - k.b <= 2 ? 15000 : 10000);
+    per[k.name] = m * 12; total += m * 12;
+  });
+  return { total, per };
+}
+
+/* ───── ① 実質生活費 ───── */
+(function(){
+  const panel = document.getElementById('livePanel');
+  if(!panel) return;
+  const KEY = 'hfo_living_v1';
+  const DEF = {
+    salary: 85000, biz: 50000, points: 10000, mercari: 5000, other: 0,
+    kidsToKids: 0,                                   // 児童手当を子ども名義口座に入れている額（家計では使っていない分）
+    bizTel: 0, bizCar: 0, bizUtil: 0, bizGoods: 0, bizOther: 0,
+    kidsCost: 30000, oldExtra: 20000
+  };
+  const load = () => { try{ return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ return Object.assign({}, DEF); } };
+  const save = st => { try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} render(); };
+
+  function drawdown(){
+    const H = window.DASHBOARD_HISTORY || {}, cur = window.__hfoCurrentMonth;
+    if(!cur || !H[cur] || !H[cur].keys) return { v:0, from:null };
+    const [y,m] = cur.split('-').map(Number);
+    const target = (y-1)+'-'+String(m).padStart(2,'0');
+    const keys = Object.keys(H).filter(k=>k<=target && H[k].keys && typeof H[k].keys.household==='number').sort();
+    const base = keys.length ? keys[keys.length-1] : null;
+    if(!base) return { v:0, from:null };
+    const [by,bm] = base.split('-').map(Number);
+    const months = Math.max(1, (y*12+m)-(by*12+bm));
+    return { v: (H[base].keys.household - H[cur].keys.household)/months, from: base, months };
+  }
+  function loanPay(){
+    const snap = (window.DASHBOARD_HISTORY||{})[window.__hfoCurrentMonth];
+    const rows = (snap && snap.breakdown && snap.breakdown.liabilities) || [];
+    let home = 0, sch = 0;
+    rows.forEach(r=>{ const n=String(r[0]||''), x=r[4]||{};
+      if(n.indexOf('住宅ローン')>=0) home = x.monthly_payment||0;
+      if(n.indexOf('奨学金')>=0) sch = x.monthly_payment||0; });
+    return { home, sch };
+  }
+
+  function render(){
+    const st = load();
+    const ps = window.__hfoPensSettings ? window.__hfoPensSettings() : { saving:191000, living:250000 };
+    const fy = (()=>{ const d=new Date(); return d.getMonth()>=3 ? d.getFullYear() : d.getFullYear()-1; })();
+    const allowance = hfoAllowance(fy).total/12;
+    const dd = drawdown(), lp = loanPay();
+
+    const income = st.salary + st.biz + allowance + st.points + st.mercari + st.other - st.kidsToKids;
+    const spend = income + dd.v - ps.saving;                     // 入ってきたお金＋貯金の取り崩し−積立＝使ったお金
+    const bizShare = st.bizTel + st.bizCar + st.bizUtil + st.bizGoods + st.bizOther;
+    const real = spend + bizShare;
+    const old = real - lp.home - lp.sch - st.kidsCost + st.oldExtra;
+
+    const inp = (k, label, sub) => '<div class="lv-row"><span class="n">'+label+(sub?'<small>'+sub+'</small>':'')+'</span>'
+      + '<input type="text" inputmode="numeric" data-yen data-lv="'+k+'" value="'+hfoYen(st[k])+'"></div>';
+    const fix = (label, v, sub, cls) => '<div class="lv-row'+(cls?' '+cls:'')+'"><span class="n">'+label+(sub?'<small>'+sub+'</small>':'')+'</span><span class="a">'+(v<0?'−¥'+hfoYen(-v):'¥'+hfoYen(v))+'</span></div>';
+
+    const focus = document.activeElement && panel.contains(document.activeElement) ? document.activeElement.dataset.lv : null;
+    document.getElementById('liveBody').innerHTML =
+      '<div class="lv-big">'
+        + '<div class="b"><div class="k">今の家計の支出（推計）</div><div class="v">¥'+hfoYen(spend)+'</div></div>'
+        + '<div class="b"><div class="k">事業が肩代わりしている分</div><div class="v">+¥'+hfoYen(bizShare)+'</div></div>'
+        + '<div class="b g"><div class="k">実質生活費（今）</div><div class="v">¥'+hfoYen(real)+'</div></div>'
+        + '<div class="b g"><div class="k">老後の実質生活費（推計）</div><div class="v">¥'+hfoYen(old)+'</div></div>'
+      + '</div>'
+      + '<div class="lv-sec"><div class="sh"><span>① 毎月入ってくるお金</span><span>計 ¥'+hfoYen(income)+'</span></div>'
+        + inp('salary','役員報酬（夫婦・手取り）','額面で入っていたら、社会保険料を引いた手取りに直す')
+        + inp('biz','個人事業（デリバリー）の手取り','売上から経費を引いた後')
+        + fix('児童手当', allowance, fy+'年度の制度・子どもの年齢から自動計算')
+        + inp('kidsToKids','うち子ども名義の口座に入れている額','家計で使っていないなら、ここに入れて差し引く')
+        + inp('points','クレカのポイント','仕入を個人カードで立替えた分のポイントを含む')
+        + inp('mercari','メルカリなどの売却')
+        + inp('other','その他（給付金など）')
+      + '</div>'
+      + '<div class="lv-sec"><div class="sh"><span>② 貯金の出入り（ダッシュボードから自動）</span></div>'
+        + fix('貯金の取り崩し（家計の現金の減り方）', dd.v, dd.from ? dd.from+' → '+window.__hfoCurrentMonth+' の平均' : '比べる月がない')
+        + fix('積立（老後パネルの「月の積立」）', -ps.saving, '投資に回した分は「使ったお金」ではないので引く')
+        + fix('＝ 今の家計の支出（推計）', spend, '', 'tot')
+      + '</div>'
+      + '<div class="lv-sec"><div class="sh"><span>③ 事業・法人が負担している生活関連費</span><span>計 ¥'+hfoYen(bizShare)+'</span></div>'
+        + inp('bizTel','通信費（スマホ・ネット）の事業負担分')
+        + inp('bizCar','車両・ガソリン・駐車場の事業負担分')
+        + inp('bizUtil','自宅の光熱費の事業負担分')
+        + inp('bizGoods','日用品・消耗品で事業に入れている分')
+        + inp('bizOther','その他')
+        + fix('＝ 実質生活費（今）', real, '引退して事業をやめたら、③も全部自分で払うことになる', 'tot')
+      + '</div>'
+      + '<div class="lv-sec"><div class="sh"><span>④ 老後に変わるもの</span></div>'
+        + fix('住宅ローンの返済（64歳で完済）', -lp.home)
+        + fix('奨学金の返済（2029年2月に完済）', -lp.sch)
+        + inp('kidsCost','子どもにかかっている分（今の支出に含まれる額）','学校・習い事・子どもの食費や服など。独立したらなくなる')
+        + inp('oldExtra','老後に増えるもの','医療・介護保険料、住まいの修繕、交際費など')
+        + fix('＝ 老後の実質生活費（推計）', old, '老後パネルの生活費は今 ¥'+hfoYen(ps.living), 'tot')
+      + '</div>'
+      + '<button type="button" class="lv-btn" id="lvApply">この額（¥'+hfoYen(Math.max(0,Math.round(old/1000)*1000))+'）を老後パネルの生活費に反映する</button>'
+      + '<div class="lv-note">'
+      + '・「今の家計の支出」は、入ってきたお金＋貯金の取り崩し−積立 で逆算している。レシートを足し上げた数字ではないので、大きくずれていたら①の入力を見直す。<br>'
+      + '・取り崩しには、計上漏れの口座を後から足した影響などが混ざる（1年平均なのでならされる）。<br>'
+      + '・参考：総務省の家計調査では、65歳以上の夫婦のみ無職世帯の消費支出は月25万円前後。低すぎる値を老後の前提に使うのは避ける。<br>'
+      + '・入力はこの端末にだけ保存される。</div>';
+    if(focus){ const el = panel.querySelector('[data-lv="'+focus+'"]'); if(el){ el.focus(); const n=el.value.length; try{ el.setSelectionRange(n,n); }catch(_){} } }
+    const btn = document.getElementById('lvApply');
+    if(btn) btn.onclick = ()=>{ if(window.__hfoSetLiving) window.__hfoSetLiving(Math.max(0,Math.round(old/1000)*1000)); render(); };
+  }
+  let t = null;
+  document.addEventListener('input', e=>{
+    const el = e.target; if(!el || !el.dataset || !el.dataset.lv) return;
+    const v = parseInt(String(el.value).replace(/[^0-9]/g,''),10);
+    const st = load(); st[el.dataset.lv] = isNaN(v) ? 0 : v;
+    try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(_){}
+    clearTimeout(t); t = setTimeout(render, 400);
+  });
+  window.__hfoRenderLiving = render;
+  setTimeout(render, 0);
+})();
+
+/* ───── ② ライフプラン年表 ───── */
+(function(){
+  const body = document.getElementById('lifeBody'), sum = document.getElementById('lifeSum'), ctrl = document.getElementById('lifeView');
+  if(!body || !ctrl) return;
+  const KEY = 'hfo_life_view_v1';
+  let view = 'kids';
+  try{ view = localStorage.getItem(KEY) || 'kids'; }catch(e){}
+  const fyNow = (()=>{ const d=new Date(); return d.getMonth()>=3 ? d.getFullYear() : d.getFullYear()-1; })();
+  const edu = y => window.__hfoEduForYear ? window.__hfoEduForYear(y) : 0;
+  const tile = (k,v,sub) => '<div class="ls"><div class="lbl">'+k+'</div><div class="v num">'+v+'</div>'+(sub?'<div style="font-size:.66rem;color:var(--ink-mute);margin-top:2px">'+sub+'</div>':'')+'</div>';
+
+  function kids(){
+    const rows = []; let allowSum = 0, eduSum = 0, lastAllow = fyNow;
+    for(let fy=fyNow; fy<=2046; fy++){
+      const al = hfoAllowance(fy), e = edu(fy);
+      allowSum += al.total; eduSum += e; if(al.total>0) lastAllow = fy;
+      rows.push({ fy, al, e });
+    }
+    sum.innerHTML = tile('児童手当（'+fyNow+'年度から受け取る総額）', hfoMan(allowSum), lastAllow+'年度まで')
+      + tile('教育費（高校・大学）', hfoMan(eduSum), '老後パネルの設定から')
+      + tile('教育費 − 児童手当', hfoMan(eduSum-allowSum), '手当で埋まらない分')
+      + tile('今年度の児童手当', hfoMan(hfoAllowance(fyNow).total), '月 ¥'+hfoYen(hfoAllowance(fyNow).total/12));
+    body.innerHTML = '<div class="lp-wrap"><table class="lp-t"><tr><th>年度</th>'
+      + HFO_KIDS.map(k=>'<th class="c">'+k.name+'</th>').join('')
+      + '<th>児童手当</th><th>教育費</th><th>差し引き</th></tr>'
+      + rows.map(r=>{
+          const d = r.al.total - r.e;
+          return '<tr'+(r.fy===fyNow?' class="now"':'')+'><td>'+r.fy+'</td>'
+            + HFO_KIDS.map(k=>{ const g = hfoGrade(r.fy, k.b); return '<td class="c"><span class="st '+g.c+'">'+g.t+'</span></td>'; }).join('')
+            + '<td>'+(r.al.total?hfoMan(r.al.total):'—')+'</td>'
+            + '<td>'+(r.e?hfoMan(r.e):'—')+'</td>'
+            + '<td class="'+(d>=0?'pos':'neg')+'">'+(d===0?'—':(d>0?'+':'−')+hfoMan(Math.abs(d)))+'</td></tr>';
+        }).join('')
+      + '</table></div>'
+      + '<div class="lp-note">'
+      + '・<b>児童手当</b>：2024年10月からの制度（所得制限なし・高校生年代まで）。月額は3歳未満1.5万／3歳〜高校生1万／<b>第3子以降は3万</b>。'
+      + '<b>末っ子の月3万は、長男が22歳の年度末（2037年3月）まで「第3子」として数えられる場合</b>。大学生年代の兄姉を数えるには、親が生計費を負担している旨の<b>届出が必要</b>。忘れると末っ子の分が月1万に下がる。<br>'
+      + '・教育費は老後パネルの「高校 1人・年」「大学 1人・年」「支援で軽くなる割合」で計算（塾・習い事は含まない）。<br>'
+      + '・「差し引き」がマイナスの年は、手当では足りず家計か貯金から出ていく年。<b>2032年度から2045年度まで14年続き、いちばん重いのは2人が同時に大学生の2035〜2036年度</b>。</div>';
+  }
+
+  function home(){
+    const snap = (window.DASHBOARD_HISTORY||{})[window.__hfoCurrentMonth];
+    const rows = (snap && snap.breakdown && snap.breakdown.liabilities) || [];
+    const L = rows.find(r=>String(r[0]).indexOf('住宅ローン')>=0);
+    if(!L){ body.innerHTML = '<div class="lp-note">住宅ローンのデータがありません。</div>'; sum.innerHTML=''; return; }
+    let bal = L[1]; const pay = (L[4]||{}).monthly_payment || 45695;
+    const m0 = String(L[0]).match(/([\d.]+)\s*%/); const r0 = m0 ? parseFloat(m0[1]) : 1.425;
+    const up = r0 + 0.25;                        // 2026年9月の日銀利上げ → 11月分から+0.25%の想定
+    const out = []; let y = 2026, m = 10, paidInt = 0, yearInt = 0, yearPay = 0, payoff = null;
+    while(bal > 0 && y < 2060){
+      const rate = (y > 2026 || m >= 11) ? up : r0;
+      const i = bal * rate/100/12; const p = Math.min(bal + i, pay);
+      bal = bal + i - p; paidInt += i; yearInt += i; yearPay += p;
+      if(bal <= 0.5 && !payoff){ payoff = y+'年'+m+'月'; bal = 0; }
+      if(m === 3 || bal === 0){ out.push({ fy: m===3 ? y-1 : (m>=4?y:y-1), bal, yearInt, yearPay, rate }); yearInt = 0; yearPay = 0; }
+      m++; if(m > 12){ m = 1; y++; }
+    }
+    sum.innerHTML = tile('住宅ローン残高', hfoMan(L[1]), '今')
+      + tile('完済（この金利のまま）', payoff || '—', '毎月 ¥'+hfoYen(pay)+' を続けた場合')
+      + tile('これから払う利息', hfoMan(paidInt), up.toFixed(3)+'%で計算')
+      + tile('奨学金の完済', '2029年2月', '無利子');
+    body.innerHTML = '<div class="lp-wrap"><table class="lp-t"><tr><th>年度</th><th>年度末の残高</th><th>その年の返済</th><th>うち利息</th><th>金利</th></tr>'
+      + out.map(r=>'<tr'+(r.fy===fyNow?' class="now"':'')+'><td>'+r.fy+'</td><td>'+hfoMan(r.bal)+'</td><td>'+hfoMan(r.yearPay)+'</td><td>'+hfoMan(r.yearInt)+'</td><td>'+r.rate.toFixed(3)+'%</td></tr>').join('')
+      + '</table></div>'
+      + '<div class="lp-note">・2026年11月分から金利が+0.25%（'+up.toFixed(3)+'%）になり、その後は変わらない想定。実際は日銀の動きで上下する。<br>'
+      + '・変動金利の5年ルール・125%ルールで毎月の返済額は据え置かれるが、<b>利息が増えた分だけ元金の減りが遅くなり、完済が後ろにずれる</b>。次の返済額の見直しは2029年12月の見込み。<br>'
+      + '・繰上返済の判断は「繰上返済」パネルを参照。</div>';
+  }
+
+  function old(){
+    const born = { h: 1987.2, w: 1984.5 };      // 夫1987/3、妻1984/7
+    const ev = [
+      [2029, '奨学金の完済（2月）'],
+      [2033, '長男 大学入学（想定）'],
+      [2035, '長女 大学入学（想定）'],
+      [2037, '末っ子の児童手当が月3万→1万に（長男が22歳の年度末を過ぎる）'],
+      [2042, '末っ子 大学入学・児童手当の終了（高校卒業）'],
+      [2046, '末っ子 大学卒業（教育費の終わり）'],
+      [2047, '夫 60歳（iDeCoの受け取りが可能に）'],
+      [2049, '妻 65歳・年金開始（7月）'],
+      [2051, '住宅ローン完済（この金利なら後ろにずれる可能性あり）'],
+      [2052, '夫 65歳・年金開始（3月）'],
+      [2076, '夫婦とも90歳前後']
+    ];
+    sum.innerHTML = tile('夫', (fyNow-1987)+'歳', '1987年3月生まれ')
+      + tile('妻', (fyNow-1984)+'歳', '1984年7月生まれ')
+      + tile('夫65歳まで', (2052-fyNow)+'年', '2052年3月')
+      + tile('教育費が終わるまで', (2046-fyNow)+'年', '2046年3月');
+    body.innerHTML = '<div class="lp-ev">' + ev.map(e=>{
+        const ah = e[0]-1987, aw = e[0]-1984;
+        return '<div class="e"><span class="y">'+e[0]+'年</span><span>'+e[1]+'<small style="display:block;font-size:.68rem;color:var(--ink-mute)">夫 '+ah+'歳・妻 '+aw+'歳</small></span></div>';
+      }).join('') + '</div>'
+      + '<div class="lp-note">年齢はその年の誕生日を迎えた後の満年齢。お金の見込みは「年金・老後」パネルを参照。</div>';
+  }
+
+  function render(){
+    ctrl.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===view));
+    if(view==='home') home(); else if(view==='old') old(); else kids();
+  }
+  ctrl.addEventListener('click', e=>{
+    const b = e.target.closest('button[data-v]'); if(!b) return;
+    view = b.dataset.v; try{ localStorage.setItem(KEY, view); }catch(_){}
+    render();
+  });
+  window.__hfoRenderLife = render;
+  setTimeout(render, 0);
 })();
 </script>
 </body>
