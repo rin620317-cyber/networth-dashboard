@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d1b27">
+<title>Nesto かんたん版</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --bg:#0d1b27; --surface:#132636; --surface-2:#1a3145;
+  --ink:#eef3f7; --ink-soft:#a9bccb; --ink-faint:#7390a6; --line:#24405a;
+  --gold:#e8c170; --gold-soft:#f3d99c; --up:#34d399; --down:#f87171;
+  --gray:#4d6378;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f5f3ee; --surface:#ffffff; --surface-2:#f0ece3;
+    --ink:#1b2530; --ink-soft:#4f5d6a; --ink-faint:#7a8793; --line:#e2ddd2;
+    --gold:#a8741c; --gold-soft:#8a5e12; --up:#0f7a55; --down:#b43c3c;
+    --gray:#c9c3b6;
+    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","BIZ UDPGothic","Noto Sans JP",system-ui,sans-serif;
+  font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.page{max-width:640px;margin:0 auto;padding:18px 16px 60px}
+.back{display:inline-block;font-size:.85rem;color:var(--ink-soft);text-decoration:none;margin-bottom:8px}
+.back:hover{color:var(--gold)}
+h1{font-size:1.5rem;margin:6px 0 4px;line-height:1.4}
+.date{font-size:.8rem;color:var(--ink-faint)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 18px;margin:16px 0}
+.step{font-size:.75rem;font-weight:700;letter-spacing:.12em;color:var(--gold)}
+.card h2{font-size:1.2rem;margin:2px 0 10px;line-height:1.45}
+.big{font-size:clamp(2.2rem,11vw,3.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.big small{font-size:.4em;font-weight:700;color:var(--ink-soft);margin-left:4px}
+.one{margin:10px 0 0;color:var(--ink-soft)}
+.one b{color:var(--ink)}
+.note{font-size:.72rem;color:var(--ink-faint);margin-top:8px;line-height:1.6}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.hb{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.hb .r .l{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:4px;color:var(--ink-soft)}
+.hb .r .l b{color:var(--ink);font-variant-numeric:tabular-nums}
+.hb .r.me .l{color:var(--ink)} .hb .r.me .l b{color:var(--gold-soft)}
+.hb .bar{height:18px;border-radius:9px;background:var(--surface-2);overflow:hidden}
+.hb .bar i{display:block;height:100%;border-radius:9px;background:var(--gray)}
+.hb .r.me .bar i{background:var(--gold)}
+.stack{display:flex;height:34px;border-radius:12px;overflow:hidden;gap:2px;margin:6px 0 10px}
+.stack i{display:block;height:100%}
+.leg{display:flex;flex-direction:column;gap:6px}
+.leg .x{display:flex;justify-content:space-between;align-items:center;font-size:.92rem}
+.leg .x span{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft)}
+.leg .x span i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.leg .x{gap:10px}
+.leg .x span{flex:1;min-width:0}
+.leg .x b{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.88rem}
+.pair{display:flex;flex-direction:column;gap:16px}
+.pair .t{font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.pair .t em{font-style:normal;color:var(--up);font-size:1.05rem}
+.pair .row{display:grid;grid-template-columns:5.2em 1fr 5.4em;align-items:center;gap:8px;font-size:.85rem;color:var(--ink-soft);margin:3px 0}
+.pair .row .bar{height:16px;border-radius:8px;background:var(--surface-2);overflow:hidden}
+.pair .row .bar i{display:block;height:100%;border-radius:8px}
+.pair .row b{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+.why{display:grid;grid-template-columns:1fr;gap:10px}
+.why .w{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border-radius:14px;padding:12px 14px}
+.why .w .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--bg);font-weight:800;display:flex;align-items:center;justify-content:center}
+.why .w b{display:block}
+.why .w span{font-size:.88rem;color:var(--ink-soft)}
+.care{margin:0;padding-left:1.2em;color:var(--ink-soft)}
+.care li{margin:4px 0}
+.care b{color:var(--ink)}
+.end{text-align:center;font-size:1.05rem;margin:26px 0 6px;color:var(--ink)}
+.end b{color:var(--gold-soft)}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="./">← Nestoにもどる</a>
+  <h1>わが家のお金、<br>ちゃんと育っています</h1>
+  <div class="date" id="asof">読み込み中…</div>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="step">STEP 1　いまの財産</div>
+    <h2>家族の財産（ローンを引いたあと）</h2>
+    <div class="big" id="nw">—</div>
+    <svg id="line" viewBox="0 0 600 200" role="img" aria-label="家族の財産の移り変わり"></svg>
+    <p class="one" id="lineMsg"></p>
+    <p class="note">※2026年夏に、それまで数え忘れていた口座（会社の消費税の還付金など）を足した分も含みます。</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <div class="step">STEP 2　くらべてみると</div>
+    <h2>預金と投資の合計（家は除く）</h2>
+    <div class="hb" id="cmp"></div>
+    <p class="one">収入が少ない家庭のまんなかは<b>約360万円</b>。わが家は<b id="times">—</b>です。</p>
+    <p class="note">くらべる数字：金融経済教育推進機構「家計の金融行動に関する世論調査（2025年）」2人以上の世帯・中央値（まんなかの家庭の金額）。自宅は含みません。</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <div class="step">STEP 3　どこにある？</div>
+    <h2>お金の置き場所</h2>
+    <div class="stack" id="stack"></div>
+    <div class="leg" id="leg"></div>
+    <p class="one">いちばん多いのは<b>投資</b>。銀行に置くより、時間をかけて増えやすい場所に置いています。</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <div class="step">STEP 4　あなたの口座</div>
+    <h2>入れたお金が、こんなに増えました</h2>
+    <div class="pair">
+      <div>
+        <div class="t">iDeCo（妻）<em>約2倍</em></div>
+        <div class="row"><span>入れたお金</span><span class="bar"><i style="width:49%;background:var(--gray)"></i></span><b>123万円</b></div>
+        <div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>251万円</b></div>
+      </div>
+      <div>
+        <div class="t">SBI証券（妻）<em>約1.8倍</em></div>
+        <div class="row"><span>入れたお金</span><span class="bar"><i style="width:56%;background:var(--gray)"></i></span><b>183万円</b></div>
+        <div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>328万円</b></div>
+      </div>
+    </div>
+    <p class="one">増えた分は<b>あわせて約273万円</b>。何もしなくても、お金が働いてくれた分です。</p>
+    <p class="note">2026年8月時点の数字。値段は毎月上がったり下がったりします。</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="card">
+    <div class="step">STEP 5　これから</div>
+    <h2>夫が65歳のとき（2052年）</h2>
+    <div class="hb" id="future"></div>
+    <p class="one">年金だけでは足りない分は<b>約4,000万円</b>。今のペースなら、<b>少なめに見積もっても足りる</b>見込みです。</p>
+    <p class="note">2026年9月の試算（物価の上がり分を差し引いた、今のお金の価値）。子ども3人の高校・大学の費用2,340万円を払ったあとの金額です。将来を約束するものではありません。</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="card">
+    <div class="step">STEP 6　なぜうまくいっている？</div>
+    <h2>わが家の3つのひみつ</h2>
+    <div class="why">
+      <div class="w"><div class="n">1</div><div><b>使いすぎない</b><span>毎月の生活費がおさえられているから、残せる。</span></div></div>
+      <div class="w"><div class="n">2</div><div><b>早く始めて、やめなかった</b><span>iDeCoもNISAも、長く続けるほど増える。</span></div></div>
+      <div class="w"><div class="n">3</div><div><b>国の制度をフルに使っている</b><span>税金がかからない投資（NISA・iDeCo）、児童手当、医療費の助けなど。</span></div></div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="card">
+    <div class="step">STEP 7　気をつけること</div>
+    <h2>安心しすぎない</h2>
+    <ul class="care">
+      <li>投資は<b>下がる月もある</b>。9月は円高で約70万円へった。あわてて売らないのがコツ。</li>
+      <li>これから<b>子ども3人の学費</b>が続く（いちばん重いのは2035〜2036年）。</li>
+      <li>収入が少し増えるだけで、<b>もっと安心</b>になる。</li>
+    </ul>
+  </div>
+
+  <p class="end">収入が少なくても、<br><b>お金はちゃんと育てられる。</b></p>
+</div>
+
+<script>
+(function(){
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const man = v => Math.round(v/10000).toLocaleString('ja-JP') + '万円';
+  const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // Nesto本体（index.html）に埋め込まれている月次データを読む → 毎月の更新で自動的に新しくなる
+  fetch('./index.html', { cache: 'no-store' }).then(r=>r.text()).then(t=>{
+    const i = t.indexOf('window.DASHBOARD_HISTORY'), j = t.indexOf('/* DASHBOARD_HISTORY_END */');
+    const body = t.slice(t.indexOf('{', i), t.lastIndexOf('}', j) + 1);
+    render(JSON.parse(body));
+  }).catch(()=>{ document.getElementById('asof').textContent = 'データを読み込めませんでした（Nestoを開き直してください）'; });
+
+  function render(H){
+    const keys = Object.keys(H).filter(k => H[k] && H[k].keys && typeof H[k].keys.net_worth_total === 'number').sort();
+    const last = keys[keys.length-1], K = H[last].keys;
+    document.getElementById('asof').textContent = (H[last].as_of || last) + ' 時点';
+    document.getElementById('nw').innerHTML = Math.round(K.net_worth_total/10000).toLocaleString('ja-JP') + '<small>万円</small>';
+
+    // STEP1：2018年9月から（それより前は記録の形がそろっていないため）
+    const pts = keys.filter(k => k >= '2018-09').map(k => ({ k, v: H[k].keys.net_worth_total }));
+    line(pts);
+    const first = pts[0];
+    document.getElementById('lineMsg').innerHTML = first.v < 0
+      ? (first.k.slice(0,4)+'年は<b>マイナス'+man(-first.v)+'</b>（家のローンのほうが多かった）。いまは<b>プラス'+man(K.net_worth_total)+'</b>。')
+      : (first.k.slice(0,4)+'年の'+man(first.v)+'から、いまは<b>'+man(K.net_worth_total)+'</b>。');
+
+    // STEP2：自由に使えるお金＝家計（預金など）＋投資＋小規模企業共済
+    const fin = (K.household||0) + (K.investment||0) + (K.individual||0);
+    const cmp = [
+      { l:'収入が少ない家庭（年収300万円未満）', v:3600000 },
+      { l:'40代の家庭', v:5000000 },
+      { l:'わが家', v:fin, me:true }
+    ];
+    const mx = Math.max(...cmp.map(c=>c.v));
+    document.getElementById('cmp').innerHTML = cmp.map(c =>
+      '<div class="r'+(c.me?' me':'')+'"><div class="l"><span>'+c.l+'</span><b>'+man(c.v)+'</b></div>'
+      + '<div class="bar"><i style="width:'+Math.max(3, c.v/mx*100).toFixed(1)+'%"></i></div></div>').join('');
+    document.getElementById('times').textContent = '約' + Math.round(fin/3600000) + '倍';
+
+    // STEP3：置き場所（3つ）
+    const parts = [
+      { l:'投資（NISA・iDeCoなど）', v:K.investment||0, c:'--s1' },
+      { l:'預金・電子マネー', v:K.household||0, c:'--s2' },
+      { l:'小規模企業共済（退職金の積立）', v:K.individual||0, c:'--s3' }
+    ];
+    const tot = parts.reduce((s,p)=>s+p.v,0);
+    document.getElementById('stack').innerHTML = parts.map(p=>'<i style="width:'+(p.v/tot*100).toFixed(1)+'%;background:var('+p.c+')" title="'+esc(p.l)+'"></i>').join('');
+    document.getElementById('leg').innerHTML = parts.map(p=>'<div class="x"><span><i style="background:var('+p.c+')"></i>'+esc(p.l)+'</span><b>'+man(p.v)+'（'+Math.round(p.v/tot*100)+'%）</b></div>').join('');
+
+    // STEP5：65歳の見込み（2026年9月の試算値）
+    const fut = [
+      { l:'足りない分（必要な額）', v:39750000 },
+      { l:'見込み（少なめ・年1%）', v:58190000, me:true },
+      { l:'見込み（ふつう・年3%）', v:89130000, me:true }
+    ];
+    const fm = Math.max(...fut.map(f=>f.v));
+    document.getElementById('future').innerHTML = fut.map(f =>
+      '<div class="r'+(f.me?' me':'')+'"><div class="l"><span>'+f.l+'</span><b>'+man(f.v)+'</b></div>'
+      + '<div class="bar"><i style="width:'+(f.v/fm*100).toFixed(1)+'%"></i></div></div>').join('');
+  }
+
+  function line(pts){
+    const svg = document.getElementById('line');
+    const W = 600, H = 200, L = 8, R = 8, T = 26, B = 26;
+    const vs = pts.map(p=>p.v), vmin = Math.min(0, ...vs), vmax = Math.max(...vs);
+    const toM = k => { const a = k.split('-').map(Number); return a[0]*12 + a[1]; };
+    const t0 = toM(pts[0].k), t1 = toM(pts[pts.length-1].k);
+    const X = k => L + (W-L-R) * (toM(k)-t0) / Math.max(1, t1-t0);
+    const Y = v => T + (H-T-B) * (1 - (v - vmin) / (vmax - vmin));
+    const gold = css('--gold'), faint = css('--ink-faint'), line = css('--line'), down = css('--down');
+    let d = pts.map((p,i)=>(i?'L':'M')+X(p.k).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+    let o = '';
+    o += '<line x1="'+L+'" y1="'+Y(0)+'" x2="'+(W-R)+'" y2="'+Y(0)+'" stroke="'+line+'" stroke-dasharray="4 4"/>';
+    o += '<text x="'+(W-R)+'" y="'+(Y(0)-6)+'" font-size="13" fill="'+faint+'" text-anchor="end">0円</text>';
+    o += '<path d="'+d+' L'+X(pts[pts.length-1].k)+' '+Y(0)+' L'+X(pts[0].k)+' '+Y(0)+' Z" fill="'+gold+'" opacity=".14"/>';
+    o += '<path d="'+d+'" fill="none" stroke="'+gold+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>';
+    const a = pts[0], z = pts[pts.length-1];
+    o += '<circle cx="'+X(a.k)+'" cy="'+Y(a.v)+'" r="6" fill="'+(a.v<0?down:gold)+'"/>';
+    o += '<text x="'+(X(a.k)+10)+'" y="'+(Y(a.v)+5)+'" font-size="15" font-weight="700" fill="'+(a.v<0?down:gold)+'">'+a.k.slice(0,4)+'年 '+(a.v<0?'−':'')+man(Math.abs(a.v))+'</text>';
+    o += '<circle cx="'+X(z.k)+'" cy="'+Y(z.v)+'" r="6" fill="'+gold+'"/>';
+    o += '<text x="'+(X(z.k)-10)+'" y="'+(Y(z.v)-12)+'" font-size="15" font-weight="700" fill="'+gold+'" text-anchor="end">'+z.k.slice(0,4)+'年 '+man(z.v)+'</text>';
+    svg.innerHTML = o;
+  }
+})();
+</script>
+</body>
+</html>
