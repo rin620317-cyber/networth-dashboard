@@ -4194,7 +4194,8 @@ const hfoMan = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+
 function hfoGrade(fy, b){
   const a = fy - b;
   if(a < 0) return { t:'—', c:'jb' };
-  if(a <= 3) return { t: a+'歳', c:'' };
+  if(a <= 0) return { t: '0歳', c:'' };
+  if(a <= 3) return { t: (a-1)+'→'+a+'歳', c:'' };   // その年度中に a 歳になる
   if(a <= 6) return { t: ['年少','年中','年長'][a-4], c:'' };
   if(a <= 12) return { t: '小'+(a-6), c:'' };
   if(a <= 15) return { t: '中'+(a-12), c:'' };
