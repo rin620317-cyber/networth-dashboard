@@ -494,6 +494,22 @@
   .al .desc{font-size:.74rem;color:var(--ink-sub);line-height:1.5}
   .al .meta{font-size:.66rem;color:var(--ink-mute);margin-top:6px;letter-spacing:.04em}
 
+  /* 運用成績 */
+  .perf-card{margin-bottom:18px}
+  .perf-big{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin:4px 0 12px}
+  .perf-big .v{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:800;color:#6ee7b7;font-variant-numeric:tabular-nums}
+  .perf-big .v.neg{color:#fca5a5}
+  .perf-big .s{font-size:.8rem;color:var(--ink-sub)}
+  .perf-wrap{max-width:100%;overflow-x:auto}
+  .perf-t{width:100%;border-collapse:collapse;font-size:.78rem;min-width:520px}
+  .perf-t th,.perf-t td{padding:7px 6px;text-align:right;white-space:nowrap;color:var(--ink-sub);border-bottom:1px solid rgba(255,255,255,.04)}
+  .perf-t th{color:var(--ink-mute);font-weight:600;border-bottom:1px solid var(--line)}
+  .perf-t td:first-child,.perf-t th:first-child{text-align:left;color:var(--ink)}
+  .perf-t .pos{color:#6ee7b7}.perf-t .neg{color:#fca5a5}
+  .perf-t tr.tot td{border-top:1px solid var(--line2);font-weight:700;color:var(--ink)}
+  .perf-t .old{color:var(--gold-soft);font-size:.68rem;margin-left:4px}
+  .perf-note{font-size:.7rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
+
   /* 今月の相場メモ */
   .mkt-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
   .mkt-lead{font-size:.86rem;color:var(--ink);line-height:1.7;margin-bottom:12px}
@@ -1164,6 +1180,14 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="card perf-card" id="perfPanel" data-nav="運用成績">
+      <div class="card-h">
+        <div class="lbl">📊 運用成績（入れたお金と、運用で増えた分）</div>
+        <div class="as" id="perfAs"></div>
+      </div>
+      <div id="perfBody"></div>
     </div>
 
     <div class="card mkt-card" id="mktPanel" data-nav="相場メモ">
@@ -2604,7 +2628,8 @@ window.DASHBOARD_HISTORY = {
      "2026-09-17",
      "bookmarklet 取得",
      {
-      "principal_jpy": 1236000
+      "principal_jpy": 1236000,
+      "principal_as_of": "2026-09-17"
      }
     ],
     [
@@ -2629,13 +2654,21 @@ window.DASHBOARD_HISTORY = {
      "SBI証券（子・長女）",
      2326726,
      "2026-09-17",
-     "画面の合計2,326,726円＝投資信託1,610,598（評価損益+940,564）＋預り金(円)716,128。預り金は証券口座内の現金で、他の口座では数えていないのでそのまま合算"
+     "画面の合計2,326,726円＝投資信託1,610,598（評価損益+940,564）＋預り金(円)716,128。預り金は証券口座内の現金で、他の口座では数えていないのでそのまま合算",
+     {
+      "principal_jpy": 1386162,
+      "principal_as_of": "2026-09-17"
+     }
     ],
     [
      "SBI証券（夫）",
      4560832,
      "2026-09-17",
-     "画面の合計4,948,534円（国内株式119,611＋投資信託4,441,118＋預り金103＋スイープ専用銀行口座387,702）から、スイープ分（＝SBIハイブリッド預金）を除いた額。ハイブリッド預金はドコモSMTBネット銀行（個人）側で計上するため、二重に数えないよう除いている。2026-09にTHEO解約金のうち1,490,000円を入金し、NISA成長投資枠でオルカンを購入済み"
+     "画面の合計4,948,534円（国内株式119,611＋投資信託4,441,118＋預り金103＋スイープ専用銀行口座387,702）から、スイープ分（＝SBIハイブリッド預金）を除いた額。ハイブリッド預金はドコモSMTBネット銀行（個人）側で計上するため、二重に数えないよう除いている。2026-09にTHEO解約金のうち1,490,000円を入金し、NISA成長投資枠でオルカンを購入済み",
+     {
+      "principal_jpy": 3443687,
+      "principal_as_of": "2026-09-17"
+     }
     ],
     [
      "SBI証券（妻）",
@@ -2643,14 +2676,19 @@ window.DASHBOARD_HISTORY = {
      "2026-09-17",
      "bookmarklet 取得",
      {
-      "principal_jpy": 1923190
+      "principal_jpy": 1923190,
+      "principal_as_of": "2026-09-17"
      }
     ],
     [
      "SBI証券（子・長男）",
      2133311,
      "2026-09-17",
-     "画面の合計2,133,311円＝投資信託1,562,468（評価損益+912,435）＋預り金(円)570,843。預り金は証券口座内の現金で、他の口座では数えていないのでそのまま合算"
+     "画面の合計2,133,311円＝投資信託1,562,468（評価損益+912,435）＋預り金(円)570,843。預り金は証券口座内の現金で、他の口座では数えていないのでそのまま合算",
+     {
+      "principal_jpy": 1220876,
+      "principal_as_of": "2026-09-17"
+     }
     ]
    ],
    "realestate": [
@@ -2839,7 +2877,7 @@ window.DASHBOARD_HISTORY = {
     const CATEGORY_TILE_KEYS = ['corporate','individual','household_realestate','investment'];
 
     window.__hfoApplyMonth = function(monthKey){
-      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); if(window.__hfoRenderPrepay) window.__hfoRenderPrepay(); if(window.__hfoRenderLiving) window.__hfoRenderLiving(); if(window.__hfoRenderLife) window.__hfoRenderLife(); }, 0);
+      setTimeout(()=>{ if(window.__hfoRenderMarket) window.__hfoRenderMarket(); if(window.__hfoRenderPerf) window.__hfoRenderPerf(); if(window.__hfoRenderPrepay) window.__hfoRenderPrepay(); if(window.__hfoRenderLiving) window.__hfoRenderLiving(); if(window.__hfoRenderLife) window.__hfoRenderLife(); }, 0);
       const snap = history[monthKey];
       if(!snap) return;
       window.__hfoCurrentMonth = monthKey;
@@ -4448,6 +4486,52 @@ function hfoAllowance(fy){
     render();
   });
   window.__hfoRenderLife = render;
+  setTimeout(render, 0);
+})();
+</script>
+<script>
+/* 運用成績：内訳の principal_jpy（入れたお金）と評価額の差＝運用で増えた分。
+   元本が登録されていない口座は合計に入れず、下に一覧で出す（勝手に推定しない）。 */
+(function(){
+  const panel = document.getElementById('perfPanel');
+  if(!panel) return;
+  const yen = n => Math.round(n).toLocaleString('ja-JP');
+  const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+'万';
+  const sgn = v => (v>=0?'+':'−') + '¥' + yen(Math.abs(v));
+  function render(){
+    const cur = window.__hfoCurrentMonth, snap = (window.DASHBOARD_HISTORY||{})[cur];
+    const rows = (snap && snap.breakdown && snap.breakdown.investment) || [];
+    if(!rows.length){ panel.classList.add('hidden'); return; }
+    panel.classList.remove('hidden');
+    const known = [], unknown = [];
+    rows.forEach(r=>{
+      const x = r[4] || {};
+      if(x.principal_jpy) known.push({ n: String(r[0]), v: r[1], p: x.principal_jpy, at: x.principal_as_of || '' });
+      else unknown.push({ n: String(r[0]), v: r[1] });
+    });
+    const P = known.reduce((a,k)=>a+k.p,0), V = known.reduce((a,k)=>a+k.v,0), G = V - P;
+    const asOf = (snap.as_of||cur);
+    document.getElementById('perfAs').textContent = asOf + ' 時点';
+    const stale = k => k.at && k.at.slice(0,7) < asOf.slice(0,7);
+    document.getElementById('perfBody').innerHTML =
+      '<div class="perf-big"><div><div class="s">運用で増えた分（元本がわかる'+known.length+'口座）</div>'
+      + '<div class="v'+(G<0?' neg':'')+'">'+sgn(G)+'</div></div>'
+      + '<div class="s">入れたお金 ¥'+yen(P)+' → いま ¥'+yen(V)+'（'+(P?((G/P*100>=0?'+':'')+(G/P*100).toFixed(1)):'—')+'%）</div></div>'
+      + '<div class="perf-wrap"><table class="perf-t"><tr><th>口座</th><th>入れたお金</th><th>いまの価値</th><th>増えた分</th><th>増え方</th></tr>'
+      + known.sort((a,b)=>(b.v-b.p)-(a.v-a.p)).map(k=>{
+          const g = k.v - k.p;
+          return '<tr><td>'+k.n+(stale(k)?'<span class="old">元本は'+k.at.slice(0,7)+'時点</span>':'')+'</td><td>¥'+yen(k.p)+'</td><td>¥'+yen(k.v)+'</td>'
+            + '<td class="'+(g>=0?'pos':'neg')+'">'+sgn(g)+'</td><td class="'+(g>=0?'pos':'neg')+'">'+(g/k.p*100>=0?'+':'')+(g/k.p*100).toFixed(1)+'%</td></tr>';
+        }).join('')
+      + '<tr class="tot"><td>合計</td><td>¥'+yen(P)+'</td><td>¥'+yen(V)+'</td><td class="'+(G>=0?'pos':'neg')+'">'+sgn(G)+'</td><td>'+(P?((G/P*100>=0?'+':'')+(G/P*100).toFixed(1)+'%'):'—')+'</td></tr>'
+      + '</table></div>'
+      + (unknown.length ? '<div class="perf-note"><b>元本がまだ登録されていない口座（合計に含めていない）：</b>'
+          + unknown.map(u=>u.n+' ¥'+yen(u.v)).join('／') + '。画面の「拠出金累計」や「評価損益」がわかれば追加する。</div>' : '')
+      + '<div class="perf-note">・入れたお金（元本）は、各社の画面の「評価損益」や「拠出金累計」から出している（元本＝評価額−評価損益）。子どもの口座の預り金（現金）は損益0として元本に含む。<br>'
+      + '・<b>毎月の積立で元本も増える</b>ので、元本を更新しないと増えた分が大きく出すぎる。元本が古い口座には日付を表示している。<br>'
+      + '・2026年にTHEOを解約して確定した利益（約31万円）は、ここには含まない（すでに現金になっているため）。</div>';
+  }
+  window.__hfoRenderPerf = render;
   setTimeout(render, 0);
 })();
 </script>

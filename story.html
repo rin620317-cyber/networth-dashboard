@@ -168,6 +168,16 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     <p class="one">いちばん多いのは<b>投資</b>。銀行に置くより、時間をかけて増えやすい場所に置いています。</p>
   </div>
 
+  <!-- 3.5 -->
+  <div class="card" id="gainCard">
+    <div class="step">STEP 3+　運用のちから</div>
+    <h2>運用だけで増えたお金</h2>
+    <div class="big" id="gain" style="color:var(--up)">—</div>
+    <div class="pair" id="gainPair" style="margin-top:12px"></div>
+    <p class="one" id="gainMsg"></p>
+    <p class="note" id="gainNote"></p>
+  </div>
+
   <!-- 4 -->
   <div class="card">
     <div class="step">STEP 4　あなたの口座</div>
@@ -377,6 +387,24 @@ svg{display:block;width:100%;height:auto;overflow:visible}
         + '<br>' + (inv >= 0 ? 'でも、<b>使えるお金が増えたわけではありません。</b>いつもどおりに。' : 'でも、<b>あわてなくて大丈夫。</b>下がった月は、同じ金額で多く買えています。');
     } else {
       document.getElementById('monthCard').hidden = true;
+    }
+
+    // ── STEP3+：家族全体で、運用だけで増えた分（元本がわかる口座だけ）──
+    {
+      const rows = (H[last].breakdown && H[last].breakdown.investment) || [];
+      const kn = rows.filter(r => r[4] && r[4].principal_jpy), un = rows.filter(r => !(r[4] && r[4].principal_jpy));
+      const P = kn.reduce((a,r)=>a+r[4].principal_jpy,0), V = kn.reduce((a,r)=>a+r[1],0), G = V - P;
+      if(kn.length){
+        document.getElementById('gain').innerHTML = (G>=0?'+':'−') + Math.round(Math.abs(G)/10000).toLocaleString('ja-JP') + '<small>万円</small>';
+        document.getElementById('gainPair').innerHTML =
+          '<div class="row"><span>入れたお金</span><span class="bar"><i style="width:'+(P/V*100).toFixed(0)+'%;background:var(--gray)"></i></span><b>'+man(P)+'</b></div>'
+          + '<div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>'+man(V)+'</b></div>';
+        document.getElementById('gainMsg').innerHTML = '入れたお金の<b>約'+(V/P).toFixed(1)+'倍</b>。このうち<b>'+man(G)+'</b>は、働いて稼いだお金ではなく、<b>お金が働いて増やしたお金</b>です。';
+        document.getElementById('gainNote').textContent = '入れたお金がわかる'+kn.length+'口座の合計（子どもの口座を含む）。'
+          + (un.length ? 'まだ入れたお金がわからない口座（' + un.map(r=>String(r[0])).join('・') + '）は入れていないので、本当はもう少し多い。' : '');
+      } else {
+        document.getElementById('gainCard').hidden = true;
+      }
     }
 
     // ── STEP4：妻の口座（元本＝入れたお金は、Nestoのデータの principal_jpy）──
