@@ -510,6 +510,26 @@
   .perf-t .old{color:var(--gold-soft);font-size:.68rem;margin-left:4px}
   .perf-note{font-size:.7rem;color:var(--ink-mute);line-height:1.75;margin-top:10px}
 
+  .pbars{display:flex;flex-direction:column;gap:9px;margin:10px 0 6px}
+  .pb .pl{display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:3px}
+  .pb .pl b{font-variant-numeric:tabular-nums}
+  .pb .pl b.pos{color:#34d399}.pb .pl b.neg{color:#f87171}
+  .pb .pt{display:flex;height:12px;border-radius:6px;overflow:hidden;background:rgba(127,127,127,.12);gap:2px}
+  .pb .pt i,.plg i{display:block;height:100%}
+  .p0{background:#7d8a96}.p1{background:#34d399}.p2{background:#f87171}.pv{background:#e8c170}
+  .plg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.72rem;opacity:.85;margin-top:6px}
+  .plg span{display:inline-flex;align-items:center;gap:6px}
+  .plg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .pline{display:block;width:100%;height:auto;margin-top:8px}
+  .pline .gr{stroke:rgba(127,127,127,.18)}
+  .pline .ax{font-size:11px;fill:#8a97a3}
+  .pline .band{fill:#34d399;opacity:.22}
+  .pline .lnp{fill:none;stroke:#7d8a96;stroke-width:2.5}
+  .pline .lnv{fill:none;stroke:#e8c170;stroke-width:3}
+  .pline .lb{font-size:12px;font-weight:700;fill:#e8c170}
+  .pline .lb2{font-size:12px;font-weight:700;fill:#8a97a3}
+  .pnote{font-size:.74rem;opacity:.75;margin-top:8px;line-height:1.7;padding:10px 12px;border:1px dashed rgba(127,127,127,.35);border-radius:10px}
+
   /* 今月の相場メモ */
   .mkt-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
   .mkt-lead{font-size:.86rem;color:var(--ink);line-height:1.7;margin-bottom:12px}
@@ -2474,7 +2494,10 @@ window.DASHBOARD_HISTORY = {
    "liabilities": 11947882,
    "gross_assets": 41803527,
    "net_worth_total": 29855645,
-   "household_realestate": 17421594
+   "household_realestate": 17421594,
+   "invest_principal": 11827925,
+   "invest_principal_value": 20280604,
+   "invest_principal_n": 9
   },
   "text": {
    "as_of_label": "As of 2026-09-17"
@@ -4514,6 +4537,43 @@ function hfoAllowance(fy){
   const yen = n => Math.round(n).toLocaleString('ja-JP');
   const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+'万';
   const sgn = v => (v>=0?'+':'−') + '¥' + yen(Math.abs(v));
+
+  /* 口座別：灰色＝入れたお金、緑＝お金が増やした分（マイナスは赤）。いちばん大きい口座を100%として同じ物差しで並べる */
+  function perfBars(list, fmt){
+    const mx = Math.max(...list.map(k=>Math.max(k.p, k.v)));
+    return '<div class="pbars">' + list.map(k=>{
+      const g = k.v - k.p, base = Math.min(k.p, k.v);
+      const w1 = base/mx*100, w2 = Math.abs(g)/mx*100;
+      return '<div class="pb"><div class="pl"><span>'+k.n+'</span><b class="'+(g>=0?'pos':'neg')+'">'+(g>=0?'+':'−')+fmt(Math.abs(g))+'</b></div>'
+        + '<div class="pt"><i class="p0" style="width:'+w1.toFixed(1)+'%"></i><i class="'+(g>=0?'p1':'p2')+'" style="width:'+w2.toFixed(1)+'%"></i></div></div>';
+    }).join('') + '</div>'
+    + '<div class="plg"><span><i class="p0"></i>入れたお金</span><span><i class="p1"></i>お金が増やした分</span><span><i class="p2"></i>へった分</span></div>';
+  }
+  /* 月ごと：灰色の線＝入れたお金、金色の線＝いまの価値。あいだの緑の帯が「お金が増やした分」 */
+  function perfLine(H, fmt){
+    const ks = Object.keys(H).sort().filter(k => H[k].keys && H[k].keys.invest_principal);
+    if(ks.length < 2){
+      return '<div class="pnote">毎月の記録が2か月分たまると、ここに「入れたお金」と「いまの価値」の2本の線が出ます（'
+        + (ks.length ? ks[0].slice(0,4)+'年'+parseInt(ks[0].slice(5,7),10)+'月から記録中' : 'まだ記録なし') + '）。</div>';
+    }
+    const W = 600, Hh = 220, L = 52, R = 12, T = 14, B = 26;
+    const pts = ks.map(k => ({ k, p: H[k].keys.invest_principal, v: H[k].keys.invest_principal_value }));
+    const mx = Math.max(...pts.map(x=>Math.max(x.p,x.v))) * 1.08;
+    const X = i => L + (W-L-R) * i/(pts.length-1), Y = v => T + (Hh-T-B) * (1 - v/mx);
+    const lp = pts.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.p).toFixed(1)).join(' ');
+    const lv = pts.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.v).toFixed(1)).join(' ');
+    const band = lv + ' ' + pts.slice().reverse().map((x,j)=>'L'+X(pts.length-1-j).toFixed(1)+' '+Y(x.p).toFixed(1)).join(' ') + ' Z';
+    let o = '<svg viewBox="0 0 '+W+' '+Hh+'" class="pline" role="img" aria-label="入れたお金といまの価値の推移">';
+    [0, .5, 1].forEach(f=>{ const v = mx/1.08*f; o += '<line x1="'+L+'" y1="'+Y(v)+'" x2="'+(W-R)+'" y2="'+Y(v)+'" class="gr"/><text x="'+(L-6)+'" y="'+(Y(v)+4)+'" class="ax" text-anchor="end">'+fmt(v)+'</text>'; });
+    o += '<path d="'+band+'" class="band"/>';
+    o += '<path d="'+lp+'" class="lnp"/><path d="'+lv+'" class="lnv"/>';
+    pts.forEach((x,i)=>{ if(i===0 || i===pts.length-1 || pts.length<=12) o += '<text x="'+X(i)+'" y="'+(Hh-6)+'" class="ax" text-anchor="middle">'+x.k.slice(2,4)+'/'+parseInt(x.k.slice(5,7),10)+'</text>'; });
+    const z = pts[pts.length-1];
+    o += '<text x="'+(X(pts.length-1)-4)+'" y="'+(Y(z.v)-8)+'" class="lb" text-anchor="end">いまの価値 '+fmt(z.v)+'</text>';
+    o += '<text x="'+(X(pts.length-1)-4)+'" y="'+(Y(z.p)+16)+'" class="lb2" text-anchor="end">入れたお金 '+fmt(z.p)+'</text>';
+    return o + '</svg><div class="plg"><span><i class="p0"></i>入れたお金</span><span><i class="pv"></i>いまの価値</span><span><i class="p1"></i>あいだ＝お金が増やした分</span></div>';
+  }
+
   function render(){
     const cur = window.__hfoCurrentMonth, snap = (window.DASHBOARD_HISTORY||{})[cur];
     const rows = (snap && snap.breakdown && snap.breakdown.investment) || [];
@@ -4533,6 +4593,11 @@ function hfoAllowance(fy){
       '<div class="perf-big"><div><div class="s">運用で増えた分（元本がわかる'+known.length+'口座）</div>'
       + '<div class="v'+(G<0?' neg':'')+'">'+sgn(G)+'</div></div>'
       + '<div class="s">入れたお金 ¥'+yen(P)+' → いま ¥'+yen(V)+'（'+(P?((G/P*100>=0?'+':'')+(G/P*100).toFixed(1)):'—')+'%）</div></div>'
+      + '<div style="font-size:.78rem;font-weight:700;margin-top:4px">口座ごと（灰色＝入れたお金／緑＝お金が増やした分）</div>'
+      + perfBars(known.slice().sort((a,b)=>b.v-a.v).map(k=>({n:k.n, p:k.p, v:k.v})), man)
+      + '<div style="font-size:.78rem;font-weight:700;margin-top:14px">月ごとの推移</div>'
+      + perfLine(window.DASHBOARD_HISTORY||{}, man)
+      + '<div style="font-size:.78rem;font-weight:700;margin:14px 0 4px">くわしい数字</div>'
       + '<div class="perf-wrap"><table class="perf-t"><tr><th>口座</th><th>入れたお金</th><th>いまの価値</th><th>増えた分</th><th>増え方</th></tr>'
       + known.sort((a,b)=>(b.v-b.p)-(a.v-a.p)).map(k=>{
           const g = k.v - k.p;

@@ -108,6 +108,25 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .fun .f .ic{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:var(--surface)}
 .fun .f b{display:block;font-size:1.02rem}
 .fun .f span{font-size:.86rem;color:var(--ink-soft)}
+.pbars{display:flex;flex-direction:column;gap:9px;margin:10px 0 6px}
+.pb .pl{display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:3px}
+.pb .pl b{font-variant-numeric:tabular-nums}
+.pb .pl b.pos{color:#34d399}.pb .pl b.neg{color:#f87171}
+.pb .pt{display:flex;height:12px;border-radius:6px;overflow:hidden;background:rgba(127,127,127,.12);gap:2px}
+.pb .pt i,.plg i{display:block;height:100%}
+.p0{background:#7d8a96}.p1{background:#34d399}.p2{background:#f87171}.pv{background:#e8c170}
+.plg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.72rem;opacity:.85;margin-top:6px}
+.plg span{display:inline-flex;align-items:center;gap:6px}
+.plg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.pline{display:block;width:100%;height:auto;margin-top:8px}
+.pline .gr{stroke:rgba(127,127,127,.18)}
+.pline .ax{font-size:11px;fill:#8a97a3}
+.pline .band{fill:#34d399;opacity:.22}
+.pline .lnp{fill:none;stroke:#7d8a96;stroke-width:2.5}
+.pline .lnv{fill:none;stroke:#e8c170;stroke-width:3}
+.pline .lb{font-size:12px;font-weight:700;fill:#e8c170}
+.pline .lb2{font-size:12px;font-weight:700;fill:#8a97a3}
+.pnote{font-size:.74rem;opacity:.75;margin-top:8px;line-height:1.7;padding:10px 12px;border:1px dashed rgba(127,127,127,.35);border-radius:10px}
 .end{text-align:center;font-size:1.05rem;margin:26px 0 6px;color:var(--ink)}
 .end b{color:var(--gold-soft)}
 </style>
@@ -175,6 +194,10 @@ svg{display:block;width:100%;height:auto;overflow:visible}
     <div class="big" id="gain" style="color:var(--up)">—</div>
     <div class="pair" id="gainPair" style="margin-top:12px"></div>
     <p class="one" id="gainMsg"></p>
+    <h2 style="margin-top:18px;font-size:1.05rem">口座ごとに見ると</h2>
+    <div id="gainBars"></div>
+    <h2 style="margin-top:18px;font-size:1.05rem">毎月の変化</h2>
+    <div id="gainLine"></div>
     <p class="note" id="gainNote"></p>
   </div>
 
@@ -399,6 +422,10 @@ svg{display:block;width:100%;height:auto;overflow:visible}
         document.getElementById('gainPair').innerHTML =
           '<div class="row"><span>入れたお金</span><span class="bar"><i style="width:'+(P/V*100).toFixed(0)+'%;background:var(--gray)"></i></span><b>'+man(P)+'</b></div>'
           + '<div class="row"><span>いまの価値</span><span class="bar"><i style="width:100%;background:var(--gold)"></i></span><b>'+man(V)+'</b></div>';
+        const shortName = n => String(n).replace('SBI証券','SBI').replace('（子・長男）','（長男）').replace('（子・長女）','（長女）')
+          .replace('マネックス証券（旧NISA）','マネックス').replace('PayPayポイント運用（夫）','PayPayポイント').replace('メルカリ ビットコイン等（妻）','ビットコイン（妻）');
+        document.getElementById('gainBars').innerHTML = perfBars(kn.map(r=>({ n: shortName(r[0]), p: r[4].principal_jpy, v: r[1] })).sort((a,b)=>b.v-a.v), man);
+        document.getElementById('gainLine').innerHTML = perfLine(H, man);
         document.getElementById('gainMsg').innerHTML = '入れたお金の<b>約'+(V/P).toFixed(1)+'倍</b>。このうち<b>'+man(G)+'</b>は、働いて稼いだお金ではなく、<b>お金が働いて増やしたお金</b>です。';
         document.getElementById('gainNote').textContent = '入れたお金がわかる'+kn.length+'口座の合計（子どもの口座を含む）。'
           + (un.length ? 'まだ入れたお金がわからない口座（' + un.map(r=>String(r[0])).join('・') + '）は入れていないので、本当はもう少し多い。' : '');
@@ -472,6 +499,43 @@ svg{display:block;width:100%;height:auto;overflow:visible}
         ? '投資は<b>下がる月もある</b>。先月は約'+man(-inv)+'へった。あわてて売らないのがコツ。'
         : '投資は<b>上がる月も下がる月もある</b>。先月は約'+man(inv)+'増えたけど、使えるお金が増えたわけではない。';
     }
+  }
+
+
+  /* 口座別：灰色＝入れたお金、緑＝お金が増やした分（マイナスは赤）。いちばん大きい口座を100%として同じ物差しで並べる */
+  function perfBars(list, fmt){
+    const mx = Math.max(...list.map(k=>Math.max(k.p, k.v)));
+    return '<div class="pbars">' + list.map(k=>{
+      const g = k.v - k.p, base = Math.min(k.p, k.v);
+      const w1 = base/mx*100, w2 = Math.abs(g)/mx*100;
+      return '<div class="pb"><div class="pl"><span>'+k.n+'</span><b class="'+(g>=0?'pos':'neg')+'">'+(g>=0?'+':'−')+fmt(Math.abs(g))+'</b></div>'
+        + '<div class="pt"><i class="p0" style="width:'+w1.toFixed(1)+'%"></i><i class="'+(g>=0?'p1':'p2')+'" style="width:'+w2.toFixed(1)+'%"></i></div></div>';
+    }).join('') + '</div>'
+    + '<div class="plg"><span><i class="p0"></i>入れたお金</span><span><i class="p1"></i>お金が増やした分</span><span><i class="p2"></i>へった分</span></div>';
+  }
+  /* 月ごと：灰色の線＝入れたお金、金色の線＝いまの価値。あいだの緑の帯が「お金が増やした分」 */
+  function perfLine(H, fmt){
+    const ks = Object.keys(H).sort().filter(k => H[k].keys && H[k].keys.invest_principal);
+    if(ks.length < 2){
+      return '<div class="pnote">毎月の記録が2か月分たまると、ここに「入れたお金」と「いまの価値」の2本の線が出ます（'
+        + (ks.length ? ks[0].slice(0,4)+'年'+parseInt(ks[0].slice(5,7),10)+'月から記録中' : 'まだ記録なし') + '）。</div>';
+    }
+    const W = 600, Hh = 220, L = 52, R = 12, T = 14, B = 26;
+    const pts = ks.map(k => ({ k, p: H[k].keys.invest_principal, v: H[k].keys.invest_principal_value }));
+    const mx = Math.max(...pts.map(x=>Math.max(x.p,x.v))) * 1.08;
+    const X = i => L + (W-L-R) * i/(pts.length-1), Y = v => T + (Hh-T-B) * (1 - v/mx);
+    const lp = pts.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.p).toFixed(1)).join(' ');
+    const lv = pts.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.v).toFixed(1)).join(' ');
+    const band = lv + ' ' + pts.slice().reverse().map((x,j)=>'L'+X(pts.length-1-j).toFixed(1)+' '+Y(x.p).toFixed(1)).join(' ') + ' Z';
+    let o = '<svg viewBox="0 0 '+W+' '+Hh+'" class="pline" role="img" aria-label="入れたお金といまの価値の推移">';
+    [0, .5, 1].forEach(f=>{ const v = mx/1.08*f; o += '<line x1="'+L+'" y1="'+Y(v)+'" x2="'+(W-R)+'" y2="'+Y(v)+'" class="gr"/><text x="'+(L-6)+'" y="'+(Y(v)+4)+'" class="ax" text-anchor="end">'+fmt(v)+'</text>'; });
+    o += '<path d="'+band+'" class="band"/>';
+    o += '<path d="'+lp+'" class="lnp"/><path d="'+lv+'" class="lnv"/>';
+    pts.forEach((x,i)=>{ if(i===0 || i===pts.length-1 || pts.length<=12) o += '<text x="'+X(i)+'" y="'+(Hh-6)+'" class="ax" text-anchor="middle">'+x.k.slice(2,4)+'/'+parseInt(x.k.slice(5,7),10)+'</text>'; });
+    const z = pts[pts.length-1];
+    o += '<text x="'+(X(pts.length-1)-4)+'" y="'+(Y(z.v)-8)+'" class="lb" text-anchor="end">いまの価値 '+fmt(z.v)+'</text>';
+    o += '<text x="'+(X(pts.length-1)-4)+'" y="'+(Y(z.p)+16)+'" class="lb2" text-anchor="end">入れたお金 '+fmt(z.p)+'</text>';
+    return o + '</svg><div class="plg"><span><i class="p0"></i>入れたお金</span><span><i class="pv"></i>いまの価値</span><span><i class="p1"></i>あいだ＝お金が増やした分</span></div>';
   }
 
   function line(pts){
