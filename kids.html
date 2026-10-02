@@ -156,6 +156,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     <div class="rows">
       <div><span>入れた お金</span><b id="realP">—</b></div>
       <div><span>お金が ふやして くれた 分</span><b id="realG">—</b></div>
+      <div id="rateRow" style="display:none"><span id="rateLbl">1年あたりの ふえかた</span><b id="realR" class="up">—</b></div>
     </div>
     <div class="coins" id="coins"></div>
     <p class="one" id="coinMsg"></p>
@@ -347,6 +348,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     const c = q.get('c'), cc = c === '1' || c === '2' ? +c : 0;
     let n = (q.get('n') || '').slice(0, 12);
     try{
+      (q.get('k') || '').split(',').slice(0, 2).forEach((x, i) => { x = x.trim().slice(0, 12); if(x) localStorage.setItem('okane_name_' + (i + 1), x); });
       if(cc && n) localStorage.setItem('okane_name_' + cc, n);
       else if(cc) n = localStorage.getItem('okane_name_' + cc) || '';
     }catch(e){}
@@ -364,6 +366,22 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     tip.style.left = left + 'px'; tip.style.top = top + 'px';
   }
   const hideTip = () => { tip.style.display = 'none'; };
+
+  /* ── 1年あたり 何%で ふえたか（入れた 時期も 考える「お金の 重みつき」の 年利）。
+     はじめの ねだんと、とちゅうで 入れた お金（元本の ふえた分）を 出ていく お金、さいごの ねだんを 戻る お金として、
+     ちょうど つりあう 年利を さがす。 */
+  function annualRate(pts, ym){
+    if(pts.length < 2) return null;
+    const t0 = ym(pts[0].k), fl = [[0, -pts[0].v]];
+    for(let i = 1; i < pts.length; i++){ const d = pts[i].p - pts[i-1].p; if(Math.abs(d) >= 1000) fl.push([ym(pts[i].k) - t0, -d]); }
+    const T = ym(pts[pts.length-1].k) - t0; if(T < 1) return null;
+    fl.push([T, pts[pts.length-1].v]);
+    const f = r => fl.reduce((a, x) => a + x[1] / Math.pow(1 + r, x[0]/12), 0);
+    let lo = -0.95, hi = 3; if(f(lo) * f(hi) > 0) return null;
+    for(let i = 0; i < 80; i++){ const mid = (lo + hi)/2; if((f(mid) > 0) === (f(lo) > 0)) lo = mid; else hi = mid; }
+    return (lo + hi)/2;
+  }
+  const pct = r => (r >= 0 ? '+' : '−') + Math.abs(r*100).toFixed(1) + '%';
 
   /* ── 2本の線グラフ（入れたお金・ねだん）。あいだの色＝お金が はたらいた分（上なら緑・下なら赤） ── */
   function lineChart(box, pts, label, words){
@@ -578,7 +596,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     document.getElementById('pick').classList.toggle('hidden', !!w.c);
     [1, 2].forEach(k => {
       const a = document.getElementById('nav' + k); a.classList.toggle('on', w.c === k);
-      try{ const nn = localStorage.getItem('okane_name_' + k); if(nn) a.textContent = nn; }catch(e){}
+      try{ const nn = localStorage.getItem('okane_name_' + k); if(nn){ a.textContent = nn; const b = document.querySelector('#pick a[href="#c=' + k + '"]'); if(b) b.textContent = nn; } }catch(e){}
     });
     document.getElementById('real').classList.toggle('hidden', !w.c);
     document.getElementById('ahead').classList.toggle('hidden', !w.c);
@@ -636,8 +654,16 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     const yTxt = k => k.slice(0,4) + '年' + mTxt(k), sTxt = k => k.slice(2,4) + '/' + parseInt(k.slice(5,7),10);
     const span = n => n === 0 ? 'きろくを はじめてから' : n === 12 ? 'この 1年' : 'この ' + n + 'か月';
     if(sp.length){
-      document.getElementById('pastNote').textContent = yTxt(z.k) + ' までに、お金が はたらいて ふやした 分（ずっと 前から コツコツ 入れてきた せいせき）。'
-        + (sp.length > 1 ? yTxt(sp[0].k) + 'からの うごきは、下の「ぜんぶ」で 見られるよ。' : 'ここから 先の うごきは、下で 見られるよ。');
+      const ar = annualRate(sp, ym);
+      if(ar != null){
+        document.getElementById('rateRow').style.display = '';
+        document.getElementById('rateLbl').textContent = '1年あたりの ふえかた（' + sp[0].k.slice(0,4) + '年から）';
+        const rEl = document.getElementById('realR'); rEl.textContent = pct(ar); rEl.className = ar >= 0 ? 'up' : 'down';
+      }
+      document.getElementById('pastNote').innerHTML = esc(yTxt(z.k)) + ' までに、お金が はたらいて ふやした 分（ずっと 前から コツコツ 入れてきた せいせき）。'
+        + (ar != null ? '<br>' + esc(yTxt(sp[0].k)) + 'から いままでを ならすと、<b>1年で やく ' + Math.abs(ar*100).toFixed(1) + '%</b> ずつ ふえた 計算。口座の 中の 現金（ふえも へりも しない）も こみの 数字だよ。'
+            + (ar > 0.08 ? '<br>⚠ この 数年は 株が とても 上がった 時期。ながい目で 見ると 1年で 3〜5%くらいが ふつう。<b>毎年 こう なるとは かぎらない</b>よ。' : '') : '')
+        + (sp.length > 1 ? '<br>' + esc(yTxt(sp[0].k)) + 'からの うごきは、下の「ぜんぶ」で 見られるよ。' : '');
     }
     // いまに つながる「まいつき きろく している 期間」の はじまり（とちゅうで 2か月より あいたら そこで 切る）
     let r0 = sp.length - 1;
@@ -660,9 +686,13 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
         rb.innerHTML = ''; leg.classList.add('hidden'); return;
       }
       leg.classList.remove('hidden');
-      const pts = sp.slice(sp.indexOf(start)), b0 = pts[0];
+      const pts0 = b => sp.slice(sp.indexOf(b));
+      const pts = pts0(start), b0 = pts[0];
       const add = end.p - b0.p, rise = end.v - b0.v, work = rise - add;
-      win.innerHTML = '<div class="tiles"><div>入れた お金<b>' + sgnYen(add) + '</b></div><div>ねだんの ふえた 分<b class="' + (rise>=0?'up':'down') + '">' + sgnYen(rise) + '</b></div><div class="key' + (work<0?' neg':'') + '">お金が はたらいた 分<b class="' + (work>=0?'up':'down') + '">' + sgnYen(work) + '</b></div></div>'
+      // この 期間の ふえかた（はじめの ねだん＋とちゅうで 入れた 分の 半分 を もとに した わりあい）。1年いじょう なら 1年あたりも
+      const months = ym(end.k) - ym(b0.k), R = work / (b0.v + add/2), ar = months >= 12 ? annualRate(pts0(b0), ym) : null;
+      win.innerHTML = '<div class="tiles"><div>入れた お金<b>' + sgnYen(add) + '</b></div><div>ねだんの ふえた 分<b class="' + (rise>=0?'up':'down') + '">' + sgnYen(rise) + '</b></div><div class="key' + (work<0?' neg':'') + '">お金が はたらいた 分<b class="' + (work>=0?'up':'down') + '">' + sgnYen(work) + '</b></div>'
+        + '<div>ふえかた' + (ar != null ? '（1年あたり）' : '（この 期間）') + '<b class="' + ((ar != null ? ar : R)>=0?'up':'down') + '">' + pct(ar != null ? ar : R) + '</b></div></div>'
         + '<p class="one">' + span(n) + '（' + yTxt(b0.k) + '→' + yTxt(end.k) + '）で、'
         + (work >= 0 ? '<b>お金が ' + yen(work) + ' はたらいて くれた。</b>' + (add >= 1000 ? '入れた ' + yen(add) + ' より、ねだんは ' + yen(rise) + ' ふえて いる。' : '')
                      : '<b>お金は ' + yen(-work) + ' へった。</b>こういう 時期も かならず ある。あわてて 売らなければ、また もどって くる ことが 多いよ。') + '</p>';
