@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d1b27">
+<title>おかねの き</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --bg:#0d1b27; --surface:#132636; --surface-2:#1a3145;
+  --ink:#eef3f7; --ink-soft:#a9bccb; --ink-faint:#7390a6; --line:#24405a;
+  --gold:#e8c170; --gold-soft:#f3d99c; --up:#34d399; --down:#f87171;
+  --gray:#6b8296;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f5f3ee; --surface:#ffffff; --surface-2:#f0ece3;
+    --ink:#1b2530; --ink-soft:#4f5d6a; --ink-faint:#7a8793; --line:#e2ddd2;
+    --gold:#a8741c; --gold-soft:#8a5e12; --up:#0f7a55; --down:#b43c3c;
+    --gray:#a59f92;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  font-size:18px;line-height:1.8;-webkit-font-smoothing:antialiased}
+.page{max-width:640px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:1.6rem;margin:6px 0 2px;line-height:1.4}
+.sub{color:var(--ink-soft);font-size:.92rem;margin:0}
+.date{font-size:.78rem;color:var(--ink-faint)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px 18px;margin:16px 0}
+.step{font-size:.78rem;font-weight:700;letter-spacing:.1em;color:var(--gold)}
+.card h2{font-size:1.25rem;margin:2px 0 10px;line-height:1.45}
+.big{font-size:clamp(2.2rem,11vw,3.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.big small{font-size:.4em;font-weight:700;color:var(--ink-soft);margin-left:4px}
+.one{margin:10px 0 0;color:var(--ink-soft)}
+.one b{color:var(--ink)}
+.note{font-size:.74rem;color:var(--ink-faint);margin-top:10px;line-height:1.65}
+.up{color:var(--up)} .down{color:var(--down)}
+.rows{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.rows div{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:4px}
+.rows span{color:var(--ink-soft);font-size:.92rem}
+.rows b{font-variant-numeric:tabular-nums;font-size:1.05rem}
+.coins{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px 0 4px}
+.coin{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;text-align:center;line-height:1.2;font-variant-numeric:tabular-nums}
+.coin.a{background:var(--surface-2);color:var(--ink-soft);border:2px solid var(--gray)}
+.coin.b{background:var(--gold);color:#1b1408}
+.coin small{font-size:.62rem;font-weight:700;opacity:.85}
+.arrow{font-size:1.6rem;color:var(--ink-faint)}
+.chooser{display:flex;gap:10px;margin-top:12px}
+.chooser a{flex:1;text-align:center;padding:14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px}
+.btns button{font:inherit;font-size:.95rem;font-weight:700;padding:12px 8px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.btns button.main{background:var(--gold);color:#1b1408;border-color:transparent;grid-column:1 / -1;font-size:1.1rem;padding:14px}
+.btns button:disabled{opacity:.45;cursor:default}
+.btns button:focus-visible{outline:3px solid var(--gold-soft);outline-offset:2px}
+.month{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.month .t{font-weight:700}
+.month .r{font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums}
+.msg{margin:8px 0 0;padding:12px 14px;border-radius:14px;background:var(--surface-2);font-size:.95rem;min-height:3.2em}
+.counts{display:flex;gap:10px;margin-top:10px}
+.counts div{flex:1;text-align:center;padding:8px;border-radius:12px;background:var(--surface-2);font-size:.85rem;color:var(--ink-soft)}
+.counts b{display:block;font-size:1.3rem;font-variant-numeric:tabular-nums}
+.chartbox{position:relative;margin-top:12px}
+svg{display:block;width:100%;height:auto;overflow:visible;touch-action:pan-y}
+svg .gr{stroke:var(--line);stroke-width:1}
+svg .ax{font-size:19px;fill:var(--ink-faint)}
+svg .lp{fill:none;stroke:var(--gray);stroke-width:2}
+svg .lv{fill:none;stroke:var(--gold);stroke-width:2.5}
+svg .lb{font-size:12px;font-weight:700}
+svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:.76rem;line-height:1.55;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none;z-index:2}
+.tip b{font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;color:var(--ink-soft);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:14px;height:4px;border-radius:2px}
+.legend i.sq{height:12px;width:12px;border-radius:3px}
+.ctl{margin-top:12px}
+.ctl label{display:flex;justify-content:space-between;font-size:.92rem;color:var(--ink-soft)}
+.ctl label b{color:var(--ink);font-variant-numeric:tabular-nums}
+.ctl input[type=range]{width:100%;accent-color:var(--gold);margin:4px 0 0}
+.hbar{margin-top:10px}
+.hbar .l{display:flex;justify-content:space-between;font-size:.88rem;color:var(--ink-soft);margin-bottom:4px}
+.hbar .l b{color:var(--ink);font-variant-numeric:tabular-nums}
+.hbar .bar{display:flex;gap:2px;height:18px;border-radius:9px;overflow:hidden;background:var(--surface-2)}
+.hbar .bar i{display:block;height:100%}
+.ex{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;font-size:.92rem;margin-top:10px;font-variant-numeric:tabular-nums}
+.ex .k{color:var(--ink-faint)}
+.ex .p{color:var(--up);font-weight:700}
+.promise{counter-reset:p;list-style:none;padding:0;margin:8px 0 0}
+.promise li{counter-increment:p;position:relative;padding:10px 0 10px 46px;border-bottom:1px dashed var(--line)}
+.promise li:last-child{border-bottom:0}
+.promise li::before{content:counter(p);position:absolute;left:0;top:10px;width:32px;height:32px;border-radius:50%;background:var(--gold);color:#1b1408;font-weight:800;display:flex;align-items:center;justify-content:center}
+.promise b{display:block}
+.promise span{font-size:.88rem;color:var(--ink-soft)}
+.hidden{display:none}
+.tabs{display:flex;gap:6px;margin:4px 0 10px;flex-wrap:wrap}
+.tabs button{font:inherit;font-size:.86rem;font-weight:700;padding:8px 4px;white-space:nowrap;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;flex:1;min-width:56px}
+.tabs button.on{background:var(--gold);color:#1b1408;border-color:transparent}
+.tiles{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.tiles div{display:flex;justify-content:space-between;align-items:baseline;background:var(--surface-2);border-radius:12px;padding:8px 12px;font-size:.88rem;color:var(--ink-soft)}
+.tiles b{font-size:1.1rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tiles div.key{border:2px solid var(--up)}
+.tiles div.key.neg{border-color:var(--down)}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1 id="title">おかねの き 🌱</h1>
+  <p class="sub">お金が お金を うむ「ふくり」を たいけんしよう</p>
+
+  <!-- だれの口座か選ぶ（URLの # のあとに c=1 または c=2 がないとき） -->
+  <div class="card hidden" id="pick">
+    <h2>だれの 口座を 見る？</h2>
+    <div class="chooser"><a href="#c=1">ちょうなん</a><a href="#c=2">ちょうじょ</a></div>
+  </div>
+
+  <!-- 1：じぶんの口座（ほんものの数字） -->
+  <div class="card hidden" id="real">
+    <div class="step">その1　ほんものの 口座・これまでの せいせき</div>
+    <h2 id="realTitle">きみの 口座は いま</h2>
+    <div class="big" id="realValue">—</div>
+    <div class="rows">
+      <div><span>入れた お金</span><b id="realP">—</b></div>
+      <div><span>お金が ふやして くれた 分</span><b id="realG">—</b></div>
+    </div>
+    <div class="coins" id="coins"></div>
+    <p class="one" id="coinMsg"></p>
+    <p class="note" id="pastNote"></p>
+  </div>
+
+  <div class="card hidden" id="ahead">
+    <div class="step">その1の2　ほんものの 口座・これからの うごき</div>
+    <h2>お金は ちゃんと はたらいてる？</h2>
+    <div class="tabs" id="tabs"><button data-n="1">1か月</button><button data-n="3">3か月</button><button data-n="6">6か月</button><button data-n="12">1年</button><button data-n="0">ぜんぶ</button></div>
+    <div id="win"></div>
+    <div class="chartbox" id="rBox"></div>
+    <div class="legend" id="rLeg"><span><i style="background:var(--gray)"></i>入れた お金</span><span><i style="background:var(--gold)"></i>ねだん</span><span><i class="sq" style="background:var(--up);opacity:.5"></i>あいだ＝お金が はたらいた 分</span></div>
+    <h2 style="margin-top:20px;font-size:1.05rem">まいつきの「ふえた・へった」</h2>
+    <div id="monthly"></div>
+    <p class="note" id="realNote"></p>
+  </div>
+
+  <!-- 2：ゲーム -->
+  <div class="card">
+    <div class="step">その2　ゲーム</div>
+    <h2>まいつき 1万円 入れたら どうなる？</h2>
+    <p class="one" style="margin-top:0">1か月 すすむ たびに、1万円 入るよ。<br>ねだんは まいつき <b>上がったり 下がったり</b> する。</p>
+    <div class="btns">
+      <button class="main" id="g1">▶ 1か月 すすめる</button>
+      <button id="g3">3か月 すすめる</button>
+      <button id="g6">6か月 すすめる</button>
+      <button id="g12">⏩ 1年 すすめる</button>
+      <button id="g120">⏭ 10年 すすめる</button>
+      <button id="greset" style="grid-column:1 / -1">↺ さいしょから（やるたびに ちがう けっかに なるよ）</button>
+    </div>
+    <div class="month"><span class="t" id="gWhen">まだ 0か月</span><span class="r" id="gR"></span></div>
+    <div class="rows">
+      <div><span>入れた お金</span><b id="gP">0円</b></div>
+      <div><span>いまの ねだん</span><b id="gV">0円</b></div>
+      <div><span>ちがい</span><b id="gD">0円</b></div>
+    </div>
+    <div class="counts">
+      <div><b class="up" id="gUp">0</b>ふえた 月</div>
+      <div><b class="down" id="gDown">0</b>へった 月</div>
+    </div>
+    <p class="msg" id="gMsg">▶ を おしてみよう。</p>
+    <div class="chartbox" id="gBox"></div>
+    <div class="legend"><span><i style="background:var(--gray)"></i>入れた お金（ちょきんばこ なら こう）</span><span><i style="background:var(--gold)"></i>いまの ねだん</span></div>
+    <p class="note">※ ゲームの ねだんは ほんものでは ありません。せかいの 株を ずっと 持っていた ときの「ふつうの ゆれかた」に にせて、コンピューターが まいつき ランダムに きめています（1年で へいきん 5%くらい ふえる・ゆれは 大きめ）。</p>
+  </div>
+
+  <!-- 3：ふくりのしくみ -->
+  <div class="card">
+    <div class="step">その3　ふくりの しくみ</div>
+    <h2>ふえた 分も、また ふえる</h2>
+    <p class="one" style="margin-top:0">100円が 1年で 5% ふえると…</p>
+    <div class="ex" id="ex"></div>
+    <p class="one">2年目は、<b>ふえた 5円も いっしょに ふえる</b>から、5円より 多く ふえる。これが「ふくり」。<b>ながく つづけるほど、雪だるまみたいに 大きく なる</b>よ。</p>
+
+    <div class="ctl"><label>まいつき 入れる お金 <b id="vM"></b></label><input type="range" id="sM" min="1000" max="30000" step="1000" value="10000"></div>
+    <div class="ctl"><label>つづける 年数 <b id="vY"></b></label><input type="range" id="sY" min="1" max="50" step="1" value="20"></div>
+    <div class="ctl"><label>1年で ふえる わりあい <b id="vR"></b></label><input type="range" id="sR" min="0" max="8" step="0.5" value="5"></div>
+
+    <p class="one" id="simMsg"></p>
+    <div class="chartbox" id="sBox"></div>
+    <div class="legend"><span><i class="sq" style="background:var(--gray)"></i>入れた お金</span><span><i class="sq" style="background:var(--up)"></i>お金が ふやして くれた 分</span></div>
+
+    <h2 style="margin-top:22px;font-size:1.05rem">はやく はじめると とく</h2>
+    <div id="early"></div>
+    <p class="note">※ ここは 毎年 おなじ わりあいで ふえる としたときの けいさん。ほんとうは その2の ゲームみたいに ゆれながら ふえます。</p>
+  </div>
+
+  <!-- 4：やくそく -->
+  <div class="card">
+    <div class="step">その4　だいじな こと</div>
+    <h2>ふくりを 味方に する 3つの やくそく</h2>
+    <ol class="promise">
+      <li><b>下がっても、あわてて 売らない</b><span>へる月は かならず ある。そこで やめると、へった まま に なっちゃう。</span></li>
+      <li><b>少しずつ、ながく つづける</b><span>ふくりは 時間が かかるほど 大きく なる。いちばんの 味方は「時間」。</span></li>
+      <li><b>すぐ 使う お金は、ふやそうと しない</b><span>あと少しで 使う お金は、ゆれない ところ（ちょきん）に うつしておく。</span></li>
+    </ol>
+  </div>
+
+  <p class="date" id="asof"></p>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+(function(){
+  const yen = v => Math.round(v).toLocaleString('ja-JP') + '円';
+  const sgnYen = v => (v >= 0 ? '+' : '−') + Math.round(Math.abs(v)).toLocaleString('ja-JP') + '円';
+  const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const tip = document.getElementById('tip');
+
+  /* ── だれのページか：URLの # のあと（c=1 長男 / c=2 長女、n=名前）。名前はページの中には書かない ── */
+  function who(){
+    const q = new URLSearchParams(location.hash.slice(1));
+    const c = q.get('c'), n = (q.get('n') || '').slice(0, 12);
+    return { c: c === '1' || c === '2' ? +c : 0, name: n };
+  }
+
+  /* ── ツールチップ（グラフの上で指やマウスを動かすと出る） ── */
+  function showTip(box, x, y, html){
+    const r = box.getBoundingClientRect();
+    tip.innerHTML = html; tip.style.display = 'block';
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let left = r.left + window.scrollX + x + 12, top = r.top + window.scrollY + y - h - 10;
+    if(left + w > window.scrollX + document.documentElement.clientWidth - 8) left = r.left + window.scrollX + x - w - 12;
+    if(top < window.scrollY + 4) top = r.top + window.scrollY + y + 14;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  /* ── 2本の線グラフ（入れたお金・ねだん）。あいだの色＝お金が はたらいた分（上なら緑・下なら赤） ── */
+  function lineChart(box, pts, label, words){
+    if(pts.length < 2){ box.innerHTML = ''; return; }
+    const w = Object.assign({ v: 'いまの ねだん', p: '入れた お金', d: 'ちがい' }, words || {});
+    const W = 600, H = 260, L = 84, R = 14, T = 16, B = 34;
+    const hi = Math.max(0, ...pts.map(p=>Math.max(p.p, p.v))), lo = Math.min(0, ...pts.map(p=>Math.min(p.p, p.v)));
+    const pad = (hi - lo) * 0.1 || 1, top = hi + pad, bot = lo < 0 ? lo - pad : 0;
+    const X = i => L + (W-L-R) * i/(pts.length-1), Y = v => T + (H-T-B) * (top - v)/(top - bot);
+    const path = k => pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p[k]).toFixed(1)).join(' ');
+    const nice = v => { const a = Math.abs(v), s = v < 0 ? '−' : ''; return s + (a >= 10000 ? (a/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+'万' : Math.round(a).toLocaleString('ja-JP')); };
+    const id = box.id;
+    const pRev = pts.slice().reverse().map((p,j)=>'L'+X(pts.length-1-j).toFixed(1)+' '+Y(p.p).toFixed(1)).join(' ');
+    const band = path('v') + ' ' + pRev + ' Z';
+    const pLine = pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.p).toFixed(1)).join(' ');
+    let o = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(w.p)+'と '+esc(w.v)+' の うごき">'
+      + '<defs><clipPath id="'+id+'Ca">'+'<path d="'+pLine+' L'+X(pts.length-1)+' 0 L'+X(0)+' 0 Z"/></clipPath>'
+      + '<clipPath id="'+id+'Cb"><path d="'+pLine+' L'+X(pts.length-1)+' '+H+' L'+X(0)+' '+H+' Z"/></clipPath></defs>';
+    const ticks = bot < 0 ? [bot + pad, 0, hi] : [0, hi/2, hi];
+    ticks.forEach(v=>{ o += '<line class="gr" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="ax" x="'+(L-6)+'" y="'+(Y(v)+6)+'" text-anchor="end">'+nice(v)+'</text>'; });
+    o += '<path d="'+band+'" fill="var(--up)" opacity=".22" clip-path="url(#'+id+'Ca)"/><path d="'+band+'" fill="var(--down)" opacity=".22" clip-path="url(#'+id+'Cb)"/>';
+    o += '<path class="lp" d="'+path('p')+'"/><path class="lv" d="'+path('v')+'"/>';
+    o += '<text class="ax" x="'+L+'" y="'+(H-6)+'">'+esc(label(0))+'</text><text class="ax" x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end">'+esc(label(pts.length-1))+'</text>';
+    o += '<line class="cross" id="'+box.id+'X" y1="'+T+'" y2="'+(H-B)+'" style="display:none"/>';
+    o += '<circle id="'+box.id+'Dv" r="5" fill="var(--gold)" stroke="var(--surface)" stroke-width="2" style="display:none"/>';
+    o += '<circle id="'+box.id+'Dp" r="5" fill="var(--gray)" stroke="var(--surface)" stroke-width="2" style="display:none"/>';
+    o += '<rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent" id="'+box.id+'Hit"/></svg>';
+    box.innerHTML = o;
+    const svg = box.querySelector('svg'), hit = svg.querySelector('#'+box.id+'Hit');
+    const cx = svg.querySelector('#'+box.id+'X'), dv = svg.querySelector('#'+box.id+'Dv'), dp = svg.querySelector('#'+box.id+'Dp');
+    const move = e => {
+      const r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
+      const i = Math.max(0, Math.min(pts.length-1, Math.round((sx - L) / (W-L-R) * (pts.length-1))));
+      const p = pts[i], x = X(i);
+      cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.display = '';
+      dv.setAttribute('cx', x); dv.setAttribute('cy', Y(p.v)); dv.style.display = '';
+      dp.setAttribute('cx', x); dp.setAttribute('cy', Y(p.p)); dp.style.display = '';
+      const d = p.v - p.p;
+      showTip(box, x * r.width / W, Y(p.v) * r.height / H,
+        '<div>'+esc(label(i))+'</div><div>'+esc(w.v)+' <b>'+(w.signed?sgnYen(p.v):yen(p.v))+'</b></div><div>'+esc(w.p)+' <b>'+(w.signed?sgnYen(p.p):yen(p.p))+'</b></div><div class="'+(d>=0?'up':'down')+'">'+esc(w.d)+' <b>'+sgnYen(d)+'</b></div>');
+    };
+    const out = () => { cx.style.display = dv.style.display = dp.style.display = 'none'; hideTip(); };
+    hit.addEventListener('pointermove', move); hit.addEventListener('pointerdown', move); hit.addEventListener('pointerleave', out);
+  }
+
+  /* ════════ その2：ゲーム ════════ */
+  const G = { m: 0, p: 0, v: 0, up: 0, down: 0, pts: [{p:0, v:0}], last: null, timer: null };
+  // 1か月のふえかた：へいきん 年5%・ゆれ 年15%くらい（せかい株式の ふつうの ゆれ方に にせた つくりもの）
+  function monthReturn(){
+    let u = 0, v = 0; while(!u) u = Math.random(); while(!v) v = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    return Math.max(-0.2, Math.min(0.2, 0.004 + 0.043 * z));
+  }
+  function stepMonth(){
+    const r = monthReturn();
+    G.v = G.v * (1 + r);                 // 先月までの分が 上がったり 下がったり
+    const move = G.v - (G.v / (1 + r));
+    G.v += 10000; G.p += 10000; G.m++;   // そのあと 今月の 1万円を 入れる
+    if(G.m > 1){ if(r >= 0) G.up++; else G.down++; }
+    G.last = G.m > 1 ? { r, move } : null;
+    G.pts.push({ p: G.p, v: G.v });
+  }
+  const when = m => { const y = Math.floor(m/12), k = m % 12; return (y ? y+'年' : '') + (k || !y ? k+'か月' : ''); };
+  function drawGame(){
+    document.getElementById('gWhen').textContent = G.m ? when(G.m) + 'め' : 'まだ 0か月';
+    const rEl = document.getElementById('gR');
+    if(G.last){
+      rEl.textContent = (G.last.r>=0?'+':'−') + Math.abs(G.last.r*100).toFixed(1) + '%（' + sgnYen(G.last.move) + '）';
+      rEl.className = 'r ' + (G.last.r>=0 ? 'up' : 'down');
+    } else rEl.textContent = '';
+    document.getElementById('gP').textContent = yen(G.p);
+    document.getElementById('gV').textContent = yen(G.v);
+    const d = G.v - G.p, dEl = document.getElementById('gD');
+    dEl.textContent = sgnYen(d); dEl.className = d >= 0 ? 'up' : 'down';
+    document.getElementById('gUp').textContent = G.up;
+    document.getElementById('gDown').textContent = G.down;
+    let msg;
+    if(!G.m) msg = '▶ を おしてみよう。';
+    else if(G.m === 1) msg = 'さいしょの 1万円を 入れたよ。らいげつから、ねだんが うごきはじめる。';
+    else {
+      msg = G.last.r >= 0 ? '📈 今月は ふえた！ ' : '📉 今月は へった。でも だいじょうぶ。 ';
+      if(d < 0) msg += 'いまは 入れた お金より すくない。<b>ここで やめると そん</b>に なっちゃう。つづけて みよう。';
+      else if(G.m >= 120) msg += '<b>へった 月が '+G.down+'回も あったのに</b>、ながく つづけたら 入れた お金より '+yen(d)+' 多く なったね。これが ふくりの ちから。';
+      else if(G.m >= 36) msg += 'ふえた 分が、また ふえはじめて いるよ。もっと すすめて みよう。';
+      else msg += 'まだ はじめた ばかり。ゆれる のは ふつうの こと。';
+    }
+    document.getElementById('gMsg').innerHTML = msg;
+    lineChart(document.getElementById('gBox'), G.pts, i => i ? when(i) + 'め' : 'スタート');
+    const busy = !!G.timer, full = G.m >= 600;
+    ['g1','g3','g6','g12','g120'].forEach(id => document.getElementById(id).disabled = busy || full);
+  }
+  function run(n){
+    if(G.timer) return;
+    let left = Math.min(n, 600 - G.m);
+    const tick = n >= 120 ? 15 : n >= 12 ? 70 : 160;
+    G.timer = setInterval(() => {
+      stepMonth(); left--;
+      if(left <= 0){ clearInterval(G.timer); G.timer = null; }
+      drawGame();
+    }, tick);
+    drawGame();
+  }
+  document.getElementById('g1').onclick = () => { if(!G.timer && G.m < 600){ stepMonth(); drawGame(); } };
+  document.getElementById('g3').onclick = () => run(3);
+  document.getElementById('g6').onclick = () => run(6);
+  document.getElementById('g12').onclick = () => run(12);
+  document.getElementById('g120').onclick = () => run(120);
+  document.getElementById('greset').onclick = () => {
+    if(G.timer){ clearInterval(G.timer); G.timer = null; }
+    Object.assign(G, { m:0, p:0, v:0, up:0, down:0, pts:[{p:0,v:0}], last:null });
+    drawGame();
+  };
+  drawGame();
+
+  /* ════════ その3：ふくりのしくみ ════════ */
+  (function(){
+    let a = 100, h = '';
+    for(let y = 1; y <= 3; y++){ const b = a * 1.05; h += '<span class="k">'+y+'年目</span><span>'+a.toFixed(2).replace(/\.00$/,'')+'円 → '+b.toFixed(2).replace(/\.?0+$/,'')+'円</span><span class="p">+'+(b-a).toFixed(2).replace(/\.?0+$/,'')+'円</span>'; a = b; }
+    document.getElementById('ex').innerHTML = h;
+  })();
+  // まいつき m円を n年、年 r% で ふやしたとき（月ごとに ふくり）。年ごとの {入れたお金, ねだん}
+  function grow(m, n, r){
+    const i = Math.pow(1 + r/100, 1/12) - 1, out = [];
+    let v = 0, p = 0;
+    for(let k = 1; k <= n*12; k++){ v = v * (1 + i) + m; p += m; if(k % 12 === 0) out.push({ y: k/12, p, v }); }
+    return out;
+  }
+  let AGE = 0;
+  function drawSim(){
+    const m = +sM.value, n = +sY.value, r = +sR.value;
+    document.getElementById('vM').textContent = yen(m);
+    document.getElementById('vY').textContent = n + '年' + (AGE ? '（' + (AGE + n) + 'さい まで）' : '');
+    document.getElementById('vR').textContent = r + '%';
+    const D = grow(m, n, r), z = D[D.length-1];
+    document.getElementById('simMsg').innerHTML = n + '年後：入れた お金 <b>' + yen(z.p) + '</b> → <b class="up">' + yen(z.v) + '</b>'
+      + (z.p ? '（' + (z.v/z.p).toFixed(2) + 'ばい）' : '') + '<br>ふえた 分は <b class="up">' + yen(z.v - z.p) + '</b>。'
+      + (z.v - z.p > z.p ? '<b>入れた お金より、ふえた 分の ほうが 多い！</b>' : '');
+    // 年ごとの つみあげ棒（灰色＝入れたお金、緑＝ふえた分）
+    const box = document.getElementById('sBox');
+    const W = 600, H = 240, L = 84, R = 8, T = 12, B = 34, gap = n > 30 ? 1 : 2;
+    const mx = z.v * 1.06, bw = (W-L-R)/n - gap, Y = v => T + (H-T-B) * (1 - v/mx);
+    const nice = v => v >= 10000 ? Math.round(v/10000).toLocaleString('ja-JP')+'万' : Math.round(v).toLocaleString('ja-JP');
+    let o = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="年ごとの 入れたお金と ふえた分">';
+    [0, .5, 1].forEach(f=>{ const v = z.v*f; o += '<line class="gr" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="ax" x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+nice(v)+'</text>'; });
+    D.forEach((d, k) => {
+      const x = L + k*(bw+gap) + gap/2, yp = Y(d.p), yv = Y(d.v), g = d.v - d.p;
+      o += '<rect x="'+x.toFixed(1)+'" y="'+yp.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-yp).toFixed(1)+'" fill="var(--gray)"/>';
+      if(yp - yv > 2.5) o += '<rect x="'+x.toFixed(1)+'" y="'+yv.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(yp-yv-2).toFixed(1)+'" rx="'+Math.min(3, bw/2).toFixed(1)+'" fill="var(--up)"/>';
+      o += '<rect class="hit" data-k="'+k+'" x="'+(x-gap/2).toFixed(1)+'" y="'+T+'" width="'+(bw+gap).toFixed(1)+'" height="'+(H-T-B)+'" fill="transparent"/>';
+    });
+    const lab = k => (AGE ? (AGE + D[k].y) + 'さい' : D[k].y + '年目');
+    o += '<text class="ax" x="'+L+'" y="'+(H-6)+'">'+lab(0)+'</text><text class="ax" x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end">'+lab(D.length-1)+'</text></svg>';
+    box.innerHTML = o;
+    const svg = box.querySelector('svg');
+    box.querySelectorAll('.hit').forEach(el => {
+      const f = e => {
+        const d = D[+el.dataset.k], r2 = svg.getBoundingClientRect();
+        showTip(box, (+el.getAttribute('x') + (bw+gap)/2) * r2.width / W, Y(d.v) * r2.height / H,
+          '<div>'+d.y+'年目'+(AGE ? '（'+(AGE+d.y)+'さい）' : '')+'</div><div>ねだん <b>'+yen(d.v)+'</b></div><div>入れた お金 <b>'+yen(d.p)+'</b></div><div class="up">ふえた 分 <b>'+sgnYen(d.v-d.p)+'</b></div>');
+      };
+      el.addEventListener('pointerenter', f); el.addEventListener('pointerdown', f); el.addEventListener('pointerleave', hideTip);
+    });
+    // はやく はじめると とく：いまの年れいから と 10年おそく はじめた とき、どちらも 60さい まで
+    const a0 = AGE || 10, end = 60;
+    const A = grow(m, end - a0, r).pop(), Bz = grow(m, end - a0 - 10, r).pop(), top = A.v;
+    const bar = (t, z2) => '<div class="hbar"><div class="l"><span>'+t+'</span><b>'+yen(z2.v)+'</b></div><div class="bar">'
+      + '<i style="width:'+(z2.p/top*100).toFixed(1)+'%;background:var(--gray)"></i><i style="width:'+((z2.v-z2.p)/top*100).toFixed(1)+'%;background:var(--up)"></i></div></div>';
+    document.getElementById('early').innerHTML =
+      '<p class="one" style="margin-top:0">まいつき '+yen(m)+'、年 '+r+'% で、どちらも '+end+'さい まで つづけたら…</p>'
+      + bar(a0+'さい から（'+(end-a0)+'年）', A) + bar((a0+10)+'さい から（'+(end-a0-10)+'年）', Bz)
+      + '<p class="one">はじめるのが 10年 おそいと、入れる お金は '+yen(A.p - Bz.p)+' しか ちがわないのに、さいごは <b class="up">'+yen(A.v - Bz.v)+'</b> も ちがう。</p>';
+  }
+  const sM = document.getElementById('sM'), sY = document.getElementById('sY'), sR = document.getElementById('sR');
+  [sM, sY, sR].forEach(el => el.addEventListener('input', drawSim));
+
+  /* ════════ その1：ほんものの 口座（Nestoの 月ごとの データを 読む） ════════ */
+  function renderReal(H, KIDS){
+    const w = who();
+    document.getElementById('pick').classList.toggle('hidden', !!w.c);
+    document.getElementById('real').classList.toggle('hidden', !w.c);
+    document.getElementById('ahead').classList.toggle('hidden', !w.c);
+    const nm = w.name || 'きみ';
+    document.getElementById('title').textContent = nm + 'の おかねの き 🌱';
+    document.title = nm + 'の おかねの き';
+    // いまの年れい（年度で かぞえる）→ その3の グラフを「○さい」で 見せる
+    const kid = (KIDS || [])[w.c - 1], now = new Date();
+    const fy = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+    AGE = kid && kid.birthFY ? fy - kid.birthFY : 0;
+    if(AGE){ sY.max = Math.max(10, 65 - AGE); if(+sY.value > +sY.max) sY.value = sY.max; }
+    drawSim();
+    if(!w.c || !H) return;
+    const tag = w.c === 1 ? '子・長男' : '子・長女';
+    const ser = Object.keys(H).sort().map(k => {
+      const rows = (H[k].breakdown && H[k].breakdown.investment) || [];
+      const r = rows.find(x => String(x[0]).indexOf(tag) >= 0);
+      return r ? { k, at: H[k].as_of || k, v: r[1], p: r[4] && r[4].principal_jpy } : null;
+    }).filter(Boolean);
+    if(!ser.length){ document.getElementById('realValue').textContent = 'データが まだ ないよ'; return; }
+    const z = ser[ser.length-1];
+    document.getElementById('realTitle').textContent = nm + 'の 口座は いま';
+    document.getElementById('realValue').innerHTML = Math.round(z.v).toLocaleString('ja-JP') + '<small>円</small>';
+    document.getElementById('asof').textContent = z.at + ' の 数字（まいつき 15日ごろに 新しく なるよ）';
+    if(z.p){
+      const g = z.v - z.p, per = z.v / z.p * 10000;
+      document.getElementById('realP').textContent = yen(z.p);
+      const gEl = document.getElementById('realG'); gEl.textContent = sgnYen(g); gEl.className = g >= 0 ? 'up' : 'down';
+      const s2 = Math.round(84 * Math.sqrt(per / 10000));
+      document.getElementById('coins').innerHTML =
+        '<div class="coin a" style="width:84px;height:84px"><small>入れた</small>1万円</div><div class="arrow">→</div>'
+        + '<div class="coin b" style="width:'+s2+'px;height:'+s2+'px"><small>いまは</small>'+Math.round(per).toLocaleString('ja-JP')+'円</div>';
+      document.getElementById('coinMsg').innerHTML = '入れた <b>1万円</b> が、いまは <b>' + yen(per) + '</b> に なって いる。'
+        + (g >= 0 ? 'ふえた ' + yen(per - 10000) + ' は、<b>お金が はたらいて ふやした 分</b>。' : 'いまは 少し へって いる。でも あわてない。');
+    }
+    // ── これからの うごき：期間を えらんで、その間に 入れた お金と、お金が はたらいた 分 ──
+    const sp = ser.filter(x => x.p), ym = k => +k.slice(0,4)*12 + +k.slice(5,7) - 1;
+    const ymTxt = n => Math.floor(n/12) + '年' + (n%12 + 1) + '月', mTxt = k => parseInt(k.slice(5,7),10) + '月';
+    const yTxt = k => k.slice(0,4) + '年' + mTxt(k), sTxt = k => k.slice(2,4) + '/' + parseInt(k.slice(5,7),10);
+    const span = n => n === 0 ? 'きろくを はじめてから' : n === 12 ? 'この 1年' : 'この ' + n + 'か月';
+    if(sp.length){
+      document.getElementById('pastNote').textContent = sp[0].k.slice(0,4) + '年' + parseInt(sp[0].k.slice(5,7),10) + '月 までに、お金が はたらいて ふやした 分（ずっと 前から コツコツ 入れてきた せいせき）。ここから 先の うごきは、下の「これからの うごき」で 見られるよ。';
+    }
+    const tabs = document.querySelectorAll('#tabs button');
+    function showWin(n){
+      tabs.forEach(b => b.classList.toggle('on', +b.dataset.n === n));
+      const win = document.getElementById('win'), rb = document.getElementById('rBox'), leg = document.getElementById('rLeg');
+      const end = sp[sp.length-1];
+      let start = null;
+      if(n === 0) start = sp.length > 1 ? sp[0] : null;
+      else { const from = ym(end.k) - n; for(const x of sp) if(ym(x.k) <= from) start = x; }
+      if(!start){
+        const ok = ym(sp[0].k) + (n || 1);
+        win.innerHTML = '<p class="msg">まだ きろくが たりないよ。<b>' + ymTxt(ok) + '15日ごろ から</b>、ここで ' + (n ? span(n).replace('この ','') + 'の' : '') + ' うごきが 見られる ように なる。</p>';
+        rb.innerHTML = ''; leg.classList.add('hidden'); return;
+      }
+      leg.classList.remove('hidden');
+      const pts = sp.slice(sp.indexOf(start)), b0 = pts[0];
+      const add = end.p - b0.p, rise = end.v - b0.v, work = rise - add;
+      win.innerHTML = '<div class="tiles"><div>入れた お金<b>' + sgnYen(add) + '</b></div><div>ねだんの ふえた 分<b class="' + (rise>=0?'up':'down') + '">' + sgnYen(rise) + '</b></div><div class="key' + (work<0?' neg':'') + '">お金が はたらいた 分<b class="' + (work>=0?'up':'down') + '">' + sgnYen(work) + '</b></div></div>'
+        + '<p class="one">' + span(n) + '（' + yTxt(b0.k) + '→' + yTxt(end.k) + '）で、'
+        + (work >= 0 ? '<b>お金が ' + yen(work) + ' はたらいて くれた。</b>' + (add > 0 ? '入れた ' + yen(add) + ' より、ねだんは ' + yen(rise) + ' ふえて いる。' : '')
+                     : '<b>お金は ' + yen(-work) + ' へった。</b>こういう 時期も かならず ある。あわてて 売らなければ、また もどって くる ことが 多いよ。') + '</p>';
+      lineChart(rb, pts.map(x => ({ p: x.p - b0.p, v: x.v - b0.v })), i => sTxt(pts[i].k),
+        { v: 'ねだんの ふえた 分', p: '入れた お金', d: 'お金が はたらいた 分', signed: true });
+    }
+    tabs.forEach(b => b.onclick = () => showWin(+b.dataset.n));
+    if(sp.length){
+      const span0 = ym(sp[sp.length-1].k) - ym(sp[0].k);
+      showWin([12, 6, 3, 1].find(n => n <= span0) || 1);
+    }
+
+    // まいつきの「お金が ふやした・へらした 分」＝（ねだん−入れたお金）の 先月との ちがい。入れた お金は かぞえない
+    const mon = [];
+    for(let i = 1; i < ser.length; i++){
+      const a = ser[i-1], b = ser[i];
+      if(a.p && b.p) mon.push({ k: b.k, d: (b.v - b.p) - (a.v - a.p), add: b.p - a.p });
+    }
+    const box = document.getElementById('monthly');
+    if(!mon.length){
+      box.innerHTML = '<p class="msg">' + ser[0].k.slice(0,4) + '年' + parseInt(ser[0].k.slice(5,7),10) + '月から きろく しているよ。<b>らいげつから、まいつき「ふえた・へった」が ここに たまって いく。</b>へる 月も かならず あるから、見て いてね。</p>';
+    } else {
+      const mx = Math.max(...mon.map(x => Math.abs(x.d))) || 1;
+      box.innerHTML = mon.slice(-12).reverse().map(x =>
+        '<div class="hbar"><div class="l"><span>' + parseInt(x.k.slice(5,7),10) + '月' + (x.add > 0 ? '（入れた ' + yen(x.add) + '）' : '') + '</span><b class="' + (x.d>=0?'up':'down') + '">' + (x.d>=0?'📈 ':'📉 ') + sgnYen(x.d) + '</b></div>'
+        + '<div class="bar"><i style="width:' + (Math.abs(x.d)/mx*100).toFixed(1) + '%;background:var(--' + (x.d>=0?'up':'down') + ')"></i></div></div>').join('')
+        + '<p class="one">ふえた 月 <b class="up">' + mon.filter(x=>x.d>=0).length + '回</b>・へった 月 <b class="down">' + mon.filter(x=>x.d<0).length + '回</b></p>';
+    }
+    document.getElementById('realNote').textContent = '「ふえた・へった」は、その月に 入れた お金を のぞいた、お金が じぶんで ふえた（へった）分。口座には 現金も 入って いて、その分は ふえも へりも しない。';
+  }
+
+  let DATA = null;
+  window.addEventListener('hashchange', () => renderReal(DATA && DATA.H, DATA && DATA.KIDS));
+  drawSim();
+  fetch('./index.html', { cache: 'no-store' }).then(r => r.text()).then(t => {
+    const i = t.indexOf('window.DASHBOARD_HISTORY'), j = t.indexOf('/* DASHBOARD_HISTORY_END */');
+    const H = JSON.parse(t.slice(t.indexOf('{', i), t.lastIndexOf('}', j) + 1));
+    const m = t.match(/const KIDS = (\[[\s\S]*?\]);/);
+    let KIDS = null; try{ KIDS = m ? new Function('return ' + m[1])() : null; }catch(e){}
+    DATA = { H, KIDS };
+    renderReal(H, KIDS);
+  }).catch(e => { console.error(e); renderReal(null, null); document.getElementById('asof').textContent = 'ほんものの 口座の データを 読み込めませんでした'; });
+})();
+</script>
+</body>
+</html>
