@@ -137,7 +137,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
 <body>
 <div class="page">
   <nav class="nav" aria-label="ページの いどう">
-    <a href="index.html">🏠 Nesto</a><a href="story.html">📖 かんたん版</a><a href="#c=1" id="nav1">ちょうなん</a><a href="#c=2" id="nav2">ちょうじょ</a>
+    <a href="index.html">🏠 Nesto</a><a href="story.html">📖 かんたん版</a><a href="#c=1" id="nav1">りゅせ</a><a href="#c=2" id="nav2">ねぇね</a>
   </nav>
   <h1 id="title">おかねの き 🌱</h1>
   <p class="sub">お金が お金を うむ「ふくり」を たいけんしよう</p>
@@ -145,7 +145,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
   <!-- だれの口座か選ぶ（URLの # のあとに c=1 または c=2 がないとき） -->
   <div class="card hidden" id="pick">
     <h2>だれの 口座を 見る？</h2>
-    <div class="chooser"><a href="#c=1">ちょうなん</a><a href="#c=2">ちょうじょ</a></div>
+    <div class="chooser"><a href="#c=1">りゅせ</a><a href="#c=2">ねぇね</a></div>
   </div>
 
   <!-- 1：じぶんの口座（ほんものの数字） -->
@@ -343,16 +343,13 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
   addEventListener('resize', seenCheck);
 
   /* ── だれのページか：URLの # のあと（c=1 長男 / c=2 長女、n=名前）。名前はページの中には書かない ── */
+  const NICK = { 1: 'りゅせ', 2: 'ねぇね' };
   function who(){
     const q = new URLSearchParams(location.hash.slice(1));
     const c = q.get('c'), cc = c === '1' || c === '2' ? +c : 0;
-    let n = (q.get('n') || '').slice(0, 12);
-    try{
-      (q.get('k') || '').split(',').slice(0, 2).forEach((x, i) => { x = x.trim().slice(0, 12); if(x) localStorage.setItem('okane_name_' + (i + 1), x); });
-      if(cc && n) localStorage.setItem('okane_name_' + cc, n);
-      else if(cc) n = localStorage.getItem('okane_name_' + cc) || '';
-    }catch(e){}
-    return { c: cc, name: n };
+    // 呼び名は 末っ子が 呼ぶときの 言い方（本名は ページに 書かない）。前に 端末へ おぼえさせた 名前は 消す
+    try{ localStorage.removeItem('okane_name_1'); localStorage.removeItem('okane_name_2'); }catch(e){}
+    return { c: cc, name: cc ? NICK[cc] : '' };
   }
 
   /* ── ツールチップ（グラフの上で指やマウスを動かすと出る） ── */
@@ -596,7 +593,6 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     document.getElementById('pick').classList.toggle('hidden', !!w.c);
     [1, 2].forEach(k => {
       const a = document.getElementById('nav' + k); a.classList.toggle('on', w.c === k);
-      try{ const nn = localStorage.getItem('okane_name_' + k); if(nn){ a.textContent = nn; const b = document.querySelector('#pick a[href="#c=' + k + '"]'); if(b) b.textContent = nn; } }catch(e){}
     });
     document.getElementById('real').classList.toggle('hidden', !w.c);
     document.getElementById('ahead').classList.toggle('hidden', !w.c);
