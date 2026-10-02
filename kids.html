@@ -44,7 +44,7 @@ h1{font-size:1.6rem;margin:6px 0 2px;line-height:1.4}
 .rows span{color:var(--ink-soft);font-size:.92rem}
 .rows b{font-variant-numeric:tabular-nums;font-size:1.05rem}
 .coins{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px 0 4px}
-.coin{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;text-align:center;line-height:1.2;font-variant-numeric:tabular-nums}
+.coin{white-space:nowrap;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;text-align:center;line-height:1.2;font-variant-numeric:tabular-nums}
 .coin.a{background:var(--surface-2);color:var(--ink-soft);border:2px solid var(--gray)}
 .coin.b{background:var(--gold);color:#1b1408}
 .coin small{font-size:.62rem;font-weight:700;opacity:.85}
@@ -96,6 +96,34 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
 .promise b{display:block}
 .promise span{font-size:.88rem;color:var(--ink-soft)}
 .hidden{display:none}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin:0 54px 10px 0}
+.nav a{font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.nav a.on{background:var(--gold);color:#1b1408;border-color:transparent}
+/* 音ボタン・アニメーション */
+.snd{position:fixed;top:max(10px,env(safe-area-inset-top));right:10px;z-index:5;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:1.25rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.coin.b{cursor:pointer;animation:glow 2.4s ease-out infinite;transition:transform .15s;user-select:none;-webkit-user-select:none}
+.coin.b:active{transform:scale(.92)}
+.coin.pop{animation:pop .55s cubic-bezier(.2,1.7,.4,1),glow 2.4s ease-out .55s infinite}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(232,193,112,.6)}70%{box-shadow:0 0 0 18px rgba(232,193,112,0)}100%{box-shadow:0 0 0 0 rgba(232,193,112,0)}}
+@keyframes pop{0%{transform:scale(.55) rotate(-12deg)}100%{transform:scale(1) rotate(0)}}
+.tap{text-align:center;font-size:.78rem;color:var(--gold);font-weight:700;margin-top:2px;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.fx{position:fixed;left:0;top:0;pointer-events:none;z-index:6;font-weight:800;font-size:1.05rem;white-space:nowrap;will-change:transform,opacity}
+.fx.up{color:var(--up)} .fx.down{color:var(--down)} .fx.gold{color:var(--gold)}
+.conf{position:fixed;top:-16px;width:9px;height:15px;border-radius:2px;pointer-events:none;z-index:6;will-change:transform}
+.bump{animation:bump .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bump{0%{transform:scale(1.18)}100%{transform:scale(1)}}
+.rows b{display:inline-block}
+.bars-anim rect.bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}}
+.btns button,.tabs button{transition:transform .1s}
+.btns button:active,.tabs button:active{transform:scale(.95)}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .coin.b,.coin.pop,.tap,.bump,.bars-anim rect.bar{animation:none}
+}
 .tabs{display:flex;gap:6px;margin:4px 0 10px;flex-wrap:wrap}
 .tabs button{font:inherit;font-size:.86rem;font-weight:700;padding:8px 4px;white-space:nowrap;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);cursor:pointer;flex:1;min-width:56px}
 .tabs button.on{background:var(--gold);color:#1b1408;border-color:transparent}
@@ -108,6 +136,9 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
 </head>
 <body>
 <div class="page">
+  <nav class="nav" aria-label="ページの いどう">
+    <a href="index.html">🏠 Nesto</a><a href="story.html">📖 かんたん版</a><a href="#c=1" id="nav1">ちょうなん</a><a href="#c=2" id="nav2">ちょうじょ</a>
+  </nav>
   <h1 id="title">おかねの き 🌱</h1>
   <p class="sub">お金が お金を うむ「ふくり」を たいけんしよう</p>
 
@@ -208,6 +239,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
 </div>
 
 <div class="tip" id="tip"></div>
+<button class="snd" id="snd" aria-label="音の オン・オフ">🔊</button>
 
 <script>
 (function(){
@@ -215,12 +247,110 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
   const sgnYen = v => (v >= 0 ? '+' : '−') + Math.round(Math.abs(v)).toLocaleString('ja-JP') + '円';
   const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const tip = document.getElementById('tip');
+  const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ── 音：音源ファイルは使わず、その場で 電子音を つくる（チャリーン・ピロリ・ポヨン・ファンファーレ） ── */
+  const SND = (() => {
+    let ctx = null, on = true;
+    try{ on = localStorage.getItem('okane_sound') !== 'off'; }catch(e){}
+    const ac = () => {
+      if(!ctx){ const C = window.AudioContext || window.webkitAudioContext; if(!C) return null; ctx = new C(); }
+      if(ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    };
+    function tone(f, at, dur, type, vol, f2){
+      const c = ac(); if(!c) return;
+      const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+    }
+    const play = fn => (...a) => { if(on) fn(...a); };
+    const api = {
+      get on(){ return on; },
+      toggle(){ on = !on; try{ localStorage.setItem('okane_sound', on ? 'on' : 'off'); }catch(e){} if(on) api.coin(); return on; },
+      coin: play((v = 1) => { tone(988, 0, .08, 'square', .07*v); tone(1319, .08, .4, 'square', .07*v); }),
+      tick: play(() => tone(1568, 0, .05, 'square', .035)),
+      up:   play(() => [1047, 1319, 1568].forEach((f, i) => tone(f, i*.06, .18, 'triangle', .1))),
+      down: play(() => tone(392, 0, .3, 'triangle', .11, 247)),
+      fanfare: play(() => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, i*.12, i === 5 ? .6 : .15, 'square', .055)))
+    };
+    return api;
+  })();
+  const sndBtn = document.getElementById('snd');
+  sndBtn.textContent = SND.on ? '🔊' : '🔇';
+  sndBtn.onclick = () => { sndBtn.textContent = SND.toggle() ? '🔊' : '🔇'; };
+
+  /* ── うごき：うかぶ 文字・はじける コイン・紙ふぶき・数字の カウントアップ ── */
+  function floatText(anchor, text, cls){
+    if(RM || !anchor) return;
+    const r = anchor.getBoundingClientRect(), el = document.createElement('div');
+    el.className = 'fx ' + (cls || ''); el.textContent = text;
+    document.body.appendChild(el);
+    const x = r.left + r.width/2, y = r.top;
+    el.animate([
+      { transform: 'translate(' + x + 'px,' + y + 'px) translate(-50%,0) scale(.7)', opacity: 0 },
+      { transform: 'translate(' + x + 'px,' + (y-16) + 'px) translate(-50%,0) scale(1.15)', opacity: 1, offset: .2 },
+      { transform: 'translate(' + x + 'px,' + (y-64) + 'px) translate(-50%,0) scale(1)', opacity: 0 }
+    ], { duration: 1100, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = () => el.remove();
+  }
+  function burst(anchor, n){
+    if(RM || !anchor) return;
+    const r = anchor.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    for(let i = 0; i < (n || 16); i++){
+      const el = document.createElement('div'); el.className = 'fx'; el.textContent = i % 3 ? '✨' : '🪙';
+      el.style.fontSize = (14 + Math.random()*14) + 'px';
+      document.body.appendChild(el);
+      const a = Math.random()*Math.PI*2, d = 60 + Math.random()*80;
+      el.animate([
+        { transform: 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%) scale(.3)', opacity: 1 },
+        { transform: 'translate(' + (cx + Math.cos(a)*d) + 'px,' + (cy + Math.sin(a)*d + 30) + 'px) translate(-50%,-50%) scale(1)', opacity: 0 }
+      ], { duration: 700 + Math.random()*500, easing: 'cubic-bezier(.1,.8,.3,1)' }).onfinish = () => el.remove();
+    }
+  }
+  function confetti(){
+    if(RM) return;
+    const cols = ['#e8c170', '#34d399', '#3987e5', '#f87171', '#f3d99c', '#a78bfa'];
+    for(let i = 0; i < 80; i++){
+      const el = document.createElement('div'); el.className = 'conf';
+      el.style.left = (Math.random()*100) + 'vw'; el.style.background = cols[i % cols.length];
+      document.body.appendChild(el);
+      const dx = (Math.random() - .5)*180, rot = Math.random()*900 - 450;
+      el.animate([{ transform: 'translate(0,0) rotate(0deg)' }, { transform: 'translate(' + dx + 'px,' + (innerHeight + 40) + 'px) rotate(' + rot + 'deg)' }],
+        { duration: 1900 + Math.random()*1500, delay: Math.random()*350, easing: 'cubic-bezier(.3,.6,.5,1)', fill: 'backwards' }).onfinish = () => el.remove();
+    }
+  }
+  function countUp(el, from, to, fmt, dur){
+    if(RM || document.hidden){ el.innerHTML = fmt(to); return; }
+    const t0 = performance.now();
+    const f = now => { const k = Math.min(1, (now - t0)/(dur || 1300)), e = 1 - Math.pow(1 - k, 3); el.innerHTML = fmt(from + (to - from)*e); if(k < 1) requestAnimationFrame(f); };
+    requestAnimationFrame(f);
+  }
+  function bump(el){ if(RM || !el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+  // 画面に 入ったら 1回だけ 動かす（スクロール位置を 見るだけの しくみ。どの 端末でも 動く）
+  const seenQ = [];
+  function seenCheck(){
+    for(let i = seenQ.length - 1; i >= 0; i--){
+      const q = seenQ[i], r = q.el.getBoundingClientRect();
+      if(r.width === 0 && r.height === 0) continue;               // まだ かくれて いる
+      if(r.top < innerHeight * (1 - q.th * .5) && r.bottom > 0){ seenQ.splice(i, 1); q.fn(); }
+    }
+  }
+  function onSeen(el, fn, th){ seenQ.push({ el, fn, th: th || .35 }); setTimeout(seenCheck, 30); }
+  addEventListener('scroll', seenCheck, { passive: true });
+  addEventListener('resize', seenCheck);
 
   /* ── だれのページか：URLの # のあと（c=1 長男 / c=2 長女、n=名前）。名前はページの中には書かない ── */
   function who(){
     const q = new URLSearchParams(location.hash.slice(1));
-    const c = q.get('c'), n = (q.get('n') || '').slice(0, 12);
-    return { c: c === '1' || c === '2' ? +c : 0, name: n };
+    const c = q.get('c'), cc = c === '1' || c === '2' ? +c : 0;
+    let n = (q.get('n') || '').slice(0, 12);
+    try{
+      if(cc && n) localStorage.setItem('okane_name_' + cc, n);
+      else if(cc) n = localStorage.getItem('okane_name_' + cc) || '';
+    }catch(e){}
+    return { c: cc, name: n };
   }
 
   /* ── ツールチップ（グラフの上で指やマウスを動かすと出る） ── */
@@ -242,7 +372,8 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     const W = 600, H = 260, L = 84, R = 14, T = 16, B = 34;
     const hi = Math.max(0, ...pts.map(p=>Math.max(p.p, p.v))), lo = Math.min(0, ...pts.map(p=>Math.min(p.p, p.v)));
     const pad = (hi - lo) * 0.1 || 1, top = hi + pad, bot = lo < 0 ? lo - pad : 0;
-    const X = i => L + (W-L-R) * i/(pts.length-1), Y = v => T + (H-T-B) * (top - v)/(top - bot);
+    const tt = pts.map((p, i) => p.t != null ? p.t : i), t0 = tt[0], tw = (tt[tt.length-1] - t0) || 1;
+    const X = i => L + (W-L-R) * (tt[i] - t0)/tw, Y = v => T + (H-T-B) * (top - v)/(top - bot);
     const path = k => pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p[k]).toFixed(1)).join(' ');
     const nice = v => { const a = Math.abs(v), s = v < 0 ? '−' : ''; return s + (a >= 10000 ? (a/10000).toLocaleString('ja-JP',{maximumFractionDigits:1})+'万' : Math.round(a).toLocaleString('ja-JP')); };
     const id = box.id;
@@ -252,9 +383,9 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     let o = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(w.p)+'と '+esc(w.v)+' の うごき">'
       + '<defs><clipPath id="'+id+'Ca">'+'<path d="'+pLine+' L'+X(pts.length-1)+' 0 L'+X(0)+' 0 Z"/></clipPath>'
       + '<clipPath id="'+id+'Cb"><path d="'+pLine+' L'+X(pts.length-1)+' '+H+' L'+X(0)+' '+H+' Z"/></clipPath></defs>';
-    const ticks = bot < 0 ? [bot + pad, 0, hi] : [0, hi/2, hi];
+    const ticks = lo < 0 && -lo > (hi - lo) * .12 ? [lo, 0, hi] : [0, hi/2, hi];   // 小さな マイナスは 目もりを 出さない（0と かさなるため）
     ticks.forEach(v=>{ o += '<line class="gr" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="ax" x="'+(L-6)+'" y="'+(Y(v)+6)+'" text-anchor="end">'+nice(v)+'</text>'; });
-    o += '<path d="'+band+'" fill="var(--up)" opacity=".22" clip-path="url(#'+id+'Ca)"/><path d="'+band+'" fill="var(--down)" opacity=".22" clip-path="url(#'+id+'Cb)"/>';
+    o += '<path class="bd" d="'+band+'" fill="var(--up)" opacity=".22" clip-path="url(#'+id+'Ca)"/><path class="bd" d="'+band+'" fill="var(--down)" opacity=".22" clip-path="url(#'+id+'Cb)"/>';
     o += '<path class="lp" d="'+path('p')+'"/><path class="lv" d="'+path('v')+'"/>';
     o += '<text class="ax" x="'+L+'" y="'+(H-6)+'">'+esc(label(0))+'</text><text class="ax" x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end">'+esc(label(pts.length-1))+'</text>';
     o += '<line class="cross" id="'+box.id+'X" y1="'+T+'" y2="'+(H-B)+'" style="display:none"/>';
@@ -262,11 +393,19 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     o += '<circle id="'+box.id+'Dp" r="5" fill="var(--gray)" stroke="var(--surface)" stroke-width="2" style="display:none"/>';
     o += '<rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent" id="'+box.id+'Hit"/></svg>';
     box.innerHTML = o;
+    if(w.animate && !RM){
+      box.querySelectorAll('path.lp, path.lv').forEach(pa => {
+        const len = pa.getTotalLength();
+        pa.style.strokeDasharray = len; pa.style.strokeDashoffset = len;
+        pa.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 1200, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' });
+      });
+      box.querySelectorAll('path.bd').forEach(b => b.animate([{ opacity: 0 }, { opacity: .22 }], { duration: 800, delay: 700, fill: 'backwards' }));
+    }
     const svg = box.querySelector('svg'), hit = svg.querySelector('#'+box.id+'Hit');
     const cx = svg.querySelector('#'+box.id+'X'), dv = svg.querySelector('#'+box.id+'Dv'), dp = svg.querySelector('#'+box.id+'Dp');
     const move = e => {
       const r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
-      const i = Math.max(0, Math.min(pts.length-1, Math.round((sx - L) / (W-L-R) * (pts.length-1))));
+      let i = 0; pts.forEach((_, j) => { if(Math.abs(X(j) - sx) < Math.abs(X(i) - sx)) i = j; });
       const p = pts[i], x = X(i);
       cx.setAttribute('x1', x); cx.setAttribute('x2', x); cx.style.display = '';
       dv.setAttribute('cx', x); dv.setAttribute('cy', Y(p.v)); dv.style.display = '';
@@ -295,6 +434,16 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     if(G.m > 1){ if(r >= 0) G.up++; else G.down++; }
     G.last = G.m > 1 ? { r, move } : null;
     G.pts.push({ p: G.p, v: G.v });
+    return r;
+  }
+  // 1か月ぶんの 音と うごき。fast＝はやおくり中（音を まびく）
+  function monthFx(r, fast){
+    const btn = document.getElementById('g1'), rEl = document.getElementById('gR');
+    if(!fast){
+      SND.coin(); floatText(btn, '+1万円 🪙', 'gold');
+      if(G.m > 1) setTimeout(() => { r >= 0 ? SND.up() : SND.down(); floatText(rEl, r >= 0 ? '📈 ふえた！' : '📉 へった', r >= 0 ? 'up' : 'down'); }, 420);
+    } else if(G.m % 6 === 0) SND.coin(.45);
+    if(G.m % 120 === 0){ setTimeout(() => { SND.fanfare(); confetti(); floatText(document.getElementById('gV'), '🎉 ' + (G.m/12) + '年 たっせい！', 'gold'); }, fast ? 0 : 700); }
   }
   const when = m => { const y = Math.floor(m/12), k = m % 12; return (y ? y+'年' : '') + (k || !y ? k+'か月' : ''); };
   function drawGame(){
@@ -306,6 +455,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     } else rEl.textContent = '';
     document.getElementById('gP').textContent = yen(G.p);
     document.getElementById('gV').textContent = yen(G.v);
+    if(!G.timer) bump(document.getElementById('gV'));
     const d = G.v - G.p, dEl = document.getElementById('gD');
     dEl.textContent = sgnYen(d); dEl.className = d >= 0 ? 'up' : 'down';
     document.getElementById('gUp').textContent = G.up;
@@ -329,14 +479,17 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     if(G.timer) return;
     let left = Math.min(n, 600 - G.m);
     const tick = n >= 120 ? 15 : n >= 12 ? 70 : 160;
+    const fast = n >= 12;
     G.timer = setInterval(() => {
-      stepMonth(); left--;
+      const r = stepMonth(); left--;
       if(left <= 0){ clearInterval(G.timer); G.timer = null; }
+      monthFx(r, fast);
+      if(!G.timer && fast && G.m % 120 !== 0){ const d = G.v - G.p; d >= 0 ? SND.up() : SND.down(); floatText(document.getElementById('gD'), d >= 0 ? '📈' : '📉', d >= 0 ? 'up' : 'down'); }
       drawGame();
     }, tick);
     drawGame();
   }
-  document.getElementById('g1').onclick = () => { if(!G.timer && G.m < 600){ stepMonth(); drawGame(); } };
+  document.getElementById('g1').onclick = () => { if(!G.timer && G.m < 600){ const r = stepMonth(); drawGame(); monthFx(r, false); } };
   document.getElementById('g3').onclick = () => run(3);
   document.getElementById('g6').onclick = () => run(6);
   document.getElementById('g12').onclick = () => run(12);
@@ -344,7 +497,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
   document.getElementById('greset').onclick = () => {
     if(G.timer){ clearInterval(G.timer); G.timer = null; }
     Object.assign(G, { m:0, p:0, v:0, up:0, down:0, pts:[{p:0,v:0}], last:null });
-    drawGame();
+    SND.tick(); drawGame();
   };
   drawGame();
 
@@ -380,8 +533,11 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     [0, .5, 1].forEach(f=>{ const v = z.v*f; o += '<line class="gr" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'"/><text class="ax" x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+nice(v)+'</text>'; });
     D.forEach((d, k) => {
       const x = L + k*(bw+gap) + gap/2, yp = Y(d.p), yv = Y(d.v), g = d.v - d.p;
-      o += '<rect x="'+x.toFixed(1)+'" y="'+yp.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-yp).toFixed(1)+'" fill="var(--gray)"/>';
-      if(yp - yv > 2.5) o += '<rect x="'+x.toFixed(1)+'" y="'+yv.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(yp-yv-2).toFixed(1)+'" rx="'+Math.min(3, bw/2).toFixed(1)+'" fill="var(--up)"/>';
+      // 1本の棒を 根元から のばすので、緑（上）→すきま→灰色（下）の順に 同じ 根元から 重ねて描く
+      const dl = ' style="animation-delay:'+(k*35)+'ms"';
+      if(yp - yv > 2.5) o += '<rect class="bar"'+dl+' x="'+x.toFixed(1)+'" y="'+yv.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-yv).toFixed(1)+'" rx="'+Math.min(3, bw/2).toFixed(1)+'" fill="var(--up)"/>'
+        + '<rect class="bar"'+dl+' x="'+x.toFixed(1)+'" y="'+(yp-2).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-yp+2).toFixed(1)+'" fill="var(--surface)"/>';
+      o += '<rect class="bar"'+dl+' x="'+x.toFixed(1)+'" y="'+yp.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-yp).toFixed(1)+'" fill="var(--gray)"/>';
       o += '<rect class="hit" data-k="'+k+'" x="'+(x-gap/2).toFixed(1)+'" y="'+T+'" width="'+(bw+gap).toFixed(1)+'" height="'+(H-T-B)+'" fill="transparent"/>';
     });
     const lab = k => (AGE ? (AGE + D[k].y) + 'さい' : D[k].y + '年目');
@@ -407,12 +563,23 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
       + '<p class="one">はじめるのが 10年 おそいと、入れる お金は '+yen(A.p - Bz.p)+' しか ちがわないのに、さいごは <b class="up">'+yen(A.v - Bz.v)+'</b> も ちがう。</p>';
   }
   const sM = document.getElementById('sM'), sY = document.getElementById('sY'), sR = document.getElementById('sR');
-  [sM, sY, sR].forEach(el => el.addEventListener('input', drawSim));
+  let lastTick = 0;
+  [sM, sY, sR].forEach(el => el.addEventListener('input', () => { drawSim(); const t = Date.now(); if(t - lastTick > 70){ SND.tick(); lastTick = t; } }));
+  // 棒グラフは、画面に 入った 1回目だけ 下から のびる
+  const sBoxA = document.getElementById('sBox');
+  if(!RM){
+    sBoxA.style.visibility = 'hidden';
+    onSeen(sBoxA, () => { sBoxA.style.visibility = ''; sBoxA.classList.add('bars-anim'); setTimeout(() => sBoxA.classList.remove('bars-anim'), 3500); }, .3);
+  }
 
   /* ════════ その1：ほんものの 口座（Nestoの 月ごとの データを 読む） ════════ */
   function renderReal(H, KIDS){
     const w = who();
     document.getElementById('pick').classList.toggle('hidden', !!w.c);
+    [1, 2].forEach(k => {
+      const a = document.getElementById('nav' + k); a.classList.toggle('on', w.c === k);
+      try{ const nn = localStorage.getItem('okane_name_' + k); if(nn) a.textContent = nn; }catch(e){}
+    });
     document.getElementById('real').classList.toggle('hidden', !w.c);
     document.getElementById('ahead').classList.toggle('hidden', !w.c);
     const nm = w.name || 'きみ';
@@ -427,6 +594,8 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     if(!w.c || !H) return;
     const tag = w.c === 1 ? '子・長男' : '子・長女';
     const ser = Object.keys(H).sort().map(k => {
+      const kv = H[k].keys || {}, kk = 'kid' + w.c;
+      if(kv[kk + '_value']) return { k, at: H[k].as_of || k, v: kv[kk + '_value'], p: kv[kk + '_principal'] };
       const rows = (H[k].breakdown && H[k].breakdown.investment) || [];
       const r = rows.find(x => String(x[0]).indexOf(tag) >= 0);
       return r ? { k, at: H[k].as_of || k, v: r[1], p: r[4] && r[4].principal_jpy } : null;
@@ -434,16 +603,30 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     if(!ser.length){ document.getElementById('realValue').textContent = 'データが まだ ないよ'; return; }
     const z = ser[ser.length-1];
     document.getElementById('realTitle').textContent = nm + 'の 口座は いま';
-    document.getElementById('realValue').innerHTML = Math.round(z.v).toLocaleString('ja-JP') + '<small>円</small>';
+    const rv = document.getElementById('realValue'), fmtV = v => Math.round(v).toLocaleString('ja-JP') + '<small>円</small>';
+    rv.innerHTML = fmtV(RM ? z.v : 0);
+    onSeen(rv, () => countUp(rv, 0, z.v, fmtV, 1600));
     document.getElementById('asof').textContent = z.at + ' の 数字（まいつき 15日ごろに 新しく なるよ）';
     if(z.p){
       const g = z.v - z.p, per = z.v / z.p * 10000;
       document.getElementById('realP').textContent = yen(z.p);
-      const gEl = document.getElementById('realG'); gEl.textContent = sgnYen(g); gEl.className = g >= 0 ? 'up' : 'down';
+      const gEl = document.getElementById('realG'); gEl.className = g >= 0 ? 'up' : 'down';
+      gEl.textContent = sgnYen(RM ? g : 0);
+      onSeen(gEl, () => countUp(gEl, 0, g, v => sgnYen(v), 1800));
       const s2 = Math.round(84 * Math.sqrt(per / 10000));
       document.getElementById('coins').innerHTML =
         '<div class="coin a" style="width:84px;height:84px"><small>入れた</small>1万円</div><div class="arrow">→</div>'
-        + '<div class="coin b" style="width:'+s2+'px;height:'+s2+'px"><small>いまは</small>'+Math.round(per).toLocaleString('ja-JP')+'円</div>';
+        + '<div class="coin b" id="coinB" role="button" tabindex="0" aria-label="コインを タップ" style="width:'+s2+'px;height:'+s2+'px"><small>いまは</small><span><span id="coinN">'+Math.round(per).toLocaleString('ja-JP')+'</span>円</span></div>';
+      const cb = document.getElementById('coinB'), cn = document.getElementById('coinN');
+      const grow1 = loud => {
+        if(loud){ SND.coin(); burst(cb); if(navigator.vibrate) try{ navigator.vibrate(15); }catch(e){} }
+        cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop');
+        countUp(cn, 10000, per, v => Math.round(v).toLocaleString('ja-JP'), 1100);
+      };
+      cb.onclick = () => grow1(true);
+      cb.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); grow1(true); } };
+      if(!document.getElementById('tapHint')) document.getElementById('coins').insertAdjacentHTML('afterend', '<div class="tap" id="tapHint">👆 金色の コインを タップ！</div>');
+      onSeen(cb, () => grow1(false), .6);
       document.getElementById('coinMsg').innerHTML = '入れた <b>1万円</b> が、いまは <b>' + yen(per) + '</b> に なって いる。'
         + (g >= 0 ? 'ふえた ' + yen(per - 10000) + ' は、<b>お金が はたらいて ふやした 分</b>。' : 'いまは 少し へって いる。でも あわてない。');
     }
@@ -453,18 +636,26 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     const yTxt = k => k.slice(0,4) + '年' + mTxt(k), sTxt = k => k.slice(2,4) + '/' + parseInt(k.slice(5,7),10);
     const span = n => n === 0 ? 'きろくを はじめてから' : n === 12 ? 'この 1年' : 'この ' + n + 'か月';
     if(sp.length){
-      document.getElementById('pastNote').textContent = sp[0].k.slice(0,4) + '年' + parseInt(sp[0].k.slice(5,7),10) + '月 までに、お金が はたらいて ふやした 分（ずっと 前から コツコツ 入れてきた せいせき）。ここから 先の うごきは、下の「これからの うごき」で 見られるよ。';
+      document.getElementById('pastNote').textContent = yTxt(z.k) + ' までに、お金が はたらいて ふやした 分（ずっと 前から コツコツ 入れてきた せいせき）。'
+        + (sp.length > 1 ? yTxt(sp[0].k) + 'からの うごきは、下の「ぜんぶ」で 見られるよ。' : 'ここから 先の うごきは、下で 見られるよ。');
     }
+    // いまに つながる「まいつき きろく している 期間」の はじまり（とちゅうで 2か月より あいたら そこで 切る）
+    let r0 = sp.length - 1;
+    while(r0 > 0 && ym(sp[r0].k) - ym(sp[r0-1].k) <= 2) r0--;
+    const okFor = n => {
+      if(n === 0) return sp.length > 1 ? sp[0] : null;
+      const from = ym(sp[sp.length-1].k) - n; let st = null;
+      for(const x of sp) if(ym(x.k) <= from) st = x;
+      return st && from - ym(st.k) <= 1 ? st : null;
+    };
     const tabs = document.querySelectorAll('#tabs button');
     function showWin(n){
       tabs.forEach(b => b.classList.toggle('on', +b.dataset.n === n));
       const win = document.getElementById('win'), rb = document.getElementById('rBox'), leg = document.getElementById('rLeg');
       const end = sp[sp.length-1];
-      let start = null;
-      if(n === 0) start = sp.length > 1 ? sp[0] : null;
-      else { const from = ym(end.k) - n; for(const x of sp) if(ym(x.k) <= from) start = x; }
+      const start = okFor(n);
       if(!start){
-        const ok = ym(sp[0].k) + (n || 1);
+        const ok = ym(sp[r0].k) + (n || 1);
         win.innerHTML = '<p class="msg">まだ きろくが たりないよ。<b>' + ymTxt(ok) + '15日ごろ から</b>、ここで ' + (n ? span(n).replace('この ','') + 'の' : '') + ' うごきが 見られる ように なる。</p>';
         rb.innerHTML = ''; leg.classList.add('hidden'); return;
       }
@@ -473,22 +664,24 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
       const add = end.p - b0.p, rise = end.v - b0.v, work = rise - add;
       win.innerHTML = '<div class="tiles"><div>入れた お金<b>' + sgnYen(add) + '</b></div><div>ねだんの ふえた 分<b class="' + (rise>=0?'up':'down') + '">' + sgnYen(rise) + '</b></div><div class="key' + (work<0?' neg':'') + '">お金が はたらいた 分<b class="' + (work>=0?'up':'down') + '">' + sgnYen(work) + '</b></div></div>'
         + '<p class="one">' + span(n) + '（' + yTxt(b0.k) + '→' + yTxt(end.k) + '）で、'
-        + (work >= 0 ? '<b>お金が ' + yen(work) + ' はたらいて くれた。</b>' + (add > 0 ? '入れた ' + yen(add) + ' より、ねだんは ' + yen(rise) + ' ふえて いる。' : '')
+        + (work >= 0 ? '<b>お金が ' + yen(work) + ' はたらいて くれた。</b>' + (add >= 1000 ? '入れた ' + yen(add) + ' より、ねだんは ' + yen(rise) + ' ふえて いる。' : '')
                      : '<b>お金は ' + yen(-work) + ' へった。</b>こういう 時期も かならず ある。あわてて 売らなければ、また もどって くる ことが 多いよ。') + '</p>';
-      lineChart(rb, pts.map(x => ({ p: x.p - b0.p, v: x.v - b0.v })), i => sTxt(pts[i].k),
-        { v: 'ねだんの ふえた 分', p: '入れた お金', d: 'お金が はたらいた 分', signed: true });
+      const gap = pts.some((x, i) => i && ym(x.k) - ym(pts[i-1].k) > 2);
+      if(gap) win.insertAdjacentHTML('beforeend', '<p class="note">※ きろくが ない 月は、線で まっすぐ つないで いるよ。</p>');
+      lineChart(rb, pts.map(x => ({ p: x.p - b0.p, v: x.v - b0.v, t: ym(x.k) })), i => sTxt(pts[i].k),
+        { v: 'ねだんの ふえた 分', p: '入れた お金', d: 'お金が はたらいた 分', signed: true, animate: true });
     }
-    tabs.forEach(b => b.onclick = () => showWin(+b.dataset.n));
+    tabs.forEach(b => b.onclick = () => { SND.tick(); showWin(+b.dataset.n); });
     if(sp.length){
-      const span0 = ym(sp[sp.length-1].k) - ym(sp[0].k);
-      showWin([12, 6, 3, 1].find(n => n <= span0) || 1);
+      const n0 = [12, 6, 3, 1].find(n => okFor(n));
+      showWin(n0 != null ? n0 : (sp.length > 1 ? 0 : 1));
     }
 
     // まいつきの「お金が ふやした・へらした 分」＝（ねだん−入れたお金）の 先月との ちがい。入れた お金は かぞえない
     const mon = [];
     for(let i = 1; i < ser.length; i++){
       const a = ser[i-1], b = ser[i];
-      if(a.p && b.p) mon.push({ k: b.k, d: (b.v - b.p) - (a.v - a.p), add: b.p - a.p });
+      if(a.p && b.p && ym(b.k) - ym(a.k) === 1) mon.push({ k: b.k, d: (b.v - b.p) - (a.v - a.p), add: b.p - a.p });
     }
     const box = document.getElementById('monthly');
     if(!mon.length){
@@ -496,12 +689,14 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     } else {
       const mx = Math.max(...mon.map(x => Math.abs(x.d))) || 1;
       box.innerHTML = mon.slice(-12).reverse().map(x =>
-        '<div class="hbar"><div class="l"><span>' + parseInt(x.k.slice(5,7),10) + '月' + (x.add > 0 ? '（入れた ' + yen(x.add) + '）' : '') + '</span><b class="' + (x.d>=0?'up':'down') + '">' + (x.d>=0?'📈 ':'📉 ') + sgnYen(x.d) + '</b></div>'
+        '<div class="hbar"><div class="l"><span>' + yTxt(x.k) + (x.add >= 1000 ? '（入れた ' + yen(x.add) + '）' : '') + '</span><b class="' + (x.d>=0?'up':'down') + '">' + (x.d>=0?'📈 ':'📉 ') + sgnYen(x.d) + '</b></div>'
         + '<div class="bar"><i style="width:' + (Math.abs(x.d)/mx*100).toFixed(1) + '%;background:var(--' + (x.d>=0?'up':'down') + ')"></i></div></div>').join('')
         + '<p class="one">ふえた 月 <b class="up">' + mon.filter(x=>x.d>=0).length + '回</b>・へった 月 <b class="down">' + mon.filter(x=>x.d<0).length + '回</b></p>';
     }
     document.getElementById('realNote').textContent = '「ふえた・へった」は、その月に 入れた お金を のぞいた、お金が じぶんで ふえた（へった）分。口座には 現金も 入って いて、その分は ふえも へりも しない。';
   }
+
+  if(!RM) document.querySelectorAll('.card').forEach(c => { c.classList.add('reveal'); onSeen(c, () => c.classList.add('in'), .1); });
 
   let DATA = null;
   window.addEventListener('hashchange', () => renderReal(DATA && DATA.H, DATA && DATA.KIDS));
@@ -512,7 +707,7 @@ svg .cross{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
     const m = t.match(/const KIDS = (\[[\s\S]*?\]);/);
     let KIDS = null; try{ KIDS = m ? new Function('return ' + m[1])() : null; }catch(e){}
     DATA = { H, KIDS };
-    renderReal(H, KIDS);
+    renderReal(H, KIDS); setTimeout(seenCheck, 30);
   }).catch(e => { console.error(e); renderReal(null, null); document.getElementById('asof').textContent = 'ほんものの 口座の データを 読み込めませんでした'; });
 })();
 </script>
