@@ -494,6 +494,56 @@
   .al .desc{font-size:.74rem;color:var(--ink-sub);line-height:1.5}
   .al .meta{font-size:.66rem;color:var(--ink-mute);margin-top:6px;letter-spacing:.04em}
 
+  /* ポートフォリオ（家族の投資の中身） */
+  .pf-card{margin-bottom:18px}
+  .pf-big{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;margin:2px 0 14px}
+  .pf-big .v{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pf-big .v small{font-size:.5em;color:var(--ink-sub);font-weight:600;margin-left:3px}
+  .pf-big .s{font-size:.78rem;color:var(--ink-sub);line-height:1.6}
+  .pf-sec{margin-top:18px}
+  .pf-sh{font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .pf-sh span{font-weight:500;color:var(--ink-mute);font-size:.7rem}
+  .pf-row{display:grid;grid-template-columns:6.5em 1fr;gap:10px;align-items:center;margin:6px 0}
+  .pf-row .n{font-size:.74rem;color:var(--ink-sub);text-align:right}
+  .pf-bar{display:flex;gap:2px;height:26px;border-radius:7px;overflow:hidden;background:rgba(255,255,255,.04)}
+  .pf-bar i{display:flex;align-items:center;justify-content:center;height:100%;font-style:normal;font-size:.68rem;font-weight:700;color:#0b1620;white-space:nowrap;overflow:hidden;min-width:0;cursor:default}
+  .pf-bar i:first-child{border-radius:7px 0 0 7px}.pf-bar i:last-child{border-radius:0 7px 7px 0}
+  .pf-leg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px 18px;margin-top:12px}
+  .pf-leg div{display:grid;grid-template-columns:11px 1fr auto;column-gap:7px;align-items:center;font-size:.74rem;color:var(--ink-sub)}
+  .pf-leg i{width:11px;height:11px;border-radius:3px}
+  .pf-leg b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .pf-leg em{grid-column:2 / 4;font-style:normal;font-size:.66rem;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+  .pf-more{margin-top:8px;font-size:.74rem;color:var(--ink-sub)}
+  .pf-more summary{cursor:pointer;color:var(--ink-mute);font-size:.72rem}
+  .pf-msg{font-size:.78rem;color:var(--ink-sub);line-height:1.75;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+  .pf-msg b{color:var(--ink)}
+  .pf-w{display:grid;grid-template-columns:8.5em 1fr 6.5em;gap:10px;align-items:center;margin:7px 0;font-size:.76rem;color:var(--ink-sub)}
+  .pf-w .t{display:inline-block;font-size:.62rem;padding:1px 6px;border-radius:999px;margin-left:5px;border:1px solid var(--line2);color:var(--ink-mute)}
+  .pf-w .t.free{color:#6ee7b7;border-color:rgba(110,231,183,.35)}
+  .pf-w .t.tax{color:#fca5a5;border-color:rgba(252,165,165,.35)}
+  .pf-w .tr{height:10px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden}
+  .pf-w .tr i{display:block;height:100%;border-radius:5px;background:#7dd3fc}
+  .pf-w .tr i.tax{background:#fca5a5}.pf-w .tr i.pt{background:#64748b}
+  .pf-w .v{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pf-w .v small{color:var(--ink-mute);margin-left:4px}
+  .pf-acc{border:1px solid var(--line);border-radius:12px;margin:7px 0;background:rgba(255,255,255,.02)}
+  .pf-acc summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:10px 12px;font-size:.8rem;color:var(--ink)}
+  .pf-acc summary::-webkit-details-marker{display:none}
+  .pf-acc summary::before{content:"▸";color:var(--ink-mute);margin-right:6px}
+  .pf-acc[open] summary::before{content:"▾"}
+  .pf-acc summary .l{flex:1}
+  .pf-acc summary b{font-variant-numeric:tabular-nums}
+  .pf-acc .sw{font-size:.62rem;color:var(--gold-soft);border:1px solid rgba(232,201,138,.4);border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+  .pf-tw{overflow-x:auto;padding:0 12px 10px}
+  .pf-t{width:100%;border-collapse:collapse;font-size:.74rem;min-width:470px}
+  .pf-t th,.pf-t td{padding:6px 5px;text-align:right;color:var(--ink-sub);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap}
+  .pf-t th{color:var(--ink-mute);font-weight:600}
+  .pf-t td:first-child,.pf-t th:first-child{text-align:left;color:var(--ink);white-space:normal}
+  .pf-t .pos{color:#6ee7b7}.pf-t .neg{color:#fca5a5}
+  .pf-after{font-size:.72rem;color:var(--gold-soft);padding:0 12px 10px;line-height:1.6}
+  .pf-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:12px}
+  @media (max-width:560px){.pf-row{grid-template-columns:1fr}.pf-row .n{text-align:left}.pf-w{grid-template-columns:7em 1fr 5.5em}}
+
   /* 運用成績 */
   .perf-card{margin-bottom:18px}
   .perf-big{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin:4px 0 12px}
@@ -545,15 +595,29 @@
   .mkt-src a:hover{color:var(--gold-soft)}
 
   /* 上部のセクション移動ナビ（スクロールで見落とさないように） */
-  .qnav{position:sticky;top:0;z-index:40;display:flex;gap:6px;overflow-x:auto;padding:10px 0 10px;margin:0 0 14px;
-        background:linear-gradient(180deg,var(--bg) 78%,rgba(0,0,0,0));backdrop-filter:blur(6px);
-        scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .qnav::-webkit-scrollbar{display:none}
-  .qnav button{flex:none;background:var(--bg-card);border:1px solid var(--line);color:var(--ink-sub);
-        padding:7px 13px;border-radius:999px;font-size:.76rem;cursor:pointer;white-space:nowrap;transition:all .15s}
-  .qnav button:hover{color:var(--ink);border-color:var(--line2)}
-  .qnav button.on{background:rgba(212,175,110,.14);color:var(--gold-soft);border-color:rgba(212,175,110,.35);font-weight:700}
-  @media(max-width:560px){ .qnav{padding:8px 0} .qnav button{padding:8px 13px} }
+  .qnav{position:sticky;top:0;z-index:40;padding:10px 0;margin:0 0 14px;
+        background:linear-gradient(180deg,var(--bg-deep) 78%,rgba(0,0,0,0));backdrop-filter:blur(6px)}
+  .qnav-bar{display:flex;gap:6px;align-items:center}
+  .qnav-tg{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--line2);color:var(--ink);
+        padding:9px 14px;border-radius:12px;font:inherit;font-size:.8rem;cursor:pointer;text-align:left;transition:border-color .15s}
+  .qnav-tg:hover,.qnav-tg[aria-expanded="true"]{border-color:rgba(212,175,110,.45)}
+  .qnav-tg .k{color:var(--gold-soft);font-weight:700;flex:none}
+  .qnav-tg .c{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+  .qnav-tg .n{color:var(--ink-mute);font-size:.7rem;font-variant-numeric:tabular-nums;flex:none}
+  .qnav-tg .a{color:var(--ink-mute);flex:none;transition:transform .15s}
+  .qnav-tg[aria-expanded="true"] .a{transform:rotate(180deg)}
+  .qnav-step{flex:none;width:38px;height:38px;border-radius:12px;background:var(--bg-card);border:1px solid var(--line);color:var(--ink-sub);font-size:.9rem;cursor:pointer}
+  .qnav-step:hover{color:var(--ink);border-color:var(--line2)}
+  .qnav-menu{position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card2);border:1px solid var(--line2);border-radius:14px;
+        padding:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;max-height:70vh;overflow:auto;
+        box-shadow:0 18px 40px rgba(0,0,0,.45)}
+  .qnav-menu[hidden]{display:none}
+  .qnav-menu button{background:var(--bg-card);border:1px solid var(--line);color:var(--ink-sub);padding:9px 10px;border-radius:10px;
+        font:inherit;font-size:.78rem;cursor:pointer;text-align:left;display:flex;gap:8px;align-items:baseline}
+  .qnav-menu button i{font-style:normal;color:var(--ink-mute);font-size:.68rem;font-variant-numeric:tabular-nums;flex:none;width:1.6em}
+  .qnav-menu button:hover{color:var(--ink);border-color:var(--line2)}
+  .qnav-menu button.on{background:rgba(212,175,110,.14);color:var(--gold-soft);border-color:rgba(212,175,110,.35);font-weight:700}
+  @media(max-width:560px){ .qnav{padding:8px 0} .qnav-menu{grid-template-columns:1fr 1fr} }
 
   /* Footer */
   footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-mute);letter-spacing:.04em}
@@ -1209,6 +1273,14 @@
         <div class="as" id="perfAs"></div>
       </div>
       <div id="perfBody"></div>
+    </div>
+
+    <div class="card pf-card" id="pfPanel" data-nav="ポートフォリオ">
+      <div class="card-h">
+        <div class="lbl">🧺 ポートフォリオ（家族の投資の中身）</div>
+        <div class="as" id="pfAs"></div>
+      </div>
+      <div id="pfBody"></div>
     </div>
 
     <div class="card mkt-card" id="mktPanel" data-nav="相場メモ">
@@ -4150,30 +4222,43 @@ window.DASHBOARD_HISTORY = {
   const targets = [...document.querySelectorAll('[data-nav]')];
   if(!targets.length){ nav.remove(); return; }
   targets.forEach((el,i)=>{ if(!el.id) el.id = 'navsec'+i; });
-  nav.innerHTML = targets.map(el=>'<button type="button" data-go="'+el.id+'">'+el.dataset.nav+'</button>').join('');
-  const btns = [...nav.querySelectorAll('button')];
+  // 「目次」ボタン1つ（いまの項目と何番目か）＋ 前後の移動 ＋ 押すと全項目が一覧で開く
+  nav.innerHTML = '<div class="qnav-bar">'
+    + '<button type="button" class="qnav-tg" aria-expanded="false" aria-controls="qnavMenu"><span class="k">📑 目次</span><span class="c"></span><span class="n"></span><span class="a">▾</span></button>'
+    + '<button type="button" class="qnav-step" data-step="-1" aria-label="前の項目へ">↑</button>'
+    + '<button type="button" class="qnav-step" data-step="1" aria-label="次の項目へ">↓</button></div>'
+    + '<div class="qnav-menu" id="qnavMenu" hidden>'
+    + targets.map((el,i)=>'<button type="button" data-go="'+el.id+'"><i>'+(i+1)+'</i>'+el.dataset.nav+'</button>').join('') + '</div>';
+  const tg = nav.querySelector('.qnav-tg'), menu = nav.querySelector('.qnav-menu');
+  const btns = [...menu.querySelectorAll('button')];
+  let idx = 0;
 
-  const navH = ()=> nav.getBoundingClientRect().height + 8;
-  nav.addEventListener('click', e=>{
-    const b = e.target.closest('button[data-go]'); if(!b) return;
-    const el = document.getElementById(b.dataset.go); if(!el) return;
+  const navH = ()=> nav.querySelector('.qnav-bar').getBoundingClientRect().height + 20;
+  const open = v => { menu.hidden = !v; tg.setAttribute('aria-expanded', v ? 'true' : 'false'); };
+  function go(i){
+    const el = targets[Math.max(0, Math.min(targets.length - 1, i))]; if(!el) return;
     const y = el.getBoundingClientRect().top + window.scrollY - navH() - 6;
     window.scrollTo({ top: Math.max(0,y), behavior: 'smooth' });
+  }
+  tg.addEventListener('click', ()=> open(menu.hidden));
+  nav.addEventListener('click', e=>{
+    const st = e.target.closest('button[data-step]');
+    if(st){ open(false); go(idx + (+st.dataset.step)); return; }
+    const b = e.target.closest('button[data-go]'); if(!b) return;
+    open(false); go(btns.indexOf(b));
   });
+  document.addEventListener('click', e=>{ if(!menu.hidden && !nav.contains(e.target)) open(false); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && !menu.hidden){ open(false); tg.focus(); } });
 
   let ticking = false;
   function mark(){
     ticking = false;
     const line = window.scrollY + navH() + 40;
-    let idx = 0;
+    idx = 0;
     targets.forEach((el,i)=>{ if(el.getBoundingClientRect().top + window.scrollY <= line) idx = i; });
     btns.forEach((b,i)=>b.classList.toggle('on', i===idx));
-    const on = btns[idx];
-    if(on){
-      const l = on.offsetLeft, r = l + on.offsetWidth;
-      if(l < nav.scrollLeft || r > nav.scrollLeft + nav.clientWidth)
-        nav.scrollTo({ left: Math.max(0, l - 16), behavior: 'smooth' });
-    }
+    tg.querySelector('.c').textContent = targets[idx].dataset.nav;
+    tg.querySelector('.n').textContent = (idx + 1) + ' / ' + targets.length;
   }
   window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(mark); } }, { passive: true });
   window.addEventListener('resize', mark);
@@ -4701,6 +4786,109 @@ function hfoAllowance(fy){
   }
   window.__hfoRenderPerf = render;
   setTimeout(render, 0);
+})();
+</script>
+<script>
+/* PORTFOLIO_START */
+window.PORTFOLIO = {"values_as_of": "2026-09-17", "holdings_as_of": "2026-10-12", "us_only": 7086077, "total": 18992914, "cash_kids": 1287690, "regions": [{"name": "米国", "value": 14491193, "pct": 76.3}, {"name": "日本以外の先進国", "value": 2407166, "pct": 12.7}, {"name": "新興国", "value": 1216891, "pct": 6.4}, {"name": "日本", "value": 778886, "pct": 4.1}, {"name": "金", "value": 10537, "pct": 0.1}, {"name": "暗号資産", "value": 88194, "pct": 0.5}, {"name": "その他", "value": 47, "pct": 0.0}], "benchmark": {"name": "オルカン（参考）", "mix": {"米国": 64, "日本以外の先進国": 20, "新興国": 11, "日本": 5}}, "wrappers": [{"name": "NISA（新）", "value": 4462523, "pct": 23.5, "tax": "非課税"}, {"name": "旧つみたてNISA", "value": 3708797, "pct": 19.5, "tax": "非課税"}, {"name": "iDeCo", "value": 7152679, "pct": 37.7, "tax": "非課税"}, {"name": "ジュニアNISA", "value": 1019954, "pct": 5.4, "tax": "非課税"}, {"name": "課税口座", "value": 2152393, "pct": 11.3, "tax": "課税"}, {"name": "ポイント運用", "value": 411896, "pct": 2.2, "tax": "ポイント"}, {"name": "暗号資産", "value": 84672, "pct": 0.4, "tax": "課税"}], "monthly": {"total": 190000, "regions": [{"name": "米国", "value": 132375, "pct": 69.7}, {"name": "日本以外の先進国", "value": 32125, "pct": 16.9}, {"name": "新興国", "value": 17500, "pct": 9.2}, {"name": "日本", "value": 8000, "pct": 4.2}], "items": [{"account": "iDeCo（夫）", "fund": "DCニッセイ外国株式インデックス", "yen": 4250.0}, {"account": "iDeCo（夫）", "fund": "EXE-i 新興国株式ファンド", "yen": 500.0}, {"account": "iDeCo（夫）", "fund": "三井住友・DCつみたてNISA・日本株インデックスファンド", "yen": 250.0}, {"account": "iDeCo（妻）", "fund": "DCニッセイ外国株式インデックス", "yen": 4250.0}, {"account": "iDeCo（妻）", "fund": "EXE-i 新興国株式ファンド", "yen": 500.0}, {"account": "iDeCo（妻）", "fund": "野村DC・JPX日経400ファンド", "yen": 250.0}, {"account": "SBI証券（夫）", "fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "yen": 80000}, {"account": "SBI証券（夫）", "fund": "eMAXIS Slim 米国株式（S&P500）", "yen": 10000}, {"account": "SBI証券（妻）", "fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "yen": 70000}, {"account": "SBI証券（妻）", "fund": "eMAXIS Slim 米国株式（S&P500）", "yen": 20000}]}, "accounts": [{"name": "iDeCo（夫）", "value": 4752545, "cash": 0, "as_of": "2026-10-09", "switching_until": "2026-10-22", "after": [["DCニッセイ外国株式インデックス", 85.5], ["EXE-i 新興国株式ファンド", 9.4], ["三井住友・DCつみたてNISA・日本株インデックスファンド", 5.1]], "holdings": [{"fund": "SBI TOPIX100インデックスファンド（DC年金）", "wrapper": "iDeCo", "value": 841503, "cost": 373276}, {"fund": "三井住友・DCつみたてNISA・日本株インデックスファンド", "wrapper": "iDeCo", "value": 188027, "cost": 60858}, {"fund": "DCニッセイ日経225インデックスファンドA", "wrapper": "iDeCo", "value": 255033, "cost": 95794}, {"fund": "DCニッセイJ-REITインデックスファンドA", "wrapper": "iDeCo", "value": 48467, "cost": 40550}, {"fund": "三菱UFJ純金ファンド（ファインゴールド）", "wrapper": "iDeCo", "value": 151447, "cost": 39952}, {"fund": "EXE-i 先進国株式ファンド", "wrapper": "iDeCo", "value": 894304, "cost": 373276}, {"fund": "EXE-i 新興国株式ファンド", "wrapper": "iDeCo", "value": 166961, "cost": 69088}, {"fund": "iFree NYダウ・インデックス", "wrapper": "iDeCo", "value": 189833, "cost": 84361}, {"fund": "DCニッセイ外国株式インデックス", "wrapper": "iDeCo", "value": 1169335, "cost": 485935}, {"fund": "長期厳選投資 おおぶね", "wrapper": "iDeCo", "value": 40785, "cost": 18717}, {"fund": "野村外国債券インデックスファンド（DC）", "wrapper": "iDeCo", "value": 86453, "cost": 67551}, {"fund": "三井住友・DC外国リートインデックスファンド", "wrapper": "iDeCo", "value": 740764, "cost": 455109}, {"fund": "みのりの投信（確定拠出年金専用）", "wrapper": "iDeCo", "value": 59604, "cost": 30409}]}, {"name": "SBI証券（夫）", "value": 4560832, "cash": 0, "as_of": "2026-10-12", "switching_until": "", "after": [], "holdings": [{"fund": "国内個別株（約32銘柄の合計）", "wrapper": "NISA成長投資枠", "value": 114888, "cost": 115382}, {"fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "wrapper": "NISA成長投資枠", "value": 1496441, "cost": 1490001}, {"fund": "eMAXIS Slim 米国株式（S&P500）", "wrapper": "NISAつみたて投資枠", "value": 564697, "cost": 421008}, {"fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "wrapper": "NISAつみたて投資枠", "value": 516910, "cost": 500009}, {"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "NISAつみたて投資枠", "value": 456421, "cost": 321009}, {"fund": "SBI・V・全米株式インデックス・ファンド", "wrapper": "NISAつみたて投資枠", "value": 9836, "cost": 6000}, {"fund": "eMAXIS Slim 米国株式（S&P500）", "wrapper": "旧つみたてNISA", "value": 555779, "cost": 226728}, {"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "旧つみたてNISA", "value": 553955, "cost": 226732}, {"fund": "SBI・V・全米株式インデックス・ファンド", "wrapper": "旧つみたてNISA", "value": 535977, "cost": 226724}]}, {"name": "SBI証券（妻）", "value": 3211370, "cash": 0, "as_of": "2026-10-12", "switching_until": "", "after": [], "holdings": [{"fund": "eMAXIS Slim 全世界株式（除く日本）", "wrapper": "NISA成長投資枠", "value": 420351, "cost": 290007}, {"fund": "eMAXIS Slim 先進国株式インデックス（除く日本）", "wrapper": "NISA成長投資枠", "value": 8031, "cost": 5000}, {"fund": "eMAXIS Slim 米国株式（S&P500）", "wrapper": "NISAつみたて投資枠", "value": 148185, "cost": 140000}, {"fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "wrapper": "NISAつみたて投資枠", "value": 934215, "cost": 780020}, {"fund": "SBI・新興国株式インデックス・ファンド", "wrapper": "NISAつみたて投資枠", "value": 1755, "cost": 1000}, {"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "NISAつみたて投資枠", "value": 36787, "cost": 31000}, {"fund": "SBI・V・全米株式インデックス・ファンド", "wrapper": "NISAつみたて投資枠", "value": 1778, "cost": 1000}, {"fund": "三井住友・DC新興国株式インデックスファンド", "wrapper": "旧つみたてNISA", "value": 98611, "cost": 39002}, {"fund": "ニッセイ外国株式インデックスファンド", "wrapper": "旧つみたてNISA", "value": 235541, "cost": 68251}, {"fund": "SBI・先進国株式インデックス・ファンド", "wrapper": "旧つみたてNISA", "value": 452172, "cost": 196730}, {"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "旧つみたてNISA", "value": 611246, "cost": 246722}, {"fund": "SBI・V・全米株式インデックス・ファンド", "wrapper": "旧つみたてNISA", "value": 293666, "cost": 126722}, {"fund": "ひふみプラス", "wrapper": "旧つみたてNISA", "value": 160547, "cost": 87751}]}, {"name": "iDeCo（妻）", "value": 2400134, "cash": 0, "as_of": "2026-10-09", "switching_until": "2026-10-22", "after": [["DCニッセイ外国株式インデックス", 81.7], ["EXE-i 新興国株式ファンド", 11.1], ["野村DC・JPX日経400ファンド", 7.2]], "holdings": [{"fund": "フィデリティ・日本成長株・ファンド", "wrapper": "iDeCo", "value": 12805, "cost": 12080}, {"fund": "野村DC・JPX日経400ファンド", "wrapper": "iDeCo", "value": 176671, "cost": 69438}, {"fund": "DCニッセイ日経225インデックスファンドA", "wrapper": "iDeCo", "value": 374025, "cost": 132565}, {"fund": "DCニッセイJ-REITインデックスファンドA", "wrapper": "iDeCo", "value": 49807, "cost": 45982}, {"fund": "三菱UFJ純金ファンド（ファインゴールド）", "wrapper": "iDeCo", "value": 330502, "cost": 133728}, {"fund": "ラッセル・インベストメント外国株式ファンド（DC向け）", "wrapper": "iDeCo", "value": 25851, "cost": 11414}, {"fund": "EXE-i 先進国株式ファンド", "wrapper": "iDeCo", "value": 12889, "cost": 12070}, {"fund": "EXE-i 新興国株式ファンド", "wrapper": "iDeCo", "value": 271435, "cost": 137339}, {"fund": "DC外国株式インデックスファンド", "wrapper": "iDeCo", "value": 162369, "cost": 68024}, {"fund": "iFree NYダウ・インデックス", "wrapper": "iDeCo", "value": 44423, "cost": 22828}, {"fund": "DCニッセイ外国株式インデックス", "wrapper": "iDeCo", "value": 12864, "cost": 12070}, {"fund": "野村外国債券インデックスファンド（DC）", "wrapper": "iDeCo", "value": 28371, "cost": 22846}, {"fund": "三菱UFJ DC新興国債券インデックスファンド", "wrapper": "iDeCo", "value": 90954, "cost": 56563}, {"fund": "三井住友・DC外国リートインデックスファンド", "wrapper": "iDeCo", "value": 28568, "cost": 23484}, {"fund": "ひふみ年金", "wrapper": "iDeCo", "value": 117718, "cost": 56362}, {"fund": "EXE-i 全世界中小型株式ファンド", "wrapper": "iDeCo", "value": 125107, "cost": 68025}, {"fund": "SBI資産設計オープン（資産成長型）", "wrapper": "iDeCo", "value": 97567, "cost": 57898}, {"fund": "DCインデックスバランス（株式80）", "wrapper": "iDeCo", "value": 271433, "cost": 144226}, {"fund": "iFree 8資産バランス", "wrapper": "iDeCo", "value": 212609, "cost": 132521}]}, {"name": "SBI証券（子・長女）", "value": 1610198, "cash": 716528, "as_of": "2026-10-02", "switching_until": "", "after": [], "holdings": [{"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "特定（課税）", "value": 1127843, "cost": 440027}, {"fund": "eMAXIS Slim 米国株式（S&P500）", "wrapper": "ジュニアNISA", "value": 495485, "cost": 215006}, {"fund": "eMAXIS Slim 全世界株式（オール・カントリー）", "wrapper": "ジュニアNISA", "value": 28205, "cost": 15000}]}, {"name": "SBI証券（子・長男）", "value": 1562149, "cash": 571162, "as_of": "2026-10-02", "switching_until": "", "after": [], "holdings": [{"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "特定（課税）", "value": 1079767, "cost": 420023}, {"fund": "SBI・V・S&P500インデックス・ファンド", "wrapper": "ジュニアNISA", "value": 494241, "cost": 215008}, {"fund": "eMAXIS Slim 全世界株式（除く日本）", "wrapper": "ジュニアNISA", "value": 28188, "cost": 15000}]}, {"name": "PayPayポイント運用（夫）", "value": 411896, "cash": 0, "as_of": "2026-10-10", "switching_until": "", "after": [], "holdings": [{"fund": "ビットコインコース", "wrapper": "ポイント運用", "value": 3789, "cost": 4390}, {"fund": "金（ゴールド）コース", "wrapper": "ポイント運用", "value": 11336, "cost": 4359}, {"fund": "テクノロジーコース（GAFAM等・NASDAQ100連動）", "wrapper": "ポイント運用", "value": 19155, "cost": 6880}, {"fund": "スタンダードコース（S&P500連動）", "wrapper": "ポイント運用", "value": 139, "cost": 58}, {"fund": "チャレンジコース（S&P500の約3倍）", "wrapper": "ポイント運用", "value": 408649, "cost": 165469}, {"fund": "逆チャレンジコース（S&P500の逆3倍）", "wrapper": "ポイント運用", "value": 51, "cost": 360}]}, {"name": "マネックス証券（旧つみたてNISA）", "value": 399118, "cash": 0, "as_of": "2026-09-30", "switching_until": "", "after": [], "holdings": [{"fund": "野村つみたて外国株投信", "wrapper": "旧つみたてNISA", "value": 408136, "cost": 115000}]}, {"name": "メルカリ ビットコイン（妻）", "value": 84672, "cash": 0, "as_of": "2026-09-17", "switching_until": "", "after": [], "holdings": [{"fund": "ビットコイン", "wrapper": "暗号資産", "value": 84672, "cost": 110000}]}], "regions_as_of": "2026-10"};
+/* PORTFOLIO_END */
+</script>
+<script>
+/* ポートフォリオ：build.py が 02_data/90_holdings から作った window.PORTFOLIO を表示する。
+   地域はファンドの中身まで分解した概算。金額はNestoの最新月の残高、比率は保有銘柄のファイルから。 */
+(function(){
+  const panel = document.getElementById('pfPanel'), P = window.PORTFOLIO;
+  if(!panel) return;
+  if(!P){ panel.classList.add('hidden'); return; }
+  const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits: v >= 1e6 ? 0 : 1}) + '万';
+  const yen = v => Math.round(v).toLocaleString('ja-JP') + '円';
+  const COL = { '米国':'#2f6fd6', '日本以外の先進国':'#7dd3fc', '新興国':'#e879f9', '日本':'#f2c14e', 'その他':'#64748b' };
+  const MAIN = ['米国','日本以外の先進国','新興国','日本'];
+  // 小さい区分（金・暗号資産など）は「その他」にまとめる
+  function fold(list){
+    const out = MAIN.map(n => ({ name:n, value:0, pct:0 })), other = { name:'その他', value:0, pct:0, parts:[] };
+    list.forEach(r => {
+      const o = out.find(x => x.name === r.name);
+      if(o){ o.value += r.value; o.pct += r.pct; } else { other.value += r.value; other.pct += r.pct; other.parts.push(r.name); }
+    });
+    if(other.value > 0) out.push(other);
+    return out.filter(x => x.value > 0 || x.pct > 0);
+  }
+  const bar = (rows, labelMin) => '<div class="pf-bar">' + rows.map(r =>
+      '<i style="width:'+r.pct+'%;background:'+COL[r.name]+'" title="'+esc(r.name + (r.parts && r.parts.length ? '（'+r.parts.join('・')+'）' : '') + '：' + (r.value ? man(r.value)+'円・' : '') + r.pct.toFixed(1)+'%')+'">'
+      + (r.pct >= labelMin ? esc((r.name === '日本以外の先進国' ? '先進国' : r.name) + ' ' + Math.round(r.pct) + '%') : '') + '</i>').join('') + '</div>';
+
+  const LMIN = window.innerWidth < 560 ? 18 : 9;   // 帯の中に文字を入れる最小の割合（狭い画面では大きい区分だけ）
+  const fam = fold(P.regions);
+  const bm = fold(Object.entries(P.benchmark.mix).map(([name, pct]) => ({ name, value:0, pct })));
+  const mon = fold(P.monthly.regions || []);
+  const us = fam.find(r => r.name === '米国') || {pct:0}, usB = bm.find(r => r.name === '米国') || {pct:0};
+  const usM = mon.find(r => r.name === '米国') || {pct:0};
+  const nFunds = P.accounts.reduce((a, x) => a + (x.after.length || x.holdings.length), 0);   // 入れ替え中の口座は入れ替え後の本数
+
+  document.getElementById('pfAs').textContent = '金額 ' + (P.values_as_of || '') + '／銘柄 ' + (P.holdings_as_of || '') + ' 時点';
+  let h = '<div class="pf-big"><div class="v">' + man(P.total) + '<small>円</small></div>'
+    + '<div class="s">家族の投資 ' + P.accounts.length + '口座・' + nFunds + '銘柄（コース含む）'
+    + (P.cash_kids ? '<br>子ども口座の現金 ' + man(P.cash_kids) + '円は含めていない' : '') + '</div></div>';
+
+  // ① 地域
+  h += '<div class="pf-sec"><div class="pf-sh">どの国・地域に投資しているか<span>ファンドの中身まで分解した概算</span></div>'
+    + '<div class="pf-row"><div class="n">わが家</div>' + bar(fam, LMIN) + '</div>'
+    + '<div class="pf-row"><div class="n">オルカン（参考）</div>' + bar(bm, LMIN) + '</div>'
+    + '<div class="pf-leg">' + fam.map(r => {
+        const b = bm.find(x => x.name === r.name), d = r.pct - (b ? b.pct : 0);
+        return '<div><i style="background:'+COL[r.name]+'"></i><span>' + esc(r.name) + '</span><b>' + r.pct.toFixed(1) + '%</b><em>' + man(r.value) + '円・オルカンより ' + (d >= 0 ? '+' : '−') + Math.abs(d).toFixed(0) + 'pt</em></div>';
+      }).join('') + '</div>';
+  const dUS = us.pct - usB.pct;
+  h += '<div class="pf-msg">' + (dUS > 5
+      ? '米国が <b>' + us.pct.toFixed(0) + '%</b> で、オルカン（' + usB.pct.toFixed(0) + '%）より <b>' + dUS.toFixed(0) + 'ポイント多い</b>。米国だけに投資するファンド（S&P500・全米株式など）が <b>' + man(P.us_only) + '円</b> あるため（子ども口座・旧つみたてNISA・PayPayなど）。'
+      : '地域の割合は、オルカンとほぼ同じ形。')
+    + (P.monthly.total ? '<br>毎月の積立（' + man(P.monthly.total) + '円）の行き先は 米国 <b>' + usM.pct.toFixed(0) + '%</b>。'
+        + (usM.pct < us.pct - 2 ? '積立を続けるほど、全体の米国の割合は少しずつ下がっていく。' : '') : '') + '</div></div>';
+
+  // ② 毎月の積立の行き先
+  if(P.monthly.total){
+    const byAcc = {};
+    P.monthly.items.forEach(m => { (byAcc[m.account] = byAcc[m.account] || []).push(m); });
+    h += '<div class="pf-sec"><div class="pf-sh">毎月の積立の行き先<span>月 ' + yen(P.monthly.total) + '</span></div>'
+      + '<div class="pf-row"><div class="n">毎月の積立</div>' + bar(mon, LMIN) + '</div>'
+      + '<details class="pf-more"><summary>銘柄ごとの内訳を見る</summary><div class="pf-tw" style="padding:6px 0 0"><table class="pf-t" style="min-width:0"><tr><th>口座</th><th>銘柄</th><th>毎月</th></tr>'
+      + Object.entries(byAcc).map(([a, ms]) => ms.map((m, i) => '<tr><td>' + (i ? '' : esc(a)) + '</td><td style="text-align:left">' + esc(m.fund) + '</td><td>' + yen(m.yen) + '</td></tr>').join('')).join('')
+      + '</table></div></details></div>';
+  }
+
+  // ③ 入れ物（税金）
+  const wmax = Math.max(...P.wrappers.map(w => w.value));
+  h += '<div class="pf-sec"><div class="pf-sh">どの入れ物に入っているか<span>非課税＝利益に税金がかからない</span></div>'
+    + P.wrappers.map(w => {
+        const cls = w.tax === '非課税' ? 'free' : w.tax === '課税' ? 'tax' : '';
+        return '<div class="pf-w"><div>' + esc(w.name) + '<span class="t ' + cls + '">' + esc(w.tax) + '</span></div>'
+          + '<div class="tr" title="' + esc(w.name + '：' + man(w.value) + '円・' + w.pct + '%') + '"><i class="' + (cls === 'tax' ? 'tax' : cls ? '' : 'pt') + '" style="width:' + (w.value / wmax * 100).toFixed(1) + '%"></i></div>'
+          + '<div class="v">' + man(w.value) + '<small>' + Math.round(w.pct) + '%</small></div></div>';
+      }).join('')
+    + '</div>';
+
+  // ④ 口座ごとの銘柄
+  h += '<div class="pf-sec"><div class="pf-sh">口座ごとの銘柄<span>押すと開く・金額は保有銘柄を見た日の値</span></div>'
+    + P.accounts.map(a => {
+        const rows = a.holdings.slice().sort((x, y) => y.value - x.value);
+        return '<details class="pf-acc"><summary><span class="l">' + esc(a.name) + (a.switching_until ? '<span class="sw">入れ替え中（' + esc(a.switching_until.slice(5).replace('-', '/')) + 'ごろ完了）</span>' : '') + '</span><b>' + man(a.value) + '円</b></summary>'
+          + (a.after.length ? '<div class="pf-after">入れ替え後：' + a.after.map(x => esc(x[0]) + ' ' + x[1] + '%').join('／') + '（下の表は入れ替え前）</div>' : '')
+          + '<div class="pf-tw"><table class="pf-t"><tr><th>銘柄</th><th>入れ物</th><th>評価額</th><th>増え方</th></tr>'
+          + rows.map(x => {
+              const g = x.cost ? (x.value - x.cost) / x.cost * 100 : null;
+              return '<tr><td>' + esc(x.fund) + '</td><td>' + esc(x.wrapper || '') + '</td><td>' + yen(x.value) + '</td><td class="' + (g == null ? '' : g >= 0 ? 'pos' : 'neg') + '">' + (g == null ? '—' : (g >= 0 ? '+' : '−') + Math.abs(g).toFixed(0) + '%') + '</td></tr>';
+            }).join('')
+          + (a.cash ? '<tr><td>現金（預り金）</td><td>—</td><td>' + yen(a.cash) + '</td><td>—</td></tr>' : '')
+          + '</table></div></details>';
+      }).join('')
+    + '</div>';
+
+  h += '<div class="pf-note">・地域の割合は、各ファンドの中身（オルカン＝米国約64%など）を当てはめた概算（' + esc(P.regions_as_of) + '時点の目安）。PayPayの3倍コースは評価額で数えている（値動きは約3倍）。<br>'
+    + '・合計の金額はNestoの最新月の口座残高。中身の比率は保有銘柄の画面を見た日のもので、銘柄を入れ替えたら 02_data/90_holdings を更新する。<br>'
+    + '・iDeCoは入れ替え中なので、入れ替え後の配分で数えている。</div>';
+  document.getElementById('pfBody').innerHTML = h;
 })();
 </script>
 </body>
