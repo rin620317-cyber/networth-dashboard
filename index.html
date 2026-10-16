@@ -214,7 +214,7 @@
   .pens-sc{display:flex;align-items:center;gap:10px;font-size:.78rem}
   .pens-sc .lab{width:5.5em;color:var(--ink-sub);flex:none}
   .pens-sc .track{flex:1;height:15px;border-radius:8px;background:rgba(255,255,255,.05);position:relative;overflow:hidden}
-  .pens-sc .fill{height:100%;background:var(--teal)}
+  .pens-sc .fill{display:block;height:100%;background:var(--teal)}
   .pens-sc .fill.ng{background:var(--bad)}
   .pens-sc .line{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
   .pens-sc .val{width:6.5em;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;flex:none}
@@ -571,7 +571,7 @@
   .pb .pl b.pos{color:#34d399}.pb .pl b.neg{color:#f87171}
   .pb .pt{display:flex;height:12px;border-radius:6px;overflow:hidden;background:rgba(127,127,127,.12);gap:2px}
   .pb .pt i,.plg i{display:block;height:100%}
-  .p0{background:#7d8a96}.p1{background:#34d399}.p2{background:#f87171}.pv{background:#e8c170}
+  .pbars .p0,.plg .p0{background:#7d8a96}.pbars .p1,.plg .p1{background:#34d399}.pbars .p2,.plg .p2{background:#f87171}.plg .pv{background:#e8c170}
   .plg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.72rem;opacity:.85;margin-top:6px}
   .plg span{display:inline-flex;align-items:center;gap:6px}
   .plg i{width:12px;height:12px;border-radius:3px;display:inline-block}
@@ -3557,14 +3557,17 @@ window.DASHBOARD_HISTORY = {
       const pensLifetime = pension * 12 * pensYearsEach;
       const man = v => (v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万';
       const planOn = (s.steps||[]).some(st=>st.y < PENSION.selfPensionYear && st.m !== s.saving);
-      document.getElementById('pensScen').innerHTML = [s.r1,s.r2,s.r3].map(x=>(Number(x)||0)/100).map(r=>{
+      // 棒の目盛り：3つの見込みと必要額のうち、いちばん大きいものを100%にする（見込みが必要額を大きく超えても差が見えるように）
+      const scenRates = [s.r1,s.r2,s.r3].map(x=>(Number(x)||0)/100);
+      const scale = Math.max(need, ...scenRates.map(r=>projectTo65(startAssets, r, years, baseYear, s))) * 1.05 || 1;
+      document.getElementById('pensScen').innerHTML = scenRates.map(r=>{
         const v = projectTo65(startAssets, r, years, baseYear, s);
         const flat = projectTo65(startAssets, r, years, baseYear, s, true);
         const ok = v>=need;
         const pctOfNeed = need? Math.min(100, v/need*100) : 100;
         return '<div class="pens-sc"><span class="lab">実質 '+(+(r*100).toFixed(1))+'%</span>'
-          + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/(need*1.8)*100).toFixed(1)+'%"></span>'
-          + '<span class="line" style="left:'+(100/1.8).toFixed(1)+'%" title="必要額ライン"></span></span>'
+          + '<span class="track"><span class="fill'+(ok?'':' ng')+'" style="width:'+Math.min(100,v/scale*100).toFixed(1)+'%"></span>'
+          + '<span class="line" style="left:'+Math.min(100,need/scale*100).toFixed(1)+'%" title="必要額ライン（'+man(need)+'）"></span></span>'
           + '<span class="val '+(ok?'ok':'ng')+'">'+(v/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万'+(ok?' ○':' ×')
           + '<small style="display:block;font-weight:600;color:var(--gold,#e8c170);font-size:.7rem">＋年金 '+man(pensLifetime)+' ＝ '+man(v+pensLifetime)+'</small>'
           + (planOn ? '<small style="display:block;font-weight:400;opacity:.65;font-size:.68rem">減らさなければ '+(flat/10000).toLocaleString('ja-JP',{maximumFractionDigits:0})+'万</small>' : '')
