@@ -544,6 +544,11 @@
   .pf-note{font-size:.68rem;color:var(--ink-mute);line-height:1.75;margin-top:12px}
   @media (max-width:560px){.pf-row{grid-template-columns:1fr}.pf-row .n{text-align:left}.pf-w{grid-template-columns:7em 1fr 5.5em}}
 
+  /* 法人は参考表示（純資産に含めない） */
+  .nw-note{margin-left:10px;font-size:.62rem;letter-spacing:.04em;text-transform:none;color:var(--ink-mute);font-weight:500;border:1px solid var(--line2);border-radius:999px;padding:1px 8px}
+  .ws.legal.ref{opacity:.72;border-style:dashed}
+  .ws.legal.ref .d{line-height:1.5}
+
   /* 運用成績 */
   .perf-card{margin-bottom:18px}
   .perf-big{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin:4px 0 12px}
@@ -892,7 +897,7 @@
     <div class="hero" data-nav="純資産">
       <div class="card worth">
         <div class="card-h">
-          <div class="lbl">純資産（Family Net Worth）</div>
+          <div class="lbl">純資産（Family Net Worth）<span class="nw-note">会社（法人）のお金は含めない</span></div>
           <div class="month-picker">
             <label>基準 <select id="monthSelector" class="month-sel"></select></label>
             <label>比較 <select id="compareSelector" class="month-sel"></select></label>
@@ -912,11 +917,11 @@
         </div>
         <div id="noBreakdownNote" style="display:none;font-size:.72rem;color:var(--ink-mute);margin:8px 0 2px">この月は総資産・負債の合計のみ（BSシートからの過去取込のため、法人・個人事業・家計・投資の内訳データはありません）</div>
         <div class="worth-split">
-          <div class="ws legal">
+          <div class="ws legal ref" title="会社のお金は家族のものではないため、純資産・総資産には含めていません">
             <div class="ico">⬢</div>
-            <div class="lbl2">法人</div>
+            <div class="lbl2">法人（参考・含めない）</div>
             <div class="v num" data-key="corporate" data-count="5821159" data-prefix="¥" data-duration="1600">¥0</div>
-            <div class="d">税引前 +¥1.12M</div>
+            <div class="d" id="corpBs">会社の現金</div>
             <div class="wsd" data-delta-key="corporate"></div>
           </div>
           <div class="ws ind">
@@ -1611,7 +1616,9 @@ window.DASHBOARD_HISTORY = {
    "household": 6223494,
    "investment": 2298217,
    "realestate": 0,
-   "household_realestate": 6223494
+   "household_realestate": 6223494,
+   "net_worth_incl_corp": 4183266,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2014-11-01"
@@ -1629,7 +1636,9 @@ window.DASHBOARD_HISTORY = {
    "household": 6600354,
    "investment": 2160953,
    "realestate": 0,
-   "household_realestate": 6600354
+   "household_realestate": 6600354,
+   "net_worth_incl_corp": 4299283,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2014-12-01"
@@ -1876,7 +1885,9 @@ window.DASHBOARD_HISTORY = {
    "household": 9473257,
    "investment": 6882826,
    "realestate": 9800000,
-   "household_realestate": 19273257
+   "household_realestate": 19273257,
+   "net_worth_incl_corp": 10341249,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-04-08"
@@ -1898,7 +1909,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 856600,
    "kid1_principal": 680037,
    "kid2_value": 881579,
-   "kid2_principal": 700037
+   "kid2_principal": 700037,
+   "net_worth_incl_corp": 11131451,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-07-07"
@@ -1920,7 +1933,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 858730,
    "kid1_principal": 680036,
    "kid2_value": 883870,
-   "kid2_principal": 700035
+   "kid2_principal": 700035,
+   "net_worth_incl_corp": 11397845,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-08-10"
@@ -1943,7 +1958,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 874248,
    "kid1_principal": 680029,
    "kid2_value": 899786,
-   "kid2_principal": 700032
+   "kid2_principal": 700032,
+   "net_worth_incl_corp": 11692834,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-09-05"
@@ -1966,7 +1983,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 975794,
    "kid1_principal": 785033,
    "kid2_value": 1001266,
-   "kid2_principal": 805043
+   "kid2_principal": 805043,
+   "net_worth_incl_corp": 11796320,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-10-13"
@@ -1989,7 +2008,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 984499,
    "kid1_principal": 785029,
    "kid2_value": 1010227,
-   "kid2_principal": 805038
+   "kid2_principal": 805038,
+   "net_worth_incl_corp": 12384653,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-11-09"
@@ -2012,7 +2033,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 997949,
    "kid1_principal": 785033,
    "kid2_value": 1024020,
-   "kid2_principal": 805043
+   "kid2_principal": 805043,
+   "net_worth_incl_corp": 11496279,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2023-12-01"
@@ -2035,7 +2058,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1031450,
    "kid1_principal": 785040,
    "kid2_value": 1058694,
-   "kid2_principal": 805042
+   "kid2_principal": 805042,
+   "net_worth_incl_corp": 12104465,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-01-13"
@@ -2058,7 +2083,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1099670,
    "kid1_principal": 785041,
    "kid2_value": 1128996,
-   "kid2_principal": 805044
+   "kid2_principal": 805044,
+   "net_worth_incl_corp": 12490924,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-02-13"
@@ -2081,7 +2108,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1107097,
    "kid1_principal": 785043,
    "kid2_value": 1136533,
-   "kid2_principal": 805045
+   "kid2_principal": 805045,
+   "net_worth_incl_corp": 13514761,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-03-13"
@@ -2104,7 +2133,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1156259,
    "kid1_principal": 785044,
    "kid2_value": 1187486,
-   "kid2_principal": 805045
+   "kid2_principal": 805045,
+   "net_worth_incl_corp": 14623223,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-04-12"
@@ -2127,7 +2158,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1179920,
    "kid1_principal": 785049,
    "kid2_value": 1211795,
-   "kid2_principal": 805051
+   "kid2_principal": 805051,
+   "net_worth_incl_corp": 14766839,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-05-10"
@@ -2149,7 +2182,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1648162,
    "kid1_principal": 1217192,
    "kid2_value": 1748889,
-   "kid2_principal": 1305068
+   "kid2_principal": 1305068,
+   "net_worth_incl_corp": 15748323,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-06-10"
@@ -2171,7 +2206,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1735285,
    "kid1_principal": 1217223,
    "kid2_value": 1915325,
-   "kid2_principal": 1381589
+   "kid2_principal": 1381589,
+   "net_worth_incl_corp": 16868123,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-07-11"
@@ -2193,7 +2230,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1587142,
    "kid1_principal": 1217259,
    "kid2_value": 1762333,
-   "kid2_principal": 1381637
+   "kid2_principal": 1381637,
+   "net_worth_incl_corp": 15227537,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-08-14"
@@ -2215,7 +2254,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1598549,
    "kid1_principal": 1217302,
    "kid2_value": 1774154,
-   "kid2_principal": 1381689
+   "kid2_principal": 1381689,
+   "net_worth_incl_corp": 15762676,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-09-18"
@@ -2237,7 +2278,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1676097,
    "kid1_principal": 1217358,
    "kid2_value": 1854260,
-   "kid2_principal": 1381758
+   "kid2_principal": 1381758,
+   "net_worth_incl_corp": 15846648,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-10-10"
@@ -2259,7 +2302,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1762123,
    "kid1_principal": 1217419,
    "kid2_value": 1942789,
-   "kid2_principal": 1381832
+   "kid2_principal": 1381832,
+   "net_worth_incl_corp": 17117181,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-11-12"
@@ -2281,7 +2326,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1762410,
    "kid1_principal": 1217477,
    "kid2_value": 1943105,
-   "kid2_principal": 1381907
+   "kid2_principal": 1381907,
+   "net_worth_incl_corp": 18164042,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2024-12-11"
@@ -2303,7 +2350,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1789133,
    "kid1_principal": 1217544,
    "kid2_value": 1970852,
-   "kid2_principal": 1381989
+   "kid2_principal": 1381989,
+   "net_worth_incl_corp": 18273914,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-01-10"
@@ -2325,7 +2374,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 1781139,
    "kid1_principal": 1217620,
    "kid2_value": 1962369,
-   "kid2_principal": 1382086
+   "kid2_principal": 1382086,
+   "net_worth_incl_corp": 18611812,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-02-10"
@@ -2345,7 +2396,9 @@ window.DASHBOARD_HISTORY = {
    "realestate": 9600000,
    "household_realestate": 19079364,
    "kid2_value": 1821242,
-   "kid2_principal": 1382200
+   "kid2_principal": 1382200,
+   "net_worth_incl_corp": 17542357,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-03-12"
@@ -2355,15 +2408,17 @@ window.DASHBOARD_HISTORY = {
  "2025-04": {
   "as_of": "2025-04-12",
   "keys": {
-   "gross_assets": 31567567,
+   "gross_assets": 30854133,
    "liabilities": 14559603,
-   "net_worth_total": 17007964,
+   "net_worth_total": 16294530,
    "corporate": 713434,
    "individual": 64315,
    "household": 9311741,
    "investment": 11878077,
    "realestate": 9600000,
-   "household_realestate": 18911741
+   "household_realestate": 18911741,
+   "net_worth_incl_corp": 17007964,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-04-12"
@@ -2373,15 +2428,17 @@ window.DASHBOARD_HISTORY = {
  "2025-05": {
   "as_of": "2025-05-10",
   "keys": {
-   "gross_assets": 32859944,
+   "gross_assets": 32803385,
    "liabilities": 14517851,
-   "net_worth_total": 18342093,
+   "net_worth_total": 18285534,
    "corporate": 56559,
    "individual": 101841,
    "household": 10221931,
    "investment": 12879613,
    "realestate": 9600000,
-   "household_realestate": 19821931
+   "household_realestate": 19821931,
+   "net_worth_incl_corp": 18342093,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-05-10"
@@ -2391,15 +2448,17 @@ window.DASHBOARD_HISTORY = {
  "2025-06": {
   "as_of": "2025-06-10",
   "keys": {
-   "gross_assets": 33448627,
+   "gross_assets": 33142414,
    "liabilities": 14466290,
-   "net_worth_total": 18982337,
+   "net_worth_total": 18676124,
    "corporate": 306213,
    "individual": 412784,
    "household": 9688211,
    "investment": 13441419,
    "realestate": 9600000,
-   "household_realestate": 19288211
+   "household_realestate": 19288211,
+   "net_worth_incl_corp": 18982337,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-06-10"
@@ -2409,15 +2468,17 @@ window.DASHBOARD_HISTORY = {
  "2025-07": {
   "as_of": "2025-07-13",
   "keys": {
-   "gross_assets": 34409237,
+   "gross_assets": 33311614,
    "liabilities": 14466290,
-   "net_worth_total": 19942947,
+   "net_worth_total": 18845324,
    "corporate": 1097623,
    "individual": 105797,
    "household": 9505202,
    "investment": 14100615,
    "realestate": 9600000,
-   "household_realestate": 19105202
+   "household_realestate": 19105202,
+   "net_worth_incl_corp": 19942947,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-07-13"
@@ -2427,15 +2488,17 @@ window.DASHBOARD_HISTORY = {
  "2025-08": {
   "as_of": "2025-08-12",
   "keys": {
-   "gross_assets": 34854100,
+   "gross_assets": 33915739,
    "liabilities": 14466290,
-   "net_worth_total": 20387810,
+   "net_worth_total": 19449449,
    "corporate": 938361,
    "individual": 226867,
    "household": 9641739,
    "investment": 14447133,
    "realestate": 9600000,
-   "household_realestate": 19241739
+   "household_realestate": 19241739,
+   "net_worth_incl_corp": 20387810,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-08-12"
@@ -2445,15 +2508,17 @@ window.DASHBOARD_HISTORY = {
  "2025-09": {
   "as_of": "2025-09-10",
   "keys": {
-   "gross_assets": 35125238,
+   "gross_assets": 34622580,
    "liabilities": 14317228,
-   "net_worth_total": 20808010,
+   "net_worth_total": 20305352,
    "corporate": 502658,
    "individual": 39332,
    "household": 10029323,
    "investment": 14953925,
    "realestate": 9600000,
-   "household_realestate": 19629323
+   "household_realestate": 19629323,
+   "net_worth_incl_corp": 20808010,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-09-10"
@@ -2463,15 +2528,17 @@ window.DASHBOARD_HISTORY = {
  "2025-10": {
   "as_of": "2025-10-10",
   "keys": {
-   "gross_assets": 35788768,
+   "gross_assets": 35206403,
    "liabilities": 14268437,
-   "net_worth_total": 21520331,
+   "net_worth_total": 20937966,
    "corporate": 582365,
    "individual": 72355,
    "household": 9512377,
    "investment": 16021671,
    "realestate": 9600000,
-   "household_realestate": 19112377
+   "household_realestate": 19112377,
+   "net_worth_incl_corp": 21520331,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-10-10"
@@ -2481,15 +2548,17 @@ window.DASHBOARD_HISTORY = {
  "2025-11": {
   "as_of": "2025-11-10",
   "keys": {
-   "gross_assets": 35908151,
+   "gross_assets": 35238542,
    "liabilities": 14219608,
-   "net_worth_total": 21688543,
+   "net_worth_total": 21018934,
    "corporate": 669609,
    "individual": 159595,
    "household": 9376250,
    "investment": 16102697,
    "realestate": 9600000,
-   "household_realestate": 18976250
+   "household_realestate": 18976250,
+   "net_worth_incl_corp": 21688543,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-11-10"
@@ -2499,15 +2568,17 @@ window.DASHBOARD_HISTORY = {
  "2025-12": {
   "as_of": "2025-12-11",
   "keys": {
-   "gross_assets": 36503074,
+   "gross_assets": 35924371,
    "liabilities": 14170740,
-   "net_worth_total": 22332334,
+   "net_worth_total": 21753631,
    "corporate": 578703,
    "individual": 185221,
    "household": 9375784,
    "investment": 16763366,
    "realestate": 9600000,
-   "household_realestate": 18975784
+   "household_realestate": 18975784,
+   "net_worth_incl_corp": 22332334,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2025-12-11"
@@ -2517,15 +2588,17 @@ window.DASHBOARD_HISTORY = {
  "2026-01": {
   "as_of": "2026-01-15",
   "keys": {
-   "gross_assets": 39044018,
+   "gross_assets": 36647018,
    "liabilities": 14112057,
-   "net_worth_total": 24931961,
+   "net_worth_total": 22534961,
    "corporate": 2397000,
    "individual": 149435,
    "household": 9241173,
    "investment": 17656410,
    "realestate": 9600000,
-   "household_realestate": 18841173
+   "household_realestate": 18841173,
+   "net_worth_incl_corp": 24931961,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-01-15"
@@ -2535,15 +2608,17 @@ window.DASHBOARD_HISTORY = {
  "2026-02": {
   "as_of": "2026-02-10",
   "keys": {
-   "gross_assets": 36572694,
+   "gross_assets": 34675847,
    "liabilities": 12262890,
-   "net_worth_total": 24309804,
+   "net_worth_total": 22412957,
    "corporate": 1896847,
    "individual": 43425,
    "household": 7292033,
    "investment": 17740389,
    "realestate": 9600000,
-   "household_realestate": 16892033
+   "household_realestate": 16892033,
+   "net_worth_incl_corp": 24309804,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-02-10"
@@ -2553,15 +2628,17 @@ window.DASHBOARD_HISTORY = {
  "2026-03": {
   "as_of": "2026-03-10",
   "keys": {
-   "gross_assets": 36017366,
+   "gross_assets": 34661888,
    "liabilities": 12216474,
-   "net_worth_total": 23800892,
+   "net_worth_total": 22445414,
    "corporate": 1355478,
    "individual": 239026,
    "household": 7280307,
    "investment": 17542555,
    "realestate": 9600000,
-   "household_realestate": 16880307
+   "household_realestate": 16880307,
+   "net_worth_incl_corp": 23800892,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-03-10"
@@ -2571,15 +2648,17 @@ window.DASHBOARD_HISTORY = {
  "2026-04": {
   "as_of": "2026-04-15",
   "keys": {
-   "gross_assets": 37817824,
+   "gross_assets": 35954572,
    "liabilities": 12162831,
-   "net_worth_total": 25654993,
+   "net_worth_total": 23791741,
    "corporate": 1863252,
    "individual": 314262,
    "household": 7831236,
    "investment": 18209074,
    "realestate": 9600000,
-   "household_realestate": 17431236
+   "household_realestate": 17431236,
+   "net_worth_incl_corp": 25654993,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-04-15"
@@ -2589,15 +2668,17 @@ window.DASHBOARD_HISTORY = {
  "2026-05": {
   "as_of": "2026-05-20",
   "keys": {
-   "gross_assets": 39182505,
+   "gross_assets": 37427333,
    "liabilities": 12118932,
-   "net_worth_total": 27063573,
+   "net_worth_total": 25308401,
    "corporate": 1755172,
    "individual": 79028,
    "household": 8687453,
    "investment": 19060852,
    "realestate": 9600000,
-   "household_realestate": 18287453
+   "household_realestate": 18287453,
+   "net_worth_incl_corp": 27063573,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-05-20"
@@ -2613,9 +2694,11 @@ window.DASHBOARD_HISTORY = {
    "investment": 20470464,
    "realestate": 9600000,
    "liabilities": 12031034,
-   "gross_assets": 40443612,
-   "net_worth_total": 28412578,
-   "household_realestate": 17393117
+   "gross_assets": 39642581,
+   "net_worth_total": 27611547,
+   "household_realestate": 17393117,
+   "net_worth_incl_corp": 28412578,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-07-15"
@@ -2630,9 +2713,11 @@ window.DASHBOARD_HISTORY = {
    "investment": 21055487,
    "realestate": 9600000,
    "liabilities": 11999254,
-   "gross_assets": 42886559,
-   "net_worth_total": 30887305,
-   "household_realestate": 17671367
+   "gross_assets": 40505854,
+   "net_worth_total": 28506600,
+   "household_realestate": 17671367,
+   "net_worth_incl_corp": 30887305,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-08-19"
@@ -2647,8 +2732,8 @@ window.DASHBOARD_HISTORY = {
    "investment": 20280604,
    "realestate": 9600000,
    "liabilities": 11947882,
-   "gross_assets": 41803527,
-   "net_worth_total": 29855645,
+   "gross_assets": 39481198,
+   "net_worth_total": 27533316,
    "household_realestate": 17421594,
    "invest_principal": 11827925,
    "invest_principal_value": 20280604,
@@ -2656,7 +2741,9 @@ window.DASHBOARD_HISTORY = {
    "kid1_value": 2133311,
    "kid1_principal": 1220876,
    "kid2_value": 2326726,
-   "kid2_principal": 1386162
+   "kid2_principal": 1386162,
+   "net_worth_incl_corp": 29855645,
+   "corp_excluded": true
   },
   "text": {
    "as_of_label": "As of 2026-09-17"
@@ -2671,8 +2758,10 @@ window.DASHBOARD_HISTORY = {
    "investment": 20842260,
    "realestate": 9600000,
    "liabilities": 11906249,
-   "gross_assets": 42801401,
-   "net_worth_total": 30895152,
+   "gross_assets": 40179450,
+   "net_worth_total": 28273201,
+   "net_worth_incl_corp": 30895152,
+   "corp_excluded": true,
    "household_realestate": 17558190,
    "invest_principal": 12009079,
    "invest_principal_value": 20842260,
@@ -4952,6 +5041,18 @@ window.PORTFOLIO = {"values_as_of": "2026-10-16", "holdings_as_of": "2026-10-12"
     + '・合計の金額はNestoの最新月の口座残高。中身の比率は保有銘柄の画面を見た日のもので、銘柄を入れ替えたら 02_data/90_holdings を更新する。<br>'
     + '・iDeCoは入れ替え中なので、入れ替え後の配分で数えている。</div>';
   document.getElementById('pfBody').innerHTML = h;
+})();
+</script>
+<script>
+/* 会社（法人）の決算の数字。純資産には含めず、法人タイルに参考として添える。決算のたびに更新する
+   （出典：MFの残高試算表 2026-06-17版・2026年4月期末）。 */
+window.COMPANY_BS = { as_of: "2026-04-30", label: "2026年4月期", cash: 1795474, inventory: 4025685, assets: 5821159, liabilities: 6556329, equity: -735170, owner_loan: 798533 };
+(function(){
+  const el = document.getElementById('corpBs'), B = window.COMPANY_BS;
+  if(!el || !B) return;
+  const man = v => (v < 0 ? '−' : '') + Math.round(Math.abs(v)/10000).toLocaleString('ja-JP') + '万';
+  el.innerHTML = '会社の現金（毎月）<br>' + B.label + '決算：在庫' + man(B.inventory) + '・負債' + man(B.liabilities) + ' → 会社の純資産 <b>' + man(B.equity) + '</b>';
+  el.title = '決算（' + B.as_of + '）：資産' + man(B.assets) + '（現預金' + man(B.cash) + '・在庫' + man(B.inventory) + '）／負債' + man(B.liabilities) + '（うち会社から夫への返済予定' + man(B.owner_loan) + '）／純資産' + man(B.equity) + '。銀行などからの借入はなし';
 })();
 </script>
 </body>
