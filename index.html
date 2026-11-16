@@ -4488,6 +4488,36 @@ window.MARKET_NOTES = {
       { t: "Nikkei 225 falls 5% on rate and AI concerns（The Japan Times・10/15）", u: "https://www.japantimes.co.jp/business/2026/10/15/nagata-nikkei-decline/" },
       { t: "米ドル/円の時系列（Yahoo!ファイナンス）", u: "https://finance.yahoo.co.jp/quote/USDJPY=X/history" }
     ]
+  },
+  "2026-11": {
+    period: "2026/10/16 → 11/16",
+    short: "11月上旬にAI株と日本株が急落。円安で少し取り戻したが、運用は約10万円のマイナス",   // かんたん版の「今月のひとこと」に出す
+    lead: "11/3の米中間選挙のあと、<b>AI・半導体株が大きく売られ</b>、日本株も同じ流れで急落した。<b>円安（158円台→159円台）</b>が少し下支えしたが補いきれず、お金が働いた分は約10万円のマイナス。それでも投資全体の0.5%ほど。",
+    items: [
+      { tag: "米国株", dir: "down", text: "<b>11/5にナスダック−5.5%・S&P500−4.4%</b>。中間選挙で民主党が上下両院の多数を取り、AI規制の強化やデータセンター投資の鈍化が警戒された。11/13時点で10/16と比べ、S&P500は約−1.3%、ナスダックは約−3.8%。11/12にはエヌビディアのCEOが辞任（決算は11/17）。" },
+      { tag: "日本株", dir: "down", text: "日経平均は<b>11/6に−3,643円（−5.96%）の57,434円</b>。下げ幅は過去3位で、約半年ぶりに6万円を割った。11/13は61,142円まで戻したが、10/16（65,324円）と比べると約−6.4%。" },
+      { tag: "円安", dir: "up", text: "ドル円は10/16の158円台から、<b>11/13に一時160円台</b>。11/16は159円台。財務官が「夏の介入を忘れるのは早すぎる」とけん制した。外国株の投資信託は、円安の分だけ1%弱下支えされた。" },
+      { tag: "日銀", dir: "", text: "<b>10/30の会合は政策金利1.25%で据え置き</b>（8対1。1人は1.5%への利上げを提案）。市場は<b>12月の利上げを8割ほど織り込んでいる</b>。わが家の住宅ローンの金利見直しは12/25。" },
+      { tag: "米金利", dir: "", text: "FOMC（10/28）は3.75〜4.00%で据え置き（次回は12月）。米10年債の利回りは選挙後に4.9%前後まで下がったが、物価の強さから<b>11/13には5.1%台に戻った</b>。" },
+      { tag: "わが家", dir: "down", text: "投資の評価額は<b>+10.2万円</b>。うち積立などで入れたお金が+20.3万円、<b>お金が働いた分は−10.2万円</b>。子ども2人の口座はそれぞれ約−1.3万円（入金なし）。iDeCoは夫婦ともスイッチングが完了し、外国株中心の3本になった。" }
+    ],
+    caveats: [
+      "<b>AI関連株の値動きが大きくなっている。</b>米国株の上昇はAI関連頼みの面が大きく、1日で4〜5%下がる日が出てきた。",
+      "<b>12月は日銀の利上げが有力。</b>住宅ローンの変動金利の見直し（12/25）と重なる。返済額は2029年まで変わらないが、利息の割合が増える。",
+      "<b>160円の手前は為替介入を警戒するライン。</b>介入で一気に円高に振れると、外国株の投資信託は数%目減りする。外国株の部分は約1,800万円で、円が1%動くごとに約18万円上下する。",
+      "<b>夫婦のSBIの積立は2027年1月から「オルカンだけ・月9万円」に変わる</b>（11/17に設定変更）。米国株だけに偏る割合が少し下がる。"
+    ],
+    verdict: "米国株の高値圏で、AI関連株が一度大きく調整した月。<b>円安が下支えして、運用の損は約10万円にとどまった。</b>急落の月は、積立を続けていれば同じ金額で多く買える月でもある。",
+    sources: [
+      { t: "A brutal sell-off for AI stocks…S&P 500 tumbles 4.4%（AP・11/5）", u: "https://www.boston.com/news/national-news/2026/11/05/a-brutal-sell-off-for-ai-stocks-sends-wall-street-reeling-and-the-sp-500-tumbles-4-4/" },
+      { t: "How major US stock indexes fared Friday 11/13/2026（AP）", u: "https://wtop.com/national/2026/11/how-major-us-stock-indexes-fared-friday-11-13-2026/" },
+      { t: "日経平均 大引け｜5日続落…6万円割れ（みんかぶ・11/6）", u: "https://minkabu.jp/news/4653524" },
+      { t: "日経平均株価が反発 終値は322円高の6万1142円（日本経済新聞・11/13）", u: "https://www.nikkei.com/article/DGXZQOFL130J90T11C26A1000000/" },
+      { t: "日銀10月会合の発表内容と、基調的物価の論点（ピクテ・11/2）", u: "https://www.pictet.co.jp/investment-information/market/today/20261102.html" },
+      { t: "FOMC声明（FRB・10/28）", u: "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm" },
+      { t: "11月16日のNY為替概況（財経新聞）", u: "https://www.zaikei.co.jp/article/20261117/877888.html" },
+      { t: "10-year Treasury yield moves to 5.15%（CNBC・11/13）", u: "https://www.cnbc.com/amp/2026/11/13/treasury-yields-fed-rates.html" }
+    ]
   }
 };
 (function(){
